@@ -3,30 +3,30 @@
     x:Class="Road_Pal.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Road_Pal"
+    xmlns:local="clr-namespace:Road_Pal.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="Road_Pal">
 
-
     <TabBar>
+        <ShellContent
+            Title="Settings"
+            Icon="settings_icon.png"
+            ContentTemplate="{DataTemplate local:SettingsPage}"
+            Route="SettingsPage" />
+
         <ShellContent
             Title="Home"
             Icon="home_icon.png"
             ContentTemplate="{DataTemplate local:MainPage}"
-            Route="MainPage" />
+            Route="MainPage"
+            x:Name="homeTab" />
 
-        <ShellContent
-            Title="Settings"
-            Icon="settings_icon.png"
-            ContentTemplate="{DataTemplate local:MainPage}"
-            Route="MainPage" />
 
-        <!-- Profile Tab -->
         <ShellContent
             Title="Profile"
             Icon="profile_icon.png"
-            ContentTemplate="{DataTemplate local:MainPage}"
-            Route="MainPage" />
+            ContentTemplate="{DataTemplate local:ProfilePage}"
+            Route="ProfilePage" />
     </TabBar>
 
 </Shell>

@@ -5,6 +5,8 @@
 		public AppShell()
 		{
 			InitializeComponent();
+
+			CurrentItem = homeTab;
 		}
 	}
 }

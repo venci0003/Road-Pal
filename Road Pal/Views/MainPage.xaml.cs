@@ -1,4 +1,4 @@
-﻿namespace Road_Pal
+﻿namespace Road_Pal.Views
 {
 	public partial class MainPage : ContentPage
 	{
@@ -7,7 +7,7 @@
 		{
 			InitializeComponent();
 		}
-	
+
 	}
 
 }
