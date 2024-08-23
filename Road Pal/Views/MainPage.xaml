@@ -2,11 +2,47 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Road_Pal.Views.MainPage">
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <ScrollView AbsoluteLayout.LayoutFlags="All"
+                        AbsoluteLayout.LayoutBounds="0, 0, 1, 1">
+                <Grid x:Name="gridLayout">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-    <StackLayout>
-        <Label Text="Welcome to the Home Page!"
-               VerticalOptions="CenterAndExpand"
-               HorizontalOptions="CenterAndExpand" />
-    </StackLayout>
+                    <BoxView Color="LightGray" Grid.Row="0" Grid.Column="0" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="0" Grid.Column="1" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="1" Grid.Column="0" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="1" Grid.Column="1" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="2" Grid.Column="0" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="2" Grid.Column="1" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="3" Grid.Column="0" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
+                    
+                </Grid>
+            </ScrollView>
 
+            <Button Text="+"
+                    FontSize="24"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    BackgroundColor="Red"
+                    CornerRadius="30"
+                    TextColor="White"
+                    WidthRequest="60"
+                    HeightRequest="60"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    AbsoluteLayout.LayoutBounds="1, 1, AutoSize, AutoSize"
+                                        Margin="10 10 20 0 "/>
+
+        </AbsoluteLayout>
+    </ContentPage.Content>
 </ContentPage>
