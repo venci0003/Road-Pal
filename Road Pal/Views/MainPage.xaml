@@ -19,14 +19,14 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <BoxView Color="LightGray" Grid.Row="0" Grid.Column="0" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="0" Grid.Column="1" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="1" Grid.Column="0" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="1" Grid.Column="1" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="2" Grid.Column="0" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="2" Grid.Column="1" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="3" Grid.Column="0" Margin="10 10 0 0 " WidthRequest="200" HeightRequest="200" />
-                    
+                    <BoxView Color="LightGray" Grid.Row="0" Grid.Column="0" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="0" Grid.Column="1" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="1" Grid.Column="0" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="1" Grid.Column="1" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="2" Grid.Column="0" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="2" Grid.Column="1" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
+                    <BoxView Color="LightGray" Grid.Row="3" Grid.Column="0" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
+
                 </Grid>
             </ScrollView>
 
@@ -41,7 +41,7 @@
                     HeightRequest="60"
                     AbsoluteLayout.LayoutFlags="PositionProportional"
                     AbsoluteLayout.LayoutBounds="1, 1, AutoSize, AutoSize"
-                                        Margin="10 10 20 0 "/>
+                                        Margin="10, 10, 20, 20 "/>
 
         </AbsoluteLayout>
     </ContentPage.Content>
