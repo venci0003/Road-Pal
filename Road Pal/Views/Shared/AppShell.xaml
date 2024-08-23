@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Road_Pal.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Road_Pal"
+    Shell.FlyoutBehavior="Disabled"
+    Title="Road_Pal">
+
+
+    <TabBar>
+        <ShellContent
+            Title="Home"
+            Icon="home_icon.png"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
+
+        <ShellContent
+            Title="Settings"
+            Icon="settings_icon.png"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
+
+        <!-- Profile Tab -->
+        <ShellContent
+            Title="Profile"
+            Icon="profile_icon.png"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
+    </TabBar>
+
+</Shell>
