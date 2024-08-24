@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace Road_Pal
+namespace RoadPal
 {
 	[Register("AppDelegate")]
 	public class AppDelegate : MauiUIApplicationDelegate

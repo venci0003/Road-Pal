@@ -1,4 +1,4 @@
-namespace Road_Pal.Views;
+namespace RoadPal.Views;
 
 public partial class SettingsPage : ContentPage
 {

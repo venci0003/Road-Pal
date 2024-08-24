@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace Road_Pal
+namespace RoadPal
 {
 	public class Program
 	{

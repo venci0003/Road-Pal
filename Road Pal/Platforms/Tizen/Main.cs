@@ -2,7 +2,7 @@ using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
 using System;
 
-namespace Road_Pal
+namespace RoadPal
 {
 	internal class Program : MauiApplication
 	{

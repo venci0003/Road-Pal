@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace Road_Pal
+namespace RoadPal
 {
 	[Application]
 	public class MainApplication : MauiApplication

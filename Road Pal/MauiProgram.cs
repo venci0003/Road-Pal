@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Road_Pal
+namespace RoadPal
 {
 	public static class MauiProgram
 	{
