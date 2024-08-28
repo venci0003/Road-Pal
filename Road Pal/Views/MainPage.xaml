@@ -22,7 +22,7 @@
                      IsVisible="{Binding NoCarsMessage, Converter={StaticResource NullToVisibilityConverter}}" />
 
                     <CollectionView ItemsSource="{Binding Cars}" 
-                                    IsVisible="{Binding Cars.Count, Converter={StaticResource CountToVisibilityConverter}}">
+                                    IsVisible="{Binding Cars.Count, Converter={StaticResource NullToVisibilityConverter}}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="vm:CreateCarViewModel">
                                 <SwipeView>
