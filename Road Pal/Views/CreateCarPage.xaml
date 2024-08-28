@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RoadPal.Views.CreateCarPage"
+             xmlns:vm="clr-namespace:RoadPal.ViewModels"
+             x:DataType="vm:CreateCarViewModel">
+
+    <ContentPage.Content>
+        <StackLayout Padding="20">
+            <Label Text="Create a New Car" FontSize="24" HorizontalOptions="Center" />
+
+            <Entry Text="{Binding Make}" Placeholder="Make" />
+            <Entry Text="{Binding Model}" Placeholder="Model" />
+            <Entry Text="{Binding Description}" Placeholder="Description" />
+            <Entry Text="{Binding LicensePlate}" Placeholder="License Plate" />
+
+            <Button Text="Pick Image" Command="{Binding PickImageCommand}" />
+
+            <Image Source="{Binding CarImage}" Aspect="AspectFit" />
+
+            <Button Text="Save" Command="{Binding SaveCarCommand}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
