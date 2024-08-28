@@ -1,33 +1,58 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="RoadPal.Views.MainPage">
+             x:Class="RoadPal.Views.MainPage"    
+             xmlns:vm="clr-namespace:RoadPal.ViewModels"
+             x:DataType="vm:MainPageViewModel">
+
     <ContentPage.Content>
         <AbsoluteLayout>
             <ScrollView AbsoluteLayout.LayoutFlags="All"
                         AbsoluteLayout.LayoutBounds="0, 0, 1, 1">
-                <Grid x:Name="gridLayout">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                <StackLayout>
+                    <Label 
+                     Text="{Binding NoCarsMessage}"
+                     FontSize="24"
+                     HorizontalOptions="Center" 
+                     VerticalOptions="Center"
+                     Margin="10,20"
+                     Padding="10" 
+                     HorizontalTextAlignment="Center"                     
+                     VerticalTextAlignment="Center"                     
+                     LineBreakMode="WordWrap"                    
+                     IsVisible="{Binding NoCarsMessage, Converter={StaticResource NullToVisibilityConverter}}" />
 
-                    <BoxView Color="LightGray" Grid.Row="0" Grid.Column="0" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="0" Grid.Column="1" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="1" Grid.Column="0" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="1" Grid.Column="1" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="2" Grid.Column="0" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="2" Grid.Column="1" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
-                    <BoxView Color="LightGray" Grid.Row="3" Grid.Column="0" Margin="10,10,0,0" WidthRequest="200" HeightRequest="200" />
+                    <CollectionView ItemsSource="{Binding Cars}" 
+                                    IsVisible="{Binding Cars.Count, Converter={StaticResource CountToVisibilityConverter}}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:CreateCarViewModel">
+                                <SwipeView>
+                                    <!-- Define the delete swipe item -->
+                                    <SwipeView.RightItems>
+                                        <SwipeItems Mode="Reveal">
+                                            <SwipeItem Text="Delete"
+                                                       BackgroundColor="Red"
+                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}, Path=DeleteCarCommand}"
+                                                       CommandParameter="{Binding .}" />
+                                        </SwipeItems>
+                                    </SwipeView.RightItems>
 
-                </Grid>
+                                    <!-- Your item content -->
+                                    <Frame Margin="10" Padding="50" HasShadow="True" CornerRadius="10">
+                                        <StackLayout>
+                                            <Image Source="{Binding CarImage}" Aspect="AspectFill" />
+                                            <Label Text="{Binding Description}" FontSize="20"/>
+                                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                                <Label Text="{Binding Make}" FontSize="18" />
+                                                <Label Text="{Binding Model}" FontSize="18" />
+                                            </StackLayout>
+                                            <Label Text="{Binding LicensePlate}" FontSize="14" />
+                                        </StackLayout>
+                                    </Frame>
+                                </SwipeView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
             </ScrollView>
 
             <Button Text="+"
@@ -41,8 +66,8 @@
                     HeightRequest="60"
                     AbsoluteLayout.LayoutFlags="PositionProportional"
                     AbsoluteLayout.LayoutBounds="1, 1, AutoSize, AutoSize"
-                                        Margin="10, 10, 20, 20 "/>
-
+                    Margin="10, 10, 20, 20"
+                    Command="{Binding NavigateToCreateCarPageCommand}"/>
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>
