@@ -10,7 +10,7 @@ namespace RoadPal
 	{
 		public static MauiApp CreateMauiApp()
 		{
-			var builder = MauiApp.CreateBuilder();
+			MauiAppBuilder builder = MauiApp.CreateBuilder();
 			builder
 				.UseMauiApp<App>()
 				.ConfigureFonts(fonts =>

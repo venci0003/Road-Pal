@@ -7,10 +7,27 @@
 
     <ContentPage.Content>
         <StackLayout Padding="20">
-            <Label Text="Create a New Car" FontSize="24" HorizontalOptions="Center" />
+            <Label Text="{Binding Title}" FontSize="24" HorizontalOptions="Center" />
 
-            <Entry Text="{Binding Make}" Placeholder="Make" />
-            <Entry Text="{Binding Model}" Placeholder="Model" />
+            <SearchBar Placeholder="Search make" 
+                       Text="{Binding SearchTerm}" 
+                       SearchCommand="{Binding SearchMakesCommand}"
+                       SearchCommandParameter="{Binding Text, Source={RelativeSource Self}}" />
+
+            <Picker Title="Select Make"
+                    ItemsSource="{Binding CarMakes}"
+                    SelectedItem="{Binding SelectedMake}" />
+
+            <Picker Title="Select Model"
+                    ItemsSource="{Binding CarModels}"
+                    SelectedItem="{Binding SelectedModel}"
+                    Focused="OnModelPickerFocused" 
+                    IsEnabled="{Binding SelectedMake, Converter={StaticResource NullToVisibilityConverter}}" />
+
+            <Entry Placeholder="Type model if not found" 
+                   Text="{Binding ManualModelInput}" 
+                   IsVisible="{Binding AreManualModelInputVisible}" />
+
             <Entry Text="{Binding Description}" Placeholder="Description" />
             <Entry Text="{Binding LicensePlate}" Placeholder="License Plate" />
 

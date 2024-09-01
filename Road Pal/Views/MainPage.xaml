@@ -26,7 +26,6 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="vm:CreateCarViewModel">
                                 <SwipeView>
-                                    <!-- Define the delete swipe item -->
                                     <SwipeView.RightItems>
                                         <SwipeItems Mode="Reveal">
                                             <SwipeItem Text="Delete"
@@ -36,7 +35,6 @@
                                         </SwipeItems>
                                     </SwipeView.RightItems>
 
-                                    <!-- Your item content -->
                                     <Frame Margin="10" Padding="50" HasShadow="True" CornerRadius="10">
                                         <StackLayout>
                                             <Image Source="{Binding CarImage}" Aspect="AspectFill" />

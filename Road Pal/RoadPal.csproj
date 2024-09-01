@@ -42,14 +42,15 @@
 		<!-- App Icon -->
 		<!--ForegroundFile="Resources\AppIcon\appiconfg.svg"-->
 		<!--Color="#512BD4"-->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="Gray" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<!--Color="#512BD4"-->
+		<!--BaseSize="128,128"-->
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" BaseSize="256,256" Color="Gray" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -64,19 +65,20 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\RoadPal.Infrastructure\RoadPal.Infrastructure.csproj" />
+		<ProjectReference Include="..\RoadPal.Infrastructure\RoadPal.Infrastructure.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<MauiXaml Update="Resources\Converters\ConverterResource.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\CreateCarPage.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Shared\AppShell.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -90,6 +92,10 @@
 		<MauiXaml Update="Views\SettingsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Resources\Images\" />
 	</ItemGroup>
 
 </Project>

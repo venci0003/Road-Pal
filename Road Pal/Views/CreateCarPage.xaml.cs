@@ -9,4 +9,15 @@ public partial class CreateCarPage : ContentPage
 		InitializeComponent();
 		BindingContext = vm;
 	}
+
+	private async void OnModelPickerFocused(object sender, FocusEventArgs e)
+	{
+		CreateCarViewModel? viewModel = BindingContext as CreateCarViewModel;
+
+		if (viewModel != null && !string.IsNullOrEmpty(viewModel.SelectedMake))
+		{
+			await viewModel.LoadCarModelsCommand.ExecuteAsync(viewModel.SelectedMake);
+		}
+	}
+
 }
