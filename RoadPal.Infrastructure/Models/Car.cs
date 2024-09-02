@@ -18,6 +18,9 @@ namespace RoadPal.Infrastructure.Models
 		[Required]
 		public string LicensePlate { get; set; } = string.Empty;
 
+		[Required]
+		public string CountryCodeForLicensePlate { get; set; } = string.Empty;
+
 		public string ImagePath { get; set; } = string.Empty;
 
 	}

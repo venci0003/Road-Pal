@@ -24,6 +24,9 @@ namespace RoadPal.ViewModels
 		private string? licensePlate;
 
 		[ObservableProperty]
+		private string? countryCode;
+
+		[ObservableProperty]
 		private string? carImage;
 
 		[ObservableProperty]
@@ -163,7 +166,8 @@ namespace RoadPal.ViewModels
 				string.IsNullOrWhiteSpace(model) ||
 				string.IsNullOrWhiteSpace(description) ||
 				string.IsNullOrWhiteSpace(licensePlate) ||
-				string.IsNullOrWhiteSpace(_imageFilePath))
+				string.IsNullOrWhiteSpace(_imageFilePath) ||
+				string.IsNullOrWhiteSpace(countryCode))
 			{
 				await Application.Current.MainPage.DisplayAlert("Error", "Please fill in all fields and select an image.", "OK");
 				return;
@@ -175,6 +179,7 @@ namespace RoadPal.ViewModels
 				Model = model!,
 				Description = description!,
 				LicensePlate = licensePlate!,
+				CountryCodeForLicensePlate = countryCode!,
 				ImagePath = _imageFilePath!
 			};
 

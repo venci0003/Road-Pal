@@ -29,7 +29,9 @@
                    IsVisible="{Binding AreManualModelInputVisible}" />
 
             <Entry Text="{Binding Description}" Placeholder="Description" />
+            
             <Entry Text="{Binding LicensePlate}" Placeholder="License Plate" />
+            <Entry Text="{Binding CountryCode}" Placeholder="Country Code" />
 
             <Button Text="Pick Image" Command="{Binding PickImageCommand}" />
 

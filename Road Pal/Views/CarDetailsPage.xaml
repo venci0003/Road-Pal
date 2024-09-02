@@ -6,10 +6,68 @@
 
     <ContentPage.Content>
         <StackLayout Padding="20">
-            <Image Source="{Binding CarImage}" Aspect="AspectFill" />
+            <Image Source="{Binding CarImage}" 
+                   Aspect="AspectFill" 
+                   WidthRequest="320" 
+                   HeightRequest="200"
+                   VerticalOptions="Center" 
+                   HorizontalOptions="Start"/>
             <Label Text="{Binding Make}" FontSize="24" />
             <Label Text="{Binding Model}" FontSize="24" />
-            <Label Text="{Binding LicensePlate}" FontSize="18" />
+            <Frame BackgroundColor="White"
+       CornerRadius="5"
+       Padding="0"
+       HorizontalOptions="FillAndExpand"
+       Margin="0,10"
+       HasShadow="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <BoxView Color="#00309a"
+                 Grid.RowSpan="3"
+                 Grid.Column="0"
+                 WidthRequest="60"
+                 HorizontalOptions="FillAndExpand"
+                 VerticalOptions="FillAndExpand"/>
+
+                    <Image Source="Resources/Images/flag_of_europe.png"
+               Grid.Row="0"
+               Grid.Column="0"
+               WidthRequest="60"
+               HeightRequest="40"
+               Aspect="AspectFill"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"/>
+
+                    <Label Text="{Binding CountryCodeForLicensePlate}"
+               Grid.Row="1"
+               Grid.Column="0"
+               FontSize="12"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               TextColor="White"
+               BackgroundColor="#00309a"
+               Padding="5"/>
+
+                    <Label Text="{Binding LicensePlate}"
+               Grid.Row="0"
+               Grid.Column="1"
+               Grid.RowSpan="3"
+               FontSize="24"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               TextColor="Black"
+               Padding="10"/>
+                </Grid>
+            </Frame>
             <Label Text="{Binding Description}" FontSize="18" />
         </StackLayout>
     </ContentPage.Content>
