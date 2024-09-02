@@ -1,0 +1,16 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RoadPal.Views.CarDetailsPage"
+             xmlns:vm="clr-namespace:RoadPal.ViewModels"
+             x:DataType="vm:CarDetailsViewModel">
+
+    <ContentPage.Content>
+        <StackLayout Padding="20">
+            <Image Source="{Binding CarImage}" Aspect="AspectFill" />
+            <Label Text="{Binding Make}" FontSize="24" />
+            <Label Text="{Binding Model}" FontSize="24" />
+            <Label Text="{Binding LicensePlate}" FontSize="18" />
+            <Label Text="{Binding Description}" FontSize="18" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

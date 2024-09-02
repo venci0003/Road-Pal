@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using RoadPal.Infrastructure.Models;
 using RoadPal.Services;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace RoadPal.ViewModels
 {
@@ -28,9 +27,10 @@ namespace RoadPal.ViewModels
 		private string? carImage;
 
 		[ObservableProperty]
-		private string title = "Add Vehicle Maintenance";
-
 		private string? _imageFilePath;
+
+		[ObservableProperty]
+		private string title = "Add Vehicle Maintenance";
 
 		private readonly CarService _carService;
 
