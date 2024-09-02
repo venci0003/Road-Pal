@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using RoadPal.Infrastructure.Models;
 using RoadPal.Services;
+using RoadPal.Views;
 using System.Collections.ObjectModel;
 
 namespace RoadPal.ViewModels
@@ -18,11 +19,16 @@ namespace RoadPal.ViewModels
 
 		public IAsyncRelayCommand NavigateToCreateCarPageCommand { get; }
 		public IAsyncRelayCommand<Car> DeleteCarCommand { get; }
+
+		public IAsyncRelayCommand NavigateToCarDetailsCommand { get; }
+
 		public MainPageViewModel(CarService carService)
 		{
 			_carService = carService;
 			NavigateToCreateCarPageCommand = new AsyncRelayCommand(NavigateToCreateCarPage);
 			DeleteCarCommand = new AsyncRelayCommand<Car>(DeleteCarAsync);
+			NavigateToCarDetailsCommand = new AsyncRelayCommand<Car>(NavigateToCarDetailsAsync);
+
 			LoadItems().ConfigureAwait(false);
 		}
 
@@ -58,5 +64,17 @@ namespace RoadPal.ViewModels
 		{
 			await Shell.Current.GoToAsync("//CreateCarPage");
 		}
+
+		private async Task NavigateToCarDetailsAsync(Car car)
+		{
+			if (car != null)
+			{
+				var carDetailsViewModel = new CarDetailsViewModel(car);
+
+				var carDetailsPage = new CarDetailsPage(carDetailsViewModel);
+				await Shell.Current.Navigation.PushAsync(carDetailsPage);
+			}
+		}
+
 	}
 }

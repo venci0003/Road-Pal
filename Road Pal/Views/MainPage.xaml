@@ -2,7 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RoadPal.Views.MainPage"    
              xmlns:vm="clr-namespace:RoadPal.ViewModels"
-             x:DataType="vm:MainPageViewModel">
+             x:DataType="vm:MainPageViewModel"
+             xmlns:model="clr-namespace:RoadPal.Infrastructure.Models;assembly=RoadPal.Infrastructure">
 
     <ContentPage.Content>
         <AbsoluteLayout>
@@ -24,7 +25,7 @@
                     <CollectionView ItemsSource="{Binding Cars}" 
                                     IsVisible="{Binding Cars.Count, Converter={StaticResource NullToVisibilityConverter}}">
                         <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="vm:CreateCarViewModel">
+                            <DataTemplate x:DataType="model:Car">
                                 <SwipeView>
                                     <SwipeView.RightItems>
                                         <SwipeItems Mode="Reveal">
@@ -36,14 +37,39 @@
                                     </SwipeView.RightItems>
 
                                     <Frame Margin="10" Padding="50" HasShadow="True" CornerRadius="10">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}, Path=NavigateToCarDetailsCommand}"
+                                               CommandParameter="{Binding .}" />
+                                        </Frame.GestureRecognizers>
+
                                         <StackLayout>
-                                            <Image Source="{Binding CarImage}" Aspect="AspectFill" />
+                                            <Image Source="{Binding ImagePath}" 
+                               Aspect="AspectFill" 
+                               WidthRequest="320" 
+                               HeightRequest="200"
+                               VerticalOptions="Center" 
+                               HorizontalOptions="Start" />
                                             <Label Text="{Binding Description}" FontSize="20"/>
                                             <StackLayout Orientation="Horizontal" Spacing="10">
                                                 <Label Text="{Binding Make}" FontSize="18" />
                                                 <Label Text="{Binding Model}" FontSize="18" />
                                             </StackLayout>
-                                            <Label Text="{Binding LicensePlate}" FontSize="14" />
+                                            <Label>License Plate</Label>
+                                            <Frame BackgroundColor="LightGray"
+                                                   CornerRadius="5"
+                                                   Padding="5"
+                                                   HorizontalOptions="FillAndExpand"
+                                                   Margin="0,10">
+                                                <Label Text="{Binding LicensePlate}"
+                                                       FontSize="24"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"
+                                                       TextColor="Black"
+                                                       BackgroundColor="LightGray"
+                                                       Padding="10"
+                                                       FontAttributes="Bold" />
+                                            </Frame>
                                         </StackLayout>
                                     </Frame>
                                 </SwipeView>
