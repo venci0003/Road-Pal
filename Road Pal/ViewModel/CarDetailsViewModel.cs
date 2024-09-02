@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using RoadPal.Infrastructure.Models;
 using RoadPal.ViewModels;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace RoadPal.ViewModels
 {
@@ -27,7 +29,13 @@ namespace RoadPal.ViewModels
 		private string? licensePlate;
 
 		[ObservableProperty]
+		private string? countryCode;
+
+		[ObservableProperty]
 		private string? carImage;
+
+		public IRelayCommand ScanReceiptCommand { get; }
+
 
 		public CarDetailsViewModel(Car car)
 		{
@@ -36,6 +44,7 @@ namespace RoadPal.ViewModels
 			model = car.Model;
 			licensePlate = car.LicensePlate;
 			description = car.Description;
+			countryCode = car.CountryCodeForLicensePlate;
 		}
 	}
 }
