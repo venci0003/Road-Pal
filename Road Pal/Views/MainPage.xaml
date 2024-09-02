@@ -55,7 +55,6 @@
                                                 <Label Text="{Binding Make}" FontSize="18" />
                                                 <Label Text="{Binding Model}" FontSize="18" />
                                             </StackLayout>
-                                            <Label>License Plate</Label>
                                             <Frame BackgroundColor="LightGray"
                                                    CornerRadius="5"
                                                    Padding="5"
