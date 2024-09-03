@@ -3,6 +3,7 @@ using RoadPal.Infrastructure;
 using RoadPal.Services;
 using RoadPal.ViewModels;
 using RoadPal.Views;
+using ZXing.Net.Maui.Controls;
 
 namespace RoadPal
 {
@@ -17,7 +18,8 @@ namespace RoadPal
 				{
 					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 					fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-				});
+				})
+				.UseBarcodeReader();
 
 			builder.Services.AddSingleton<RoadPalDatabase>();
 
