@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             xmlns:vm="clr-namespace:RoadPal.ViewModels"
+             x:DataType="vm:BarcodeReaderViewModel"
+
+             x:Class="RoadPal.Views.BarcodeReader"
+             Title="BarcodeReader">
+    <ContentPage.Content>
+        <StackLayout>
+            <zxing:CameraBarcodeReaderView
+                x:Name="barcodeReader"
+                BarcodesDetected="BarcodeReader_BarcodesDetected" />
+
+            <Button Text="Go Back"
+                    Command="{Binding GoBackToPreviousPage}"
+                    VerticalOptions="EndAndExpand"
+                    HorizontalOptions="Center"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
