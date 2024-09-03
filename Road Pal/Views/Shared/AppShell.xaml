@@ -28,4 +28,10 @@
     </TabBar>
 
     <ShellContent Route="CreateCarPage" ContentTemplate="{DataTemplate local:CreateCarPage}" />
+
+    <ShellContent Route="CarDetailsPage" ContentTemplate="{DataTemplate local:CarDetailsPage}" />
+
+    <ShellContent Route="BarcodeReader" ContentTemplate="{DataTemplate local:BarcodeReader}" />
+    
+
 </Shell>

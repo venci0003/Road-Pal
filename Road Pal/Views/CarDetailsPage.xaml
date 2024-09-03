@@ -82,7 +82,6 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Image for Icon -->
                     <Image Source="Resources/Images/qr_icon.png"
                            WidthRequest="40" 
                            HeightRequest="40"
@@ -90,7 +89,6 @@
                            VerticalOptions="Center"
                            HorizontalOptions="Start"/>
 
-                    <!-- Text Next to the Icon -->
                     <Label Text="Scan a receipt"
                            FontSize="16"
                            VerticalOptions="Center"

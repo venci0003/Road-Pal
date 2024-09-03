@@ -1,4 +1,5 @@
 using RoadPal.ViewModels;
+using ZXing;
 
 namespace RoadPal.Views;
 

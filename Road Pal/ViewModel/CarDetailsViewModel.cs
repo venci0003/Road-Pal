@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using RoadPal.Infrastructure.Models;
 using RoadPal.ViewModels;
+using RoadPal.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,13 @@ namespace RoadPal.ViewModels
 			licensePlate = car.LicensePlate;
 			description = car.Description;
 			countryCode = car.CountryCodeForLicensePlate;
+
+			ScanReceiptCommand = new AsyncRelayCommand(ScanReceiptNavigation);
+		}
+
+		private async Task ScanReceiptNavigation()
+		{
+			await Shell.Current.GoToAsync("///BarcodeReader");
 		}
 	}
 }
