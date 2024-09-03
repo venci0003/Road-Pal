@@ -5,70 +5,105 @@
              x:DataType="vm:CarDetailsViewModel">
 
     <ContentPage.Content>
-        <StackLayout Padding="20">
-            <Image Source="{Binding CarImage}" 
-                   Aspect="AspectFill" 
-                   WidthRequest="320" 
-                   HeightRequest="200"
-                   VerticalOptions="Center" 
-                   HorizontalOptions="Start"/>
-            <Label Text="{Binding Make}" FontSize="24" />
-            <Label Text="{Binding Model}" FontSize="24" />
-            <Frame BackgroundColor="White"
-       CornerRadius="5"
-       Padding="0"
-       HorizontalOptions="FillAndExpand"
-       Margin="0,10"
-       HasShadow="True">
+        <AbsoluteLayout>
+            <ScrollView AbsoluteLayout.LayoutFlags="All"
+                        AbsoluteLayout.LayoutBounds="0, 0, 1, 1">
+                <StackLayout Padding="20">
+                    <Image Source="{Binding CarImage}" 
+                           Aspect="AspectFill" 
+                           WidthRequest="320" 
+                           HeightRequest="200"
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Center"/>
+
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10">
+                        <Label Text="{Binding Make}" FontSize="24" />
+                        <Label Text="{Binding Model}" FontSize="24" />
+                    </StackLayout>
+
+                    <Frame BackgroundColor="White"
+                           CornerRadius="5"
+                           Padding="0"
+                           HorizontalOptions="FillAndExpand"
+                           Margin="0,10"
+                           HasShadow="True">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackLayout Grid.RowSpan="2" Grid.Column="0" BackgroundColor="#00309a" Padding="5" VerticalOptions="Center" HorizontalOptions="Center">
+                                <Image Source="Resources/Images/flag_of_europe.png"
+                                       WidthRequest="30"
+                                       HeightRequest="20"
+                                       Aspect="AspectFit"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                                <Label Text="{Binding CountryCode}" 
+                                       FontSize="12" 
+                                       HorizontalOptions="Center" 
+                                       VerticalOptions="Center" 
+                                       TextColor="White" />
+                            </StackLayout>
+
+                            <Label Grid.Column="1"
+                                   FontSize="24"
+                                   Text="{Binding LicensePlate}"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Start"
+                                   Padding="10"
+                                   TextColor="Black" />
+                        </Grid>
+                    </Frame>
+
+                    <Label Text="{Binding Description}" 
+                           FontSize="18" 
+                           VerticalOptions="Start"/>
+                </StackLayout>
+            </ScrollView>
+
+            <Frame BackgroundColor="Blue"
+                   CornerRadius="20"
+                   Padding="14"
+                   HasShadow="True"
+                   VerticalOptions="End"
+                   HorizontalOptions="Center"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                   AbsoluteLayout.LayoutBounds="0.5, 1, AutoSize, AutoSize"
+                   Margin="0, 0, 0, 20">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <BoxView Color="#00309a"
-                 Grid.RowSpan="3"
-                 Grid.Column="0"
-                 WidthRequest="60"
-                 HorizontalOptions="FillAndExpand"
-                 VerticalOptions="FillAndExpand"/>
+                    <!-- Image for Icon -->
+                    <Image Source="Resources/Images/qr_icon.png"
+                           WidthRequest="40" 
+                           HeightRequest="40"
+                           Aspect="AspectFit"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Start"/>
 
-                    <Image Source="Resources/Images/flag_of_europe.png"
-               Grid.Row="0"
-               Grid.Column="0"
-               WidthRequest="60"
-               HeightRequest="40"
-               Aspect="AspectFill"
-               HorizontalOptions="Center"
-               VerticalOptions="Center"/>
-
-                    <Label Text="{Binding CountryCodeForLicensePlate}"
-               Grid.Row="1"
-               Grid.Column="0"
-               FontSize="12"
-               HorizontalOptions="Center"
-               VerticalOptions="Center"
-               TextColor="White"
-               BackgroundColor="#00309a"
-               Padding="5"/>
-
-                    <Label Text="{Binding LicensePlate}"
-               Grid.Row="0"
-               Grid.Column="1"
-               Grid.RowSpan="3"
-               FontSize="24"
-               HorizontalOptions="Center"
-               VerticalOptions="Center"
-               TextColor="Black"
-               Padding="10"/>
+                    <!-- Text Next to the Icon -->
+                    <Label Text="Scan a receipt"
+                           FontSize="16"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Start"
+                           Margin="10, 0, 0, 0"
+                           TextColor="White"
+                           Grid.Column="1"/>
                 </Grid>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ScanReceiptCommand}" />
+                </Frame.GestureRecognizers>
             </Frame>
-            <Label Text="{Binding Description}" FontSize="18" />
-        </StackLayout>
+
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>
