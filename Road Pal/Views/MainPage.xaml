@@ -30,7 +30,7 @@
                                     <SwipeView.RightItems>
                                         <SwipeItems Mode="Reveal">
                                             <SwipeItem Text="Delete"
-                                                       BackgroundColor="Red"
+                                                       BackgroundColor="#C62828"
                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}, Path=DeleteCarCommand}"
                                                        CommandParameter="{Binding .}" />
                                         </SwipeItems>
@@ -49,11 +49,11 @@
                                                 <Label Text="{Binding Model}" FontSize="18" />
                                             </StackLayout>
                                             <Image Source="{Binding ImagePath}" 
-                               Aspect="AspectFill" 
-                               WidthRequest="320" 
-                               HeightRequest="200"
-                               VerticalOptions="Center" 
-                               HorizontalOptions="Start" />
+                                                   Aspect="AspectFill" 
+                                                   WidthRequest="320" 
+                                                   HeightRequest="200"
+                                                   VerticalOptions="Center" 
+                                                   HorizontalOptions="Start" />
                                             <Frame BackgroundColor="White"
                                                    CornerRadius="5"
                                                    Padding="0"
