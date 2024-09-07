@@ -16,5 +16,10 @@
 			public static string DatabasePath =>
 				Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
 		}
+
+		public static class MessagesConstants
+		{
+			public const string NoCarsMessage = "No cars yet!\n Add a new one to get started.";
+		}
 	}
 }
