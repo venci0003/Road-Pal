@@ -11,7 +11,7 @@
                         AbsoluteLayout.LayoutBounds="0, 0, 1, 1">
                 <StackLayout>
                     <Label 
-                     Text="{Binding NoCarsMessage}"
+                     Text="{Binding CarCountMessage}"
                      FontSize="24"
                      HorizontalOptions="Center" 
                      VerticalOptions="Center"
@@ -20,7 +20,7 @@
                      HorizontalTextAlignment="Center"                     
                      VerticalTextAlignment="Center"                     
                      LineBreakMode="WordWrap"                    
-                     IsVisible="{Binding NoCarsMessage, Converter={StaticResource NullToVisibilityConverter}}" />
+                     IsVisible="{Binding CarCountMessage, Converter={StaticResource NullToVisibilityConverter}}" />
 
                     <CollectionView ItemsSource="{Binding Cars}" 
                                     IsVisible="{Binding Cars.Count, Converter={StaticResource NullToVisibilityConverter}}">
