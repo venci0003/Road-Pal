@@ -28,6 +28,7 @@ namespace RoadPal
 			builder.Services.AddTransient<CreateCarPage>();
 			builder.Services.AddTransient<CreateCarViewModel>();
 
+
 			builder.Services.AddTransient<CarService>();
 
 

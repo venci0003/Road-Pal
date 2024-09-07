@@ -1,12 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using RoadPal.Infrastructure.Models;
-using RoadPal.Services;
-using RoadPal.Views;
+using static RoadPal.Common.ApplicationConstants.MessagesConstants;
 using System.Collections.ObjectModel;
 
 namespace RoadPal.ViewModels
 {
+	using Infrastructure.Models;
+	using Services;
+	using Views;
 	public partial class MainPageViewModel : ObservableObject
 	{
 		private readonly CarService _carService;
@@ -15,7 +16,7 @@ namespace RoadPal.ViewModels
 		private ObservableCollection<Car>? cars;
 
 		[ObservableProperty]
-		private string? noCarsMessage;
+		private string? carCountMessage;
 
 		public IAsyncRelayCommand NavigateToCreateCarPageCommand { get; }
 		public IAsyncRelayCommand<Car> DeleteCarCommand { get; }
@@ -55,8 +56,8 @@ namespace RoadPal.ViewModels
 			IEnumerable<Car> carsFromService = await _carService.GetAllCarsAsync();
 			Cars = new ObservableCollection<Car>(carsFromService);
 
-			NoCarsMessage = (Cars == null || Cars.Count == 0)
-				? "No cars yet!\n Add a new one to get started."
+			CarCountMessage = (Cars == null || Cars.Count == 0)
+				? NoCarsMessage
 				: null;
 		}
 
