@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ZXing.PDF417.Internal;
+using RoadPal.Contracts;
 
 namespace RoadPal.ViewModels
 {
@@ -10,8 +10,13 @@ namespace RoadPal.ViewModels
 
 		public IAsyncRelayCommand<string> BarcodeScannedCommand { get; }
 
-		public BarcodeReaderViewModel()
+		private readonly INavigationService _navigationService;
+
+		public BarcodeReaderViewModel(INavigationService navigationService)
 		{
+
+			_navigationService = navigationService; // Injected NavigationService instance
+
 			GoBackToPreviousPage = new AsyncRelayCommand(GoBack);
 
 			BarcodeScannedCommand = new AsyncRelayCommand<string>(BarcodeScannedAsync);
@@ -20,7 +25,7 @@ namespace RoadPal.ViewModels
 
 		private async Task GoBack()
 		{
-			await Shell.Current.GoToAsync("///HomePage");
+			await _navigationService.GoBack();
 		}
 
 

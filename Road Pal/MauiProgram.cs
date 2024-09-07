@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using RoadPal.Contracts;
 using RoadPal.Infrastructure;
 using RoadPal.Services;
 using RoadPal.ViewModels;
@@ -28,10 +29,13 @@ namespace RoadPal
 			builder.Services.AddTransient<CreateCarPage>();
 			builder.Services.AddTransient<CreateCarViewModel>();
 
+			builder.Services.AddTransient<BarcodeReader>();
+			builder.Services.AddTransient<BarcodeReaderViewModel>();
+
+
 
 			builder.Services.AddTransient<CarService>();
-
-
+			builder.Services.AddSingleton<INavigationService, NavigationService>();
 
 
 

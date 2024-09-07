@@ -6,11 +6,15 @@ using System.Collections.ObjectModel;
 namespace RoadPal.ViewModels
 {
 	using Infrastructure.Models;
+	using RoadPal.Contracts;
 	using Services;
 	using Views;
 	public partial class MainPageViewModel : ObservableObject
 	{
 		private readonly CarService _carService;
+
+		private readonly INavigationService _navigationService;
+
 
 		[ObservableProperty]
 		private ObservableCollection<Car>? cars;
@@ -23,9 +27,10 @@ namespace RoadPal.ViewModels
 
 		public IAsyncRelayCommand NavigateToCarDetailsCommand { get; }
 
-		public MainPageViewModel(CarService carService)
+		public MainPageViewModel(CarService carService, INavigationService navigationService)
 		{
 			_carService = carService;
+			_navigationService = navigationService;
 			NavigateToCreateCarPageCommand = new AsyncRelayCommand(NavigateToCreateCarPage);
 			DeleteCarCommand = new AsyncRelayCommand<Car>(DeleteCarAsync);
 			NavigateToCarDetailsCommand = new AsyncRelayCommand<Car>(NavigateToCarDetailsAsync);
@@ -63,19 +68,22 @@ namespace RoadPal.ViewModels
 
 		private async Task NavigateToCreateCarPage()
 		{
-			await Shell.Current.GoToAsync("//CreateCarPage");
+			var createCarViewModel = new CreateCarViewModel(_carService, _navigationService);
+			var createCarPage = new CreateCarPage(createCarViewModel);
+			await _navigationService.NavigateToPage(createCarPage);
 		}
 
-		private async Task NavigateToCarDetailsAsync(Car car)
+
+		private async Task NavigateToCarDetailsAsync(Car? car)
 		{
 			if (car != null)
 			{
-				var carDetailsViewModel = new CarDetailsViewModel(car);
-
+				var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService); // Pass navigationService here
 				var carDetailsPage = new CarDetailsPage(carDetailsViewModel);
-				await Shell.Current.Navigation.PushAsync(carDetailsPage);
+				await _navigationService.NavigateToPage(carDetailsPage);
 			}
 		}
+
 
 	}
 }

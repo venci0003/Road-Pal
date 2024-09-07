@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
 using RoadPal.Services;
 using System.Collections.ObjectModel;
@@ -8,6 +9,8 @@ namespace RoadPal.ViewModels
 {
 	public partial class CreateCarViewModel : ObservableObject
 	{
+		private readonly INavigationService _navigationService;
+
 		[ObservableProperty]
 
 		private string? make;
@@ -59,9 +62,11 @@ namespace RoadPal.ViewModels
 
 
 
-		public CreateCarViewModel(CarService carService)
+		public CreateCarViewModel(CarService carService, INavigationService navigationService)
 		{
 			_carService = carService;
+			_navigationService = navigationService;
+
 
 			PickImageCommand = new RelayCommand(async () => await PickImageAsync());
 			SaveCarCommand = new RelayCommand(async () => await SaveCarAsync());
@@ -187,7 +192,7 @@ namespace RoadPal.ViewModels
 
 			await Application.Current.MainPage.DisplayAlert("Success", "Car added successfully!", "OK");
 
-			await Shell.Current.GoToAsync("///HomePage");
+			await _navigationService.GoBack(); 
 
 		}
 	}

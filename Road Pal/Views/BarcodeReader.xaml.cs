@@ -5,18 +5,17 @@ namespace RoadPal.Views;
 
 public partial class BarcodeReader : ContentPage
 {
-	public BarcodeReader()
+	private readonly BarcodeReaderViewModel _viewModel;
+
+	public BarcodeReader(BarcodeReaderViewModel viewModel)
 	{
 		InitializeComponent();
-
-		BindingContext = new BarcodeReaderViewModel();
+		_viewModel = viewModel;
+		BindingContext = _viewModel;
 
 		barcodeReader.Options = new BarcodeReaderOptions()
 		{
-			Formats = BarcodeFormat.QrCode
-			  | BarcodeFormat.Code128
-			  | BarcodeFormat.Code39
-			  | BarcodeFormat.Ean13,
+			Formats = BarcodeFormat.QrCode | BarcodeFormat.Code128 | BarcodeFormat.Code39 | BarcodeFormat.Ean13,
 			AutoRotate = true,
 			TryHarder = true
 		};
@@ -30,8 +29,6 @@ public partial class BarcodeReader : ContentPage
 			return;
 
 		var viewModel = (BarcodeReaderViewModel)BindingContext;
-
 		await viewModel.BarcodeScannedCommand.ExecuteAsync(first.Value);
-
 	}
 }
