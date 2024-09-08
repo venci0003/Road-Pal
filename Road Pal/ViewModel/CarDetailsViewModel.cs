@@ -2,14 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
-using RoadPal.ViewModels;
 using RoadPal.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace RoadPal.ViewModels
 {
@@ -56,19 +49,10 @@ namespace RoadPal.ViewModels
 		}
 
 		private async Task ScanReceiptNavigation()
-		{
-			try
-			{
-				var barcodeReaderViewModel = new BarcodeReaderViewModel(_navigationService); // Initialize this view model as needed
+		{		
+				var barcodeReaderViewModel = new BarcodeReaderViewModel(_navigationService);
 				var barcodeReaderPage = new BarcodeReader(barcodeReaderViewModel);
-				await _navigationService.NavigateToPage(barcodeReaderPage);
-			}
-			catch (Exception ex)
-			{
-				// Handle or log the exception
-				Console.WriteLine($"Navigation failed: {ex.Message}");
-			}
+				await _navigationService.NavigateToPage(barcodeReaderPage);					
 		}
-
 	}
 }

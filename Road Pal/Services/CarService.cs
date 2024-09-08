@@ -63,7 +63,7 @@ namespace RoadPal.Services
 			}
 		}
 
-		public async Task CacheCarModelsForMakeAsync(string make)
+		public async Task<bool> CacheCarModelsForMakeAsync(string make)
 		{
 			string cacheFilePath = GetCacheFilePathForMake(make);
 
@@ -82,13 +82,19 @@ namespace RoadPal.Services
 					{
 						string response = await httpClient.GetStringAsync(url);
 						File.WriteAllText(cacheFilePath, response);
+
+						return true;
 					}
 					catch (Exception ex)
 					{
 						Console.WriteLine($"Failed to download models for {make}: {ex.Message}");
+
+						return false;
 					}
 				}
 			}
+
+			return true;
 		}
 
 		private string GetCacheFilePathForMake(string make)
@@ -112,7 +118,7 @@ namespace RoadPal.Services
 
 			List<string> makes = ((IEnumerable<dynamic>)jsonResponse.Results)
 				.Select(r => (string)r.Make_Name)
-				//.Take(100)
+				.Take(100)
 				.ToList();
 
 			return makes;
@@ -121,22 +127,33 @@ namespace RoadPal.Services
 		public async Task<List<string>> GetCarModelsForMakeAsync(string make)
 		{
 			await CacheCarModelsForMakeAsync(make);
-			string path = GetCacheFilePathForMake(make);
 
-			string json = File.ReadAllText(path);
-			dynamic? jsonResponse = JsonConvert.DeserializeObject<dynamic>(json);
+			bool makeDirectoryExists = await CacheCarModelsForMakeAsync(make);
 
-			if (jsonResponse?.Results == null)
+			if (makeDirectoryExists)
+			{
+				string path = GetCacheFilePathForMake(make);
+
+				string json = File.ReadAllText(path);
+				dynamic? jsonResponse = JsonConvert.DeserializeObject<dynamic>(json);
+
+				if (jsonResponse?.Results == null)
+				{
+					return new List<string>();
+				}
+
+				List<string> models = ((IEnumerable<dynamic>)jsonResponse.Results)
+					.Where(r => ((string)r.Make_Name).Contains(make, StringComparison.OrdinalIgnoreCase))
+					.Select(r => (string)r.Model_Name)
+					.ToList();
+
+				return models;
+
+			}
+			else
 			{
 				return new List<string>();
 			}
-
-			List<string> models = ((IEnumerable<dynamic>)jsonResponse.Results)
-				.Where(r => ((string)r.Make_Name).Contains(make, StringComparison.OrdinalIgnoreCase))
-				.Select(r => (string)r.Model_Name)
-				.ToList();
-
-			return models;
 		}
 
 		public async Task<List<string>> SearchCarMakesAsync(string searchTerm)

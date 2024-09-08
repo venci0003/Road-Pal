@@ -24,18 +24,26 @@
                     Focused="OnModelPickerFocused" 
                     IsEnabled="{Binding SelectedMake, Converter={StaticResource NullToVisibilityConverter}}" />
 
+            <Entry Placeholder="Type make if not found" 
+                   Text="{Binding ManualMakeInput}" 
+                   IsVisible="{Binding IsManualMakeInputVisible}" />
+
             <Entry Placeholder="Type model if not found" 
                    Text="{Binding ManualModelInput}" 
-                   IsVisible="{Binding AreManualModelInputVisible}" />
+                   IsVisible="{Binding IsManualModelInputVisible}" />
+
+
 
             <Entry Text="{Binding Description}" Placeholder="Description" />
-            
+
             <Entry Text="{Binding LicensePlate}" Placeholder="License Plate" />
+
             <Entry Text="{Binding CountryCode}" Placeholder="Country Code" />
 
             <Button Text="Pick Image" Command="{Binding PickImageCommand}" />
 
-            <Image Source="{Binding CarImage}" Aspect="AspectFit" />
+            <Image Source="{Binding CarImage}" Aspect="AspectFit" 
+                   Margin="10"/>
 
             <Button Text="Save" Command="{Binding SaveCarCommand}" />
         </StackLayout>

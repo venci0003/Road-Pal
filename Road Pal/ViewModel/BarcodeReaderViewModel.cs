@@ -15,7 +15,7 @@ namespace RoadPal.ViewModels
 		public BarcodeReaderViewModel(INavigationService navigationService)
 		{
 
-			_navigationService = navigationService; // Injected NavigationService instance
+			_navigationService = navigationService;
 
 			GoBackToPreviousPage = new AsyncRelayCommand(GoBack);
 
