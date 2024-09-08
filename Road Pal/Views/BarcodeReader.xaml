@@ -11,7 +11,9 @@
         <StackLayout>
             <zxing:CameraBarcodeReaderView
                 x:Name="barcodeReader"
-                BarcodesDetected="BarcodeReader_BarcodesDetected" />
+                BarcodesDetected="BarcodeReader_BarcodesDetected"/>
+
+            <Button Text="Toggle Torch" Clicked="ToggleTorchButton_Clicked" VerticalOptions="End" HorizontalOptions="Center" />
 
             <Button Text="Go Back"
                     Command="{Binding GoBackToPreviousPage}"

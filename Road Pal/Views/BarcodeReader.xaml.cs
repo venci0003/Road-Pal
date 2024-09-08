@@ -31,4 +31,9 @@ public partial class BarcodeReader : ContentPage
 		var viewModel = (BarcodeReaderViewModel)BindingContext;
 		await viewModel.BarcodeScannedCommand.ExecuteAsync(first.Value);
 	}
+
+	private void ToggleTorchButton_Clicked(object sender, EventArgs e)
+	{
+		barcodeReader.IsTorchOn = !barcodeReader.IsTorchOn;
+	}
 }
