@@ -185,7 +185,6 @@ namespace RoadPal.ViewModels
 
 		private async Task SaveCarAsync()
 		{
-			// Validate all required fields
 			if (string.IsNullOrWhiteSpace(make) &&
 				string.IsNullOrWhiteSpace(manualMakeInput) ||
 				string.IsNullOrWhiteSpace(model) &&
