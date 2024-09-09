@@ -21,6 +21,10 @@ namespace RoadPal.Infrastructure
 				{
 					await _database.CreateTableAsync<Car>();
 				}
+				if (!_database.TableMappings.Any(m => m.MappedType.Name == typeof(Barcode).Name))
+				{
+					await _database.CreateTableAsync<Barcode>();
+				}
 			}
 			catch (Exception ex)
 			{
@@ -32,6 +36,11 @@ namespace RoadPal.Infrastructure
 		public Task<int> DeleteAllCarsAsync()
 		{
 			return _database.ExecuteAsync("DELETE FROM Car");
+		}
+
+		public Task<int> DeleteAllBarcodesAsync()
+		{
+			return _database.ExecuteAsync("DELETE FROM Barcode");
 		}
 
 		public SQLiteAsyncConnection GetConnection()
