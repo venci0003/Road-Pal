@@ -15,14 +15,15 @@ namespace RoadPal.Infrastructure.Models
 		public int BarcodeId { get; set; }
 
 		[Required]
-		public int SerialNumber { get; set; }
+		public string SerialNumber { get; set; } = string.Empty;
 
-		public int VATId { get; set; }
+		[Required]
+		public string VATId { get; set; } = string.Empty;
 
 		public DateTime DateOfIssue { get; set; }
 
 		public DateTime TimeOfIssue { get; set; }
 
-        public decimal TotalAmount { get; set; }
-    }
+		public decimal TotalAmount { get; set; }
+	}
 }

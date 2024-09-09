@@ -8,10 +8,10 @@ namespace RoadPal.Views
 	{
 		private readonly MainPageViewModel _viewModel;
 
-		public MainPage(CarService carService, INavigationService _navigationService)
+		public MainPage(CarService carService, INavigationService _navigationService, BarcodeService _barcodeService)
 		{
 			InitializeComponent();
-			_viewModel = new MainPageViewModel(carService, _navigationService);
+			_viewModel = new MainPageViewModel(carService, _navigationService, _barcodeService);
 			BindingContext = _viewModel;
 		}
 		protected override async void OnAppearing()

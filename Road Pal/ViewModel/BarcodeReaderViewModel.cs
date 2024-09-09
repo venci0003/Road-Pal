@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RoadPal.Contracts;
+using RoadPal.Infrastructure.Models;
+using RoadPal.Services;
 using static RoadPal.Common.ApplicationConstants.MessagesConstants;
 
 namespace RoadPal.ViewModels
@@ -13,10 +15,13 @@ namespace RoadPal.ViewModels
 
 		private readonly INavigationService _navigationService;
 
-		public BarcodeReaderViewModel(INavigationService navigationService)
-		{
+		private readonly BarcodeService _barcodeService;
 
+		public BarcodeReaderViewModel(INavigationService navigationService, BarcodeService context)
+		{
 			_navigationService = navigationService;
+
+			_barcodeService = context;
 
 			GoBackToPreviousPage = new AsyncRelayCommand(GoBack);
 
@@ -41,13 +46,33 @@ namespace RoadPal.ViewModels
 
 			string alertMessageTitle = string.Empty;
 
+			string serialNumber = string.Empty;
+			string vatId = string.Empty;
+			DateTime dateOfIssue = DateTime.MinValue;
+			DateTime timeOfIssue = DateTime.MinValue;
+			decimal totalAmount = 0;
+
 			if (splittedInformation.Length == 5)
 			{
-				var (serialNumber, vatId, dateOfIssue, timeOfIssue, totalAmount) =
-					(splittedInformation[0], splittedInformation[1], splittedInformation[2], splittedInformation[3], splittedInformation[4]);
+				serialNumber = splittedInformation[0];
+				vatId = splittedInformation[1];
+
+				if (DateTime.TryParse(splittedInformation[2], out DateTime parsedDate))
+				{
+					dateOfIssue = parsedDate;
+				}
+
+				if (DateTime.TryParse(splittedInformation[3], out DateTime parsedTime))
+				{
+					timeOfIssue = parsedTime;
+				}
+
+				if (decimal.TryParse(splittedInformation[4], out decimal parsedTotalAmount))
+				{
+					totalAmount = parsedTotalAmount;
+				}
 
 				receiptInfoMessage = string.Format(BarcodeInformationMessage, serialNumber, vatId, dateOfIssue, timeOfIssue, totalAmount);
-
 				alertMessageTitle = SuccesfullyScannedBarcodeMessage;
 			}
 			else
@@ -59,7 +84,25 @@ namespace RoadPal.ViewModels
 
 			await Application.Current.MainPage.Dispatcher.DispatchAsync(async () =>
 			{
-				await Application.Current.MainPage.DisplayAlert($"{alertMessageTitle}", $"{receiptInfoMessage}", "Ok");
+				bool saveReceipt = await Application.Current.MainPage
+				.DisplayAlert($"{alertMessageTitle}", $"{receiptInfoMessage}\n\nWould you like to save this receipt?", "Yes", "No");
+
+				if (saveReceipt)
+				{
+					Barcode barcode = new Barcode()
+					{
+						SerialNumber = serialNumber,
+						VATId = vatId,
+						DateOfIssue = dateOfIssue,
+						TimeOfIssue = timeOfIssue,
+						TotalAmount = totalAmount
+					};
+
+					await _barcodeService.SaveReceiptAsync(barcode);
+
+					await Application.Current.MainPage
+				.DisplayAlert($"Receipt saved succesfully","You can find you receipts in car details!", "Ok");
+				}
 			});
 		}
 	}

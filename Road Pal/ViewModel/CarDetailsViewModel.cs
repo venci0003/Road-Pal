@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
+using RoadPal.Services;
 using RoadPal.Views;
 
 namespace RoadPal.ViewModels
@@ -9,6 +10,8 @@ namespace RoadPal.ViewModels
 	public partial class CarDetailsViewModel : ObservableObject
 	{
 		private readonly INavigationService _navigationService;
+
+		private readonly BarcodeService _barcodeService;
 
 		[ObservableProperty]
 
@@ -34,10 +37,10 @@ namespace RoadPal.ViewModels
 		public IRelayCommand ScanReceiptCommand { get; }
 
 
-		public CarDetailsViewModel(Car car, INavigationService navigationService)
+		public CarDetailsViewModel(Car car, INavigationService navigationService, BarcodeService context)
 		{
 			_navigationService = navigationService;
-
+			_barcodeService = context;
 			carImage = car.ImagePath;
 			make = car.Make;
 			model = car.Model;
@@ -49,10 +52,10 @@ namespace RoadPal.ViewModels
 		}
 
 		private async Task ScanReceiptNavigation()
-		{		
-				var barcodeReaderViewModel = new BarcodeReaderViewModel(_navigationService);
-				var barcodeReaderPage = new BarcodeReader(barcodeReaderViewModel);
-				await _navigationService.NavigateToPage(barcodeReaderPage);					
+		{
+			var barcodeReaderViewModel = new BarcodeReaderViewModel(_navigationService, _barcodeService);
+			var barcodeReaderPage = new BarcodeReader(barcodeReaderViewModel);
+			await _navigationService.NavigateToPage(barcodeReaderPage);
 		}
 	}
 }
