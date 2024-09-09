@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RoadPal.Contracts;
+using static RoadPal.Common.ApplicationConstants.MessagesConstants;
 
 namespace RoadPal.ViewModels
 {
@@ -36,26 +37,29 @@ namespace RoadPal.ViewModels
 
 			string[] splittedInformation = barcodeInformation.Split('*');
 
-			string serialNumber = splittedInformation[0];
+			string receiptInfoMessage = string.Empty;
 
-			string vatId = splittedInformation[1];
+			string alertMessageTitle = string.Empty;
 
-			string dateOfIssue = splittedInformation[2];
+			if (splittedInformation.Length == 5)
+			{
+				var (serialNumber, vatId, dateOfIssue, timeOfIssue, totalAmount) =
+					(splittedInformation[0], splittedInformation[1], splittedInformation[2], splittedInformation[3], splittedInformation[4]);
 
-			string timeOfIssue = splittedInformation[3];
+				receiptInfoMessage = string.Format(BarcodeInformationMessage, serialNumber, vatId, dateOfIssue, timeOfIssue, totalAmount);
 
-			string totalAmount = splittedInformation[4];
+				alertMessageTitle = SuccesfullyScannedBarcodeMessage;
+			}
+			else
+			{
+				receiptInfoMessage = barcodeInformation;
 
-			string receiptInfo = $"Receipt Information:\n" +
-								 $"Serial Number: {serialNumber}\n" +
-								 $"VAT ID: {vatId}\n" +
-								 $"Date of Issue: {dateOfIssue:yyyy-MM-dd}\n" +
-								 $"Time of Issue: {timeOfIssue:HH:mm:ss}\n" +
-								 $"Total Amount: {totalAmount} lv";
+				alertMessageTitle = UnsuccesfullyScannedBarcodeMessage;
+			}
 
 			await Application.Current.MainPage.Dispatcher.DispatchAsync(async () =>
 			{
-				await Application.Current.MainPage.DisplayAlert("Barcode scanned successfully!", $"{receiptInfo}", "Ok");
+				await Application.Current.MainPage.DisplayAlert($"{alertMessageTitle}", $"{receiptInfoMessage}", "Ok");
 			});
 		}
 	}
