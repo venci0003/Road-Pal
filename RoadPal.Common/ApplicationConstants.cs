@@ -20,6 +20,17 @@
 		public static class MessagesConstants
 		{
 			public const string NoCarsMessage = "No cars yet!\n Add a new one to get started.";
+
+			public static readonly string BarcodeInformationMessage = "Receipt Information:\n" +
+					 "Serial Number: {0}\n" +
+					 "VAT ID: {1}\n" +
+					 "Date of Issue: {2:yyyy-MM-dd}\n" +
+					 "Time of Issue: {3:HH:mm:ss}\n" +
+					 "Total Amount: {4} lv";
+
+			public static string SuccesfullyScannedBarcodeMessage = "Barcode scanned successfully!";
+
+			public static string UnsuccesfullyScannedBarcodeMessage = "Oops something happened...\nPlease try again later.";
 		}
 	}
 }
