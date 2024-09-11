@@ -1,10 +1,5 @@
 ﻿using RoadPal.Infrastructure;
 using RoadPal.Infrastructure.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoadPal.Services
 {
@@ -20,6 +15,11 @@ namespace RoadPal.Services
 		public async Task SaveReceiptAsync(Barcode barcode)
 		{
 			await _roadPalDatabase.GetConnection().InsertAsync(barcode);
+		}
+
+		public async Task<IEnumerable<Barcode>> GetBarcodesAsync()
+		{
+			return await _roadPalDatabase.GetConnection().Table<Barcode>().ToListAsync();
 		}
 	}
 }

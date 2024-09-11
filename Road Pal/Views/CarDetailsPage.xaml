@@ -2,7 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RoadPal.Views.CarDetailsPage"
              xmlns:vm="clr-namespace:RoadPal.ViewModels"
-             x:DataType="vm:CarDetailsViewModel">
+             x:DataType="vm:CarDetailsViewModel"
+             xmlns:model="clr-namespace:RoadPal.Infrastructure.Models;assembly=RoadPal.Infrastructure">
+
+
 
     <ContentPage.Content>
         <AbsoluteLayout>
@@ -64,6 +67,25 @@
                     <Label Text="{Binding Description}" 
                            FontSize="18" 
                            VerticalOptions="Start"/>
+
+                    <Label Text="Barcodes" FontSize="24" HorizontalOptions="Start" Margin="0, 10, 0, 0"/>
+
+                    <CollectionView ItemsSource="{Binding Barcodes}" Margin="0, 10, 0, 10">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:Barcode">
+                                <Frame Padding="10" Margin="0, 5" BackgroundColor="White" BorderColor="Gray" CornerRadius="10">
+                                    <StackLayout>
+                                        <Label Text="Serial Number:" FontSize="16" TextColor="Gray"/>
+                                        <Label Text="{Binding SerialNumber}" FontSize="18" TextColor="Black"/>
+                                        <Label Text="Date:" FontSize="16" TextColor="Gray" Margin="0, 5, 0, 0"/>
+                                        <Label Text="{Binding DateOfIssue, StringFormat='{0:dd/MM/yyyy}'}" FontSize="18" TextColor="Black"/>
+                                        <Label Text="Total Amount:" FontSize="16" TextColor="Gray" Margin="0, 5, 0, 0"/>
+                                        <Label Text="{Binding TotalAmount, StringFormat='{0:C}'}" FontSize="18" TextColor="Black"/>
+                                    </StackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </StackLayout>
             </ScrollView>
 

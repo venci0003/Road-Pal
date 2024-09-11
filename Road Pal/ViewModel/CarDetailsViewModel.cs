@@ -4,6 +4,7 @@ using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
 using RoadPal.Services;
 using RoadPal.Views;
+using System.Collections.ObjectModel;
 
 namespace RoadPal.ViewModels
 {
@@ -36,6 +37,10 @@ namespace RoadPal.ViewModels
 
 		public IRelayCommand ScanReceiptCommand { get; }
 
+		[ObservableProperty]
+
+		private ObservableCollection<Barcode>? barcodes;
+
 
 		public CarDetailsViewModel(Car car, INavigationService navigationService, BarcodeService context)
 		{
@@ -49,6 +54,16 @@ namespace RoadPal.ViewModels
 			countryCode = car.CountryCodeForLicensePlate;
 
 			ScanReceiptCommand = new AsyncRelayCommand(ScanReceiptNavigation);
+
+			LoadBarcodesAsync().ConfigureAwait(false);
+		}
+
+		private async Task LoadBarcodesAsync()
+		{
+			var barcodesFromService = await _barcodeService.GetBarcodesAsync();
+
+			Barcodes = new ObservableCollection<Barcode>(barcodesFromService);
+
 		}
 
 		private async Task ScanReceiptNavigation()
