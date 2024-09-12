@@ -35,7 +35,7 @@ namespace RoadPal
 
 
 			builder.Services.AddTransient<CarService>();
-			builder.Services.AddTransient<BarcodeService>();
+			builder.Services.AddTransient<IBarcodeService, BarcodeService>();
 			builder.Services.AddSingleton<INavigationService, NavigationService>();
 
 

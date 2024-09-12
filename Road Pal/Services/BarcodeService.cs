@@ -3,7 +3,9 @@ namespace RoadPal.Services
 {
 	using Infrastructure;
 	using Infrastructure.Models;
-	public class BarcodeService
+	using RoadPal.Contracts;
+
+	public class BarcodeService : IBarcodeService
 	{
 		private readonly RoadPalDatabase _roadPalDatabase;
 

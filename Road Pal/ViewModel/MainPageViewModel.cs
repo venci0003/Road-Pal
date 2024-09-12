@@ -15,7 +15,7 @@ namespace RoadPal.ViewModels
 
 		private readonly INavigationService _navigationService;
 
-		private readonly BarcodeService _barcodeService;
+		private readonly IBarcodeService _barcodeService;
 
 
 		[ObservableProperty]
@@ -29,7 +29,7 @@ namespace RoadPal.ViewModels
 
 		public IAsyncRelayCommand NavigateToCarDetailsCommand { get; }
 
-		public MainPageViewModel(CarService carService, INavigationService navigationService, BarcodeService barcodeService)
+		public MainPageViewModel(CarService carService, INavigationService navigationService, IBarcodeService barcodeService)
 		{
 			_carService = carService;
 			_navigationService = navigationService;

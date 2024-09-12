@@ -12,7 +12,7 @@ namespace RoadPal.ViewModels
 	{
 		private readonly INavigationService _navigationService;
 
-		private readonly BarcodeService _barcodeService;
+		private readonly IBarcodeService _barcodeService;
 
 		[ObservableProperty]
 
@@ -35,7 +35,6 @@ namespace RoadPal.ViewModels
 		[ObservableProperty]
 		private string? carImage;
 
-
 		[ObservableProperty]
 
 		private ObservableCollection<Barcode>? barcodes;
@@ -46,7 +45,7 @@ namespace RoadPal.ViewModels
 		public IRelayCommand<Barcode> DeleteBarcodeCommand { get; }
 
 
-		public CarDetailsViewModel(Car car, INavigationService navigationService, BarcodeService context)
+		public CarDetailsViewModel(Car car, INavigationService navigationService, IBarcodeService context)
 		{
 			_navigationService = navigationService;
 			_barcodeService = context;

@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
-using RoadPal.Services;
 using static RoadPal.Common.ApplicationConstants.MessagesConstants;
 
 namespace RoadPal.ViewModels
@@ -15,11 +14,11 @@ namespace RoadPal.ViewModels
 
 		private readonly INavigationService _navigationService;
 
-		private readonly BarcodeService _barcodeService;
+		private readonly IBarcodeService _barcodeService;
 
 		private int _carId;
 
-		public BarcodeReaderViewModel(INavigationService navigationService, BarcodeService context , int carId)
+		public BarcodeReaderViewModel(INavigationService navigationService, IBarcodeService context , int carId)
 		{
 			_navigationService = navigationService;
 
