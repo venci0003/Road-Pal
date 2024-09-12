@@ -35,13 +35,15 @@ namespace RoadPal.ViewModels
 		[ObservableProperty]
 		private string? carImage;
 
-		public IRelayCommand ScanReceiptCommand { get; }
 
 		[ObservableProperty]
 
 		private ObservableCollection<Barcode>? barcodes;
 
 		private int _carId;
+
+		public IRelayCommand ScanReceiptCommand { get; }
+		public IRelayCommand<Barcode> DeleteBarcodeCommand { get; }
 
 
 		public CarDetailsViewModel(Car car, INavigationService navigationService, BarcodeService context)
@@ -57,6 +59,8 @@ namespace RoadPal.ViewModels
 
 			ScanReceiptCommand = new AsyncRelayCommand(ScanReceiptNavigation);
 
+			DeleteBarcodeCommand = new AsyncRelayCommand<Barcode>(DeleteBarcodeAsync);
+
 			_carId = car.CarId;
 		}
 
@@ -66,6 +70,24 @@ namespace RoadPal.ViewModels
 
 			Barcodes = new ObservableCollection<Barcode>(barcodesFromService);
 
+		}
+
+		private async Task DeleteBarcodeAsync(Barcode? barcode)
+		{
+			if (barcode == null)
+			{
+				return;
+			}
+
+			bool deleteReceipt = await Application.Current.MainPage
+	   .DisplayAlert($"Confirm Deletion", $"Are you sure you want to delete this receipt?", "Delete", "Cancel");
+
+			if (Barcodes != null && Barcodes.Contains(barcode) && deleteReceipt)
+			{
+				Barcodes.Remove(barcode);
+
+				await _barcodeService.DeleteReceiptByIdAsync(barcode.BarcodeId);
+			}
 		}
 
 		private async Task ScanReceiptNavigation()

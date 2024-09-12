@@ -37,7 +37,6 @@ namespace RoadPal.ViewModels
 			await _navigationService.GoBack();
 		}
 
-
 		private async Task BarcodeScannedAsync(string? barcodeInformation)
 		{
 			if (string.IsNullOrEmpty(barcodeInformation))

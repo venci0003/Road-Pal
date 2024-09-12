@@ -18,6 +18,12 @@ namespace RoadPal.Services
 			await connection.InsertAsync(barcode);
 		}
 
+		public async Task DeleteReceiptByIdAsync(int barcodeId)
+		{
+			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
+			await connection.Table<Barcode>().Where(b => b.BarcodeId == barcodeId).DeleteAsync();
+		}
+
 		public async Task<IEnumerable<Barcode>> GetBarcodesAsync(int carId)
 		{
 			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
