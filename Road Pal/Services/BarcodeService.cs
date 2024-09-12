@@ -1,5 +1,6 @@
 ﻿using RoadPal.Infrastructure;
 using RoadPal.Infrastructure.Models;
+using SQLite;
 
 namespace RoadPal.Services
 {
@@ -14,12 +15,14 @@ namespace RoadPal.Services
 
 		public async Task SaveReceiptAsync(Barcode barcode)
 		{
-			await _roadPalDatabase.GetConnection().InsertAsync(barcode);
+			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
+			await connection.InsertAsync(barcode);
 		}
 
-		public async Task<IEnumerable<Barcode>> GetBarcodesAsync()
+		public async Task<IEnumerable<Barcode>> GetBarcodesAsync(int carId)
 		{
-			return await _roadPalDatabase.GetConnection().Table<Barcode>().ToListAsync();
+			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
+			return await connection.Table<Barcode>().Where(c => c.CarId == carId).ToListAsync();
 		}
 	}
 }

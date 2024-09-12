@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RoadPal.Infrastructure;
 using RoadPal.Infrastructure.Models;
+using SQLite;
 
 namespace RoadPal.Services
 {
@@ -179,12 +180,14 @@ namespace RoadPal.Services
 
 		public async Task AddCarAsync(Car car)
 		{
-			await _roadPalDatabase.GetConnection().InsertAsync(car);
+			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
+			await connection.InsertAsync(car);
 		}
 
 		public async Task<IEnumerable<Car>> GetAllCarsAsync()
 		{
-			return await _roadPalDatabase.GetConnection().Table<Car>().ToListAsync();
+			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
+			return await connection.Table<Car>().ToListAsync();
 		}
 
 		public async Task DeleteAllCarsTestAsync()
@@ -194,7 +197,8 @@ namespace RoadPal.Services
 
 		public async Task DeleteCarByIdAsync(int id)
 		{
-			await _roadPalDatabase.GetConnection().Table<Car>().Where(c => c.CarId == id).DeleteAsync();
+			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
+			await connection.Table<Car>().Where(c => c.CarId == id).DeleteAsync();
 		}
 	}
 }

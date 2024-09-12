@@ -7,6 +7,8 @@ namespace RoadPal.Infrastructure
 	public class RoadPalDatabase
 	{
 		private readonly SQLiteAsyncConnection _database;
+		private static bool _isInitialized = false;
+
 
 		public RoadPalDatabase()
 		{
@@ -17,13 +19,17 @@ namespace RoadPal.Infrastructure
 		{
 			try
 			{
-				if (!_database.TableMappings.Any(m => m.MappedType.Name == typeof(Car).Name))
+				if (!_isInitialized)
 				{
-					await _database.CreateTableAsync<Car>();
-				}
-				if (!_database.TableMappings.Any(m => m.MappedType.Name == typeof(Barcode).Name))
-				{
-					await _database.CreateTableAsync<Barcode>();
+					if (!_database.TableMappings.Any(m => m.MappedType.Name == typeof(Car).Name))
+					{
+						await _database.CreateTableAsync<Car>();
+					}
+					if (!_database.TableMappings.Any(m => m.MappedType.Name == typeof(Barcode).Name))
+					{
+						await _database.CreateTableAsync<Barcode>();
+					}
+					_isInitialized = true;
 				}
 			}
 			catch (Exception ex)
@@ -43,9 +49,12 @@ namespace RoadPal.Infrastructure
 			return _database.ExecuteAsync("DELETE FROM Barcode");
 		}
 
-		public SQLiteAsyncConnection GetConnection()
+		public async Task<SQLiteAsyncConnection> GetConnectionAsync()
 		{
-			InitializeAsync();
+			if (!_isInitialized)
+			{
+				await InitializeAsync();
+			}
 			return _database;
 		}
 	}
