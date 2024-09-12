@@ -1,9 +1,8 @@
-﻿using RoadPal.Infrastructure;
-using RoadPal.Infrastructure.Models;
-using SQLite;
-
+﻿using SQLite;
 namespace RoadPal.Services
 {
+	using Infrastructure;
+	using Infrastructure.Models;
 	public class BarcodeService
 	{
 		private readonly RoadPalDatabase _roadPalDatabase;
