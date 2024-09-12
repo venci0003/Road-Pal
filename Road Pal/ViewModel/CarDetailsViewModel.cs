@@ -41,6 +41,8 @@ namespace RoadPal.ViewModels
 
 		private ObservableCollection<Barcode>? barcodes;
 
+		private int _carId;
+
 
 		public CarDetailsViewModel(Car car, INavigationService navigationService, BarcodeService context)
 		{
@@ -55,12 +57,12 @@ namespace RoadPal.ViewModels
 
 			ScanReceiptCommand = new AsyncRelayCommand(ScanReceiptNavigation);
 
-			LoadBarcodesAsync().ConfigureAwait(false);
+			_carId = car.CarId;
 		}
 
-		private async Task LoadBarcodesAsync()
+		public async Task LoadBarcodesAsync()
 		{
-			var barcodesFromService = await _barcodeService.GetBarcodesAsync();
+			var barcodesFromService = await _barcodeService.GetBarcodesAsync(_carId);
 
 			Barcodes = new ObservableCollection<Barcode>(barcodesFromService);
 
@@ -68,7 +70,7 @@ namespace RoadPal.ViewModels
 
 		private async Task ScanReceiptNavigation()
 		{
-			var barcodeReaderViewModel = new BarcodeReaderViewModel(_navigationService, _barcodeService);
+			var barcodeReaderViewModel = new BarcodeReaderViewModel(_navigationService, _barcodeService, _carId);
 			var barcodeReaderPage = new BarcodeReader(barcodeReaderViewModel);
 			await _navigationService.NavigateToPage(barcodeReaderPage);
 		}

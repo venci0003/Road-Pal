@@ -1,13 +1,21 @@
 using RoadPal.ViewModels;
-using ZXing;
 
 namespace RoadPal.Views;
 
 public partial class CarDetailsPage : ContentPage
 {
+	private readonly CarDetailsViewModel _viewModel;
+
 	public CarDetailsPage(CarDetailsViewModel vm)
 	{
 		InitializeComponent();
-		BindingContext = vm;
+		_viewModel = vm;
+		BindingContext = _viewModel;
+	}
+
+	protected override async void OnAppearing()
+	{
+		base.OnAppearing();
+		await _viewModel.LoadBarcodesAsync();
 	}
 }

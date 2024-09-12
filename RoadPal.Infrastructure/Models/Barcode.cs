@@ -1,5 +1,6 @@
 ﻿using SQLite;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RoadPal.Infrastructure.Models
 {
@@ -20,5 +21,7 @@ namespace RoadPal.Infrastructure.Models
 		public DateTime TimeOfIssue { get; set; }
 
 		public decimal TotalAmount { get; set; }
+
+		public int CarId { get; set; }
 	}
 }

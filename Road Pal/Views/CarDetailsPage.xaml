@@ -1,4 +1,4 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RoadPal.Views.CarDetailsPage"
              xmlns:vm="clr-namespace:RoadPal.ViewModels"
@@ -80,7 +80,7 @@
                                         <Label Text="Date:" FontSize="16" TextColor="Gray" Margin="0, 5, 0, 0"/>
                                         <Label Text="{Binding DateOfIssue, StringFormat='{0:dd/MM/yyyy}'}" FontSize="18" TextColor="Black"/>
                                         <Label Text="Total Amount:" FontSize="16" TextColor="Gray" Margin="0, 5, 0, 0"/>
-                                        <Label Text="{Binding TotalAmount, StringFormat='{0:C}'}" FontSize="18" TextColor="Black"/>
+                                        <Label Text="{Binding TotalAmount, StringFormat='{0:N2} lv'}" FontSize="18" TextColor="Black"/>
                                     </StackLayout>
                                 </Frame>
                             </DataTemplate>

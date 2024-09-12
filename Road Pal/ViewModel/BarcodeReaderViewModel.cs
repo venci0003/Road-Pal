@@ -17,7 +17,9 @@ namespace RoadPal.ViewModels
 
 		private readonly BarcodeService _barcodeService;
 
-		public BarcodeReaderViewModel(INavigationService navigationService, BarcodeService context)
+		private int _carId;
+
+		public BarcodeReaderViewModel(INavigationService navigationService, BarcodeService context , int carId)
 		{
 			_navigationService = navigationService;
 
@@ -27,6 +29,7 @@ namespace RoadPal.ViewModels
 
 			BarcodeScannedCommand = new AsyncRelayCommand<string>(BarcodeScannedAsync);
 
+			_carId = carId;
 		}
 
 		private async Task GoBack()
@@ -95,7 +98,8 @@ namespace RoadPal.ViewModels
 						VATId = vatId,
 						DateOfIssue = dateOfIssue,
 						TimeOfIssue = timeOfIssue,
-						TotalAmount = totalAmount
+						TotalAmount = totalAmount,
+						CarId = _carId
 					};
 
 					await _barcodeService.SaveReceiptAsync(barcode);
