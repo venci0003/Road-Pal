@@ -1,6 +1,4 @@
-﻿using RoadPal.Contracts;
-using RoadPal.Services;
-using RoadPal.ViewModels;
+﻿using RoadPal.ViewModels;
 
 namespace RoadPal.Views
 {
@@ -18,7 +16,7 @@ namespace RoadPal.Views
 		protected override async void OnAppearing()
 		{
 			base.OnAppearing();
-			await _viewModel.LoadItems();
+			await _viewModel.LoadCarsAsync();
 		}
 	}
 }

@@ -37,8 +37,6 @@ namespace RoadPal.ViewModels
 			NavigateToCreateCarPageCommand = new AsyncRelayCommand(NavigateToCreateCarPage);
 			DeleteCarCommand = new AsyncRelayCommand<Car>(DeleteCarAsync);
 			NavigateToCarDetailsCommand = new AsyncRelayCommand<Car>(NavigateToCarDetailsAsync);
-
-			LoadItems().ConfigureAwait(false);
 		}
 
 
@@ -51,15 +49,10 @@ namespace RoadPal.ViewModels
 
 			await _carService.DeleteCarByIdAsync(car.CarId);
 
-			await LoadItems();
-		}
-
-		public async Task LoadItems()
-		{
 			await LoadCarsAsync();
 		}
 
-		private async Task LoadCarsAsync()
+		public async Task LoadCarsAsync()
 		{
 			IEnumerable<Car> carsFromService = await _carService.GetAllCarsAsync();
 			Cars = new ObservableCollection<Car>(carsFromService);
