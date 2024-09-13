@@ -7,11 +7,10 @@ namespace RoadPal.ViewModels
 {
 	using Infrastructure.Models;
 	using RoadPal.Contracts;
-	using Services;
 	using Views;
 	public partial class MainPageViewModel : ObservableObject
 	{
-		private readonly CarService _carService;
+		private readonly ICarService _carService;
 
 		private readonly INavigationService _navigationService;
 
@@ -29,7 +28,7 @@ namespace RoadPal.ViewModels
 
 		public IAsyncRelayCommand NavigateToCarDetailsCommand { get; }
 
-		public MainPageViewModel(CarService carService, INavigationService navigationService, IBarcodeService barcodeService)
+		public MainPageViewModel(ICarService carService, INavigationService navigationService, IBarcodeService barcodeService)
 		{
 			_carService = carService;
 			_navigationService = navigationService;
@@ -79,7 +78,5 @@ namespace RoadPal.ViewModels
 				await _navigationService.NavigateToPage(carDetailsPage);
 			}
 		}
-
-
 	}
 }

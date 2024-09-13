@@ -38,7 +38,7 @@ namespace RoadPal.ViewModels
 		[ObservableProperty]
 		private string title = "Add Vehicle Maintenance";
 
-		private readonly CarService _carService;
+		private readonly ICarService _carService;
 
 		[ObservableProperty]
 		private ObservableCollection<string>? carMakes;
@@ -68,7 +68,7 @@ namespace RoadPal.ViewModels
 
 
 
-		public CreateCarViewModel(CarService carService, INavigationService navigationService)
+		public CreateCarViewModel(ICarService carService, INavigationService navigationService)
 		{
 			_carService = carService;
 			_navigationService = navigationService;

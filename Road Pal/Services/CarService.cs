@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using RoadPal.Contracts;
 using RoadPal.Infrastructure;
 using RoadPal.Infrastructure.Models;
 using SQLite;
 
 namespace RoadPal.Services
 {
-	public class CarService
+	public class CarService : ICarService
 	{
 		private readonly RoadPalDatabase _roadPalDatabase;
 
@@ -23,7 +24,7 @@ namespace RoadPal.Services
 			EnsureDirectoryExists(localMakesFilePath);
 		}
 
-		private void EnsureDirectoryExists(string filePath)
+		public void EnsureDirectoryExists(string filePath)
 		{
 			string? directory = Path.GetDirectoryName(filePath);
 			if (directory != null && !Directory.Exists(directory))
@@ -32,7 +33,7 @@ namespace RoadPal.Services
 			}
 		}
 
-		private bool IsCacheValid(string filePath)
+		public bool IsCacheValid(string filePath)
 		{
 			if (!File.Exists(filePath))
 			{
@@ -98,7 +99,7 @@ namespace RoadPal.Services
 			return true;
 		}
 
-		private string GetCacheFilePathForMake(string make)
+		public string GetCacheFilePathForMake(string make)
 		{
 			string sanitizedMake = make.Replace(" ", "_").Replace("/", "_");
 			return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Json", $"models_{sanitizedMake}.json");
