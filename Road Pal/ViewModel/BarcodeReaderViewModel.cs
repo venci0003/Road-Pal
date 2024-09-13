@@ -103,7 +103,7 @@ namespace RoadPal.ViewModels
 					await _barcodeService.SaveReceiptAsync(barcode);
 
 					await Application.Current.MainPage
-				.DisplayAlert($"Receipt saved succesfully", "You can find you receipts in car details!", "Ok");
+				.DisplayAlert($"{ReceiptSavedSuccesfullyMessage}", ReceiptSavedWhereToFindMessage, "Ok");
 				}
 			});
 		}

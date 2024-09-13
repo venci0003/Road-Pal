@@ -33,6 +33,10 @@
 			public const string SuccesfullyScannedBarcodeMessage = "Barcode scanned successfully!";
 
 			public const string UnsuccesfullyScannedBarcodeMessage = "Oops something happened...\nPlease try again later.";
+
+			public const string ReceiptSavedSuccesfullyMessage = "Receipt saved succesfully";
+
+			public const string ReceiptSavedWhereToFindMessage = "You can find you receipts in car details!";
 		}
 	}
 }
