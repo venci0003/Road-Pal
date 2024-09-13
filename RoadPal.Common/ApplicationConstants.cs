@@ -37,6 +37,10 @@
 			public const string ReceiptSavedSuccesfullyMessage = "Receipt saved succesfully";
 
 			public const string ReceiptSavedWhereToFindMessage = "You can find you receipts in car details!";
+
+			public const string ConfirmDeleteTitleMessage = "Confirm Deletion";
+
+			public const string DeleteReceiptMessage = "Are you sure you want to delete this receipt?";
 		}
 	}
 }

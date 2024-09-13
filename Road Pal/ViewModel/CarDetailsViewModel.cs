@@ -5,6 +5,7 @@ using RoadPal.Infrastructure.Models;
 using RoadPal.Services;
 using RoadPal.Views;
 using System.Collections.ObjectModel;
+using static RoadPal.Common.ApplicationConstants.MessagesConstants;
 
 namespace RoadPal.ViewModels
 {
@@ -79,7 +80,7 @@ namespace RoadPal.ViewModels
 			}
 
 			bool deleteReceipt = await Application.Current.MainPage
-	   .DisplayAlert($"Confirm Deletion", $"Are you sure you want to delete this receipt?", "Delete", "Cancel");
+	   .DisplayAlert(ConfirmDeleteTitleMessage, DeleteReceiptMessage, "Delete", "Cancel");
 
 			if (Barcodes != null && Barcodes.Contains(barcode) && deleteReceipt)
 			{
