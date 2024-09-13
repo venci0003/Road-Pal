@@ -18,7 +18,7 @@ namespace RoadPal.ViewModels
 
 		private int _carId;
 
-		public BarcodeReaderViewModel(INavigationService navigationService, IBarcodeService context , int carId)
+		public BarcodeReaderViewModel(INavigationService navigationService, IBarcodeService context, int carId)
 		{
 			_navigationService = navigationService;
 
@@ -86,7 +86,7 @@ namespace RoadPal.ViewModels
 			await Application.Current.MainPage.Dispatcher.DispatchAsync(async () =>
 			{
 				bool saveReceipt = await Application.Current.MainPage
-				.DisplayAlert($"{alertMessageTitle}", $"{receiptInfoMessage}\n\nWould you like to save this receipt?", "Yes", "No");
+				.DisplayAlert($"{alertMessageTitle}", $"{receiptInfoMessage}\n\n{SaveReceiptMessage}", "Yes", "No");
 
 				if (saveReceipt)
 				{
@@ -103,7 +103,7 @@ namespace RoadPal.ViewModels
 					await _barcodeService.SaveReceiptAsync(barcode);
 
 					await Application.Current.MainPage
-				.DisplayAlert($"Receipt saved succesfully","You can find you receipts in car details!", "Ok");
+				.DisplayAlert($"Receipt saved succesfully", "You can find you receipts in car details!", "Ok");
 				}
 			});
 		}

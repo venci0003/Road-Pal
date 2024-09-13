@@ -28,9 +28,11 @@
 					 "Time of Issue: {3:HH:mm:ss}\n" +
 					 "Total Amount: {4} lv";
 
-			public static string SuccesfullyScannedBarcodeMessage = "Barcode scanned successfully!";
+			public const string SaveReceiptMessage = "Would you like to save this receipt?";
 
-			public static string UnsuccesfullyScannedBarcodeMessage = "Oops something happened...\nPlease try again later.";
+			public const string SuccesfullyScannedBarcodeMessage = "Barcode scanned successfully!";
+
+			public const string UnsuccesfullyScannedBarcodeMessage = "Oops something happened...\nPlease try again later.";
 		}
 	}
 }
