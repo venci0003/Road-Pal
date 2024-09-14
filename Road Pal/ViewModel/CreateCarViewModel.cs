@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
-using RoadPal.Services;
 using System.Collections.ObjectModel;
 
 namespace RoadPal.ViewModels
@@ -205,7 +204,8 @@ namespace RoadPal.ViewModels
 				Description = description!,
 				LicensePlate = licensePlate!,
 				CountryCodeForLicensePlate = countryCode!,
-				ImagePath = _imageFilePath!
+				ImagePath = _imageFilePath!,
+				TotalMoneySpent = 0.0m
 			};
 
 			await _carService.AddCarAsync(newCar);

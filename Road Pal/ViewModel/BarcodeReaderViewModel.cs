@@ -16,13 +16,17 @@ namespace RoadPal.ViewModels
 
 		private readonly IBarcodeService _barcodeService;
 
+		private readonly ICarService _carService;
+
 		private int _carId;
 
-		public BarcodeReaderViewModel(INavigationService navigationService, IBarcodeService context, int carId)
+		public BarcodeReaderViewModel(INavigationService navigationServiceContext, IBarcodeService barcodeServiceContext, ICarService carServiceContext, int carId)
 		{
-			_navigationService = navigationService;
+			_navigationService = navigationServiceContext;
 
-			_barcodeService = context;
+			_barcodeService = barcodeServiceContext;
+
+			_carService = carServiceContext;
 
 			GoBackToPreviousPage = new AsyncRelayCommand(GoBack);
 
@@ -101,6 +105,8 @@ namespace RoadPal.ViewModels
 					};
 
 					await _barcodeService.SaveReceiptAsync(barcode);
+
+					await _carService.AddMoneyToTotalAsync(_carId, totalAmount);
 
 					await Application.Current.MainPage
 				.DisplayAlert($"{ReceiptSavedSuccesfullyMessage}", ReceiptSavedWhereToFindMessage, "Ok");

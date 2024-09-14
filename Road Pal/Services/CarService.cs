@@ -201,6 +201,19 @@ namespace RoadPal.Services
 			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
 			await connection.Table<Car>().Where(c => c.CarId == id).DeleteAsync();
 		}
+
+		public async Task AddMoneyToTotalAsync(int carId, decimal money)
+		{
+			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
+			var car = await connection.Table<Car>().FirstOrDefaultAsync(c => c.CarId == carId);
+
+			if (car != null)
+			{
+				car.TotalMoneySpent += money;
+
+				await connection.UpdateAsync(car);
+			}
+		}
 	}
 }
 

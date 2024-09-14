@@ -27,5 +27,7 @@ namespace RoadPal.Contracts
 		Task DeleteAllCarsTestAsync();
 
 		Task DeleteCarByIdAsync(int id);
+
+		Task AddMoneyToTotalAsync(int carId, decimal money);
 	}
 }

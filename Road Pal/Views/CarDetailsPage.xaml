@@ -68,6 +68,12 @@
                            FontSize="18" 
                            VerticalOptions="Start"/>
 
+                    <Label Text="Total Money Spent" FontSize="24" HorizontalOptions="Start" Margin="0, 10, 0, 0"/>
+
+                    <Label Text="{Binding TotalMoneySpent, StringFormat='{0:N2} lv'}" 
+                           FontSize="18" 
+                           VerticalOptions="Start"/>
+
                     <Label Text="Barcodes" FontSize="24" HorizontalOptions="Start" Margin="0, 10, 0, 0"/>
 
                     <CollectionView ItemsSource="{Binding Barcodes}" Margin="0, 10, 0, 70">

@@ -15,6 +15,8 @@ namespace RoadPal.ViewModels
 
 		private readonly IBarcodeService _barcodeService;
 
+		private readonly ICarService _carService;
+
 		[ObservableProperty]
 
 		private string? make;
@@ -37,6 +39,9 @@ namespace RoadPal.ViewModels
 		private string? carImage;
 
 		[ObservableProperty]
+		private decimal? totalMoneySpent;
+
+		[ObservableProperty]
 
 		private ObservableCollection<Barcode>? barcodes;
 
@@ -46,16 +51,18 @@ namespace RoadPal.ViewModels
 		public IRelayCommand<Barcode> DeleteBarcodeCommand { get; }
 
 
-		public CarDetailsViewModel(Car car, INavigationService navigationService, IBarcodeService context)
+		public CarDetailsViewModel(Car car, INavigationService navigationServiceContext, IBarcodeService barcodeServiceContext, ICarService carServiceContext)
 		{
-			_navigationService = navigationService;
-			_barcodeService = context;
+			_navigationService = navigationServiceContext;
+			_barcodeService = barcodeServiceContext;
+			_carService = carServiceContext;
 			carImage = car.ImagePath;
 			make = car.Make;
 			model = car.Model;
 			licensePlate = car.LicensePlate;
 			description = car.Description;
 			countryCode = car.CountryCodeForLicensePlate;
+			totalMoneySpent = car.TotalMoneySpent;
 
 			ScanReceiptCommand = new AsyncRelayCommand(ScanReceiptNavigation);
 
@@ -92,7 +99,7 @@ namespace RoadPal.ViewModels
 
 		private async Task ScanReceiptNavigation()
 		{
-			var barcodeReaderViewModel = new BarcodeReaderViewModel(_navigationService, _barcodeService, _carId);
+			var barcodeReaderViewModel = new BarcodeReaderViewModel(_navigationService, _barcodeService, _carService, _carId);
 			var barcodeReaderPage = new BarcodeReader(barcodeReaderViewModel);
 			await _navigationService.NavigateToPage(barcodeReaderPage);
 		}
