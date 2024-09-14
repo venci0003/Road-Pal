@@ -23,5 +23,7 @@ namespace RoadPal.Infrastructure.Models
 
 		public string ImagePath { get; set; } = string.Empty;
 
+		public decimal TotalMoneySpent { get; set; }
+
 	}
 }
