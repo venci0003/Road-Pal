@@ -16,6 +16,6 @@ public partial class CarDetailsPage : ContentPage
 	protected override async void OnAppearing()
 	{
 		base.OnAppearing();
-		await _viewModel.LoadBarcodesAsync();
+		await _viewModel.LoadDetailsAsync();
 	}
 }

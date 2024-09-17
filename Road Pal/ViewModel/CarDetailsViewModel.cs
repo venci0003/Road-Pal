@@ -70,13 +70,20 @@ namespace RoadPal.ViewModels
 			_carId = car.CarId;
 		}
 
-		public async Task LoadBarcodesAsync()
+		public async Task LoadDetailsAsync()
 		{
 			var barcodesFromService = await _barcodeService.GetBarcodesAsync(_carId);
 
 			Barcodes = new ObservableCollection<Barcode>(barcodesFromService);
 
+			var carMoneyUpdate = await _carService.GetCarByIdAsync(_carId);
+
+			if (carMoneyUpdate != null)
+			{
+				TotalMoneySpent = carMoneyUpdate.TotalMoneySpent;
+			}
 		}
+
 
 		private async Task DeleteBarcodeAsync(Barcode? barcode)
 		{
