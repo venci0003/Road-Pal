@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
-using RoadPal.Services;
 using RoadPal.Views;
 using System.Collections.ObjectModel;
 using static RoadPal.Common.ApplicationConstants.MessagesConstants;
