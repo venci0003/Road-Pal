@@ -124,6 +124,16 @@
                             <DataTemplate x:DataType="model:ServiceNote">
                                 <Frame Padding="10" Margin="0, 5" BackgroundColor="White" BorderColor="Gray" CornerRadius="10">
                                     <Grid>
+                                        <ImageButton 
+                                           Source="Resources/Images/delete_icon.png"
+                                           BackgroundColor="Gray"
+                                           WidthRequest="30"
+                                           HeightRequest="30"
+                                           HorizontalOptions="End"
+                                           VerticalOptions="Start"
+                                           CornerRadius="15"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CarDetailsViewModel}}, Path=DeleteServiceNoteCommand}"
+                                           CommandParameter="{Binding .}" />
                                         <StackLayout Padding="0, 10, 0, 0">
                                             <Label Text="Title:" FontSize="16" TextColor="Gray"/>
                                             <Label Text="{Binding Title}" FontSize="18" TextColor="Black"/>

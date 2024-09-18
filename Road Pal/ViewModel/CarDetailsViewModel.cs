@@ -4,6 +4,8 @@ using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
 using RoadPal.Views;
 using System.Collections.ObjectModel;
+using System.Linq;
+using ZXing.QrCode.Internal;
 using static RoadPal.Common.ApplicationConstants.MessagesConstants;
 
 namespace RoadPal.ViewModels
@@ -62,8 +64,8 @@ namespace RoadPal.ViewModels
 
 		public IRelayCommand ScanReceiptCommand { get; }
 		public IRelayCommand<Barcode> DeleteBarcodeCommand { get; }
-
 		public IRelayCommand AddServiceNoteCommand { get; }
+		public IRelayCommand<ServiceNote> DeleteServiceNoteCommand { get; }
 
 
 		public CarDetailsViewModel(Car car,
@@ -90,6 +92,8 @@ namespace RoadPal.ViewModels
 
 			AddServiceNoteCommand = new AsyncRelayCommand(SaveServiceNoteAsync);
 
+			DeleteServiceNoteCommand = new AsyncRelayCommand<ServiceNote>(DeleteServiceNoteAsync);
+
 			_carId = car.CarId;
 		}
 
@@ -109,14 +113,7 @@ namespace RoadPal.ViewModels
 			await LoadNewServiceNotes();
 		}
 
-		public async Task LoadNewServiceNotes()
-		{
-			var serviceNotesFromService = await _noteService.GetAllServiceNotesAsync(_carId);
-
-			ServiceNotes = new ObservableCollection<ServiceNote>(serviceNotesFromService);
-		}
-
-		public async Task SaveServiceNoteAsync()
+		private async Task SaveServiceNoteAsync()
 		{
 			if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description))
 			{
@@ -136,6 +133,34 @@ namespace RoadPal.ViewModels
 			await _noteService.AddServiceNote(serviceNote);
 
 			await LoadNewServiceNotes();
+
+			Title = string.Empty;
+			Description = string.Empty;
+		}
+
+		private async Task LoadNewServiceNotes()
+		{
+			var serviceNotesFromService = await _noteService.GetAllServiceNotesAsync(_carId);
+
+			ServiceNotes = new ObservableCollection<ServiceNote>(serviceNotesFromService);
+		}
+
+		private async Task DeleteServiceNoteAsync(ServiceNote? serviceNote)
+		{
+			if (serviceNote == null)
+			{
+				return;
+			}
+
+			bool deleteReceipt = await Application.Current.MainPage
+	   .DisplayAlert(ConfirmDeleteTitleMessage, "Are you sure you want to delete this note?", "Delete", "Cancel");
+
+			if (ServiceNotes != null && ServiceNotes.Contains(serviceNote) && deleteReceipt)
+			{
+				ServiceNotes.Remove(serviceNote);
+
+				await _barcodeService.DeleteReceiptByIdAsync(serviceNote.ServiceNoteId);
+			}
 		}
 
 
