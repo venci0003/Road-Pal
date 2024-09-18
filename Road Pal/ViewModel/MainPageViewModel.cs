@@ -16,6 +16,8 @@ namespace RoadPal.ViewModels
 
 		private readonly IBarcodeService _barcodeService;
 
+		private readonly INoteService _noteService;
+
 
 		[ObservableProperty]
 		private ObservableCollection<Car>? cars;
@@ -28,7 +30,10 @@ namespace RoadPal.ViewModels
 
 		public IAsyncRelayCommand NavigateToCarDetailsCommand { get; }
 
-		public MainPageViewModel(ICarService carService, INavigationService navigationService, IBarcodeService barcodeService)
+		public MainPageViewModel(ICarService carService,
+			INavigationService navigationService,
+			IBarcodeService barcodeService,
+			INoteService noteServiceContext)
 		{
 			_carService = carService;
 			_navigationService = navigationService;
@@ -36,6 +41,7 @@ namespace RoadPal.ViewModels
 			NavigateToCreateCarPageCommand = new AsyncRelayCommand(NavigateToCreateCarPage);
 			DeleteCarCommand = new AsyncRelayCommand<Car>(DeleteCarAsync);
 			NavigateToCarDetailsCommand = new AsyncRelayCommand<Car>(NavigateToCarDetailsAsync);
+			_noteService = noteServiceContext;
 		}
 
 
@@ -73,7 +79,7 @@ namespace RoadPal.ViewModels
 		{
 			if (car != null)
 			{
-				var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService);
+				var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService, _noteService);
 				var carDetailsPage = new CarDetailsPage(carDetailsViewModel);
 				await _navigationService.NavigateToPage(carDetailsPage);
 			}

@@ -1,10 +1,11 @@
-﻿using RoadPal.Infrastructure;
+﻿using RoadPal.Contracts;
+using RoadPal.Infrastructure;
 using RoadPal.Infrastructure.Models;
 using SQLite;
 
 namespace RoadPal.Services
 {
-	public class NoteService
+	public class NoteService : INoteService
 	{
 		private readonly RoadPalDatabase _roadPalDatabase;
 

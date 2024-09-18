@@ -26,7 +26,7 @@ namespace RoadPal.Contracts
 
 		Task DeleteAllCarsTestAsync();
 
-		Task DeleteCarByIdAsync(int id);
+		Task DeleteCarByIdAsync(int carId);
 
 		Task<Car> GetCarByIdAsync(int carId);
 

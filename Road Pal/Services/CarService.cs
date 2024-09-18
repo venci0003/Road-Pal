@@ -196,10 +196,10 @@ namespace RoadPal.Services
 			await _roadPalDatabase.DeleteAllCarsAsync();
 		}
 
-		public async Task DeleteCarByIdAsync(int id)
+		public async Task DeleteCarByIdAsync(int carId)
 		{
 			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
-			await connection.Table<Car>().Where(c => c.CarId == id).DeleteAsync();
+			await connection.Table<Car>().Where(c => c.CarId == carId).DeleteAsync();
 		}
 
 		public async Task<Car> GetCarByIdAsync(int carId)

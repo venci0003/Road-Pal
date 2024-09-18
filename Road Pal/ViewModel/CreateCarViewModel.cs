@@ -73,8 +73,8 @@ namespace RoadPal.ViewModels
 			_navigationService = navigationService;
 
 
-			PickImageCommand = new RelayCommand(async () => await PickImageAsync());
-			SaveCarCommand = new RelayCommand(async () => await SaveCarAsync());
+			PickImageCommand = new AsyncRelayCommand(PickImageAsync);
+			SaveCarCommand = new AsyncRelayCommand(SaveCarAsync);
 			SearchMakesCommand = new AsyncRelayCommand<string?>(SearchCarMakesAsync);
 			LoadCarModelsCommand = new AsyncRelayCommand<string?>(LoadCarModelsAsync);
 
@@ -123,7 +123,7 @@ namespace RoadPal.ViewModels
 				if (models != null && models.Count > 0)
 				{
 					CarModels = new ObservableCollection<string>(models);
-					IsManualModelInputVisible = false; 
+					IsManualModelInputVisible = false;
 				}
 				else
 				{
@@ -188,7 +188,6 @@ namespace RoadPal.ViewModels
 				string.IsNullOrWhiteSpace(manualMakeInput) ||
 				string.IsNullOrWhiteSpace(model) &&
 				string.IsNullOrWhiteSpace(manualModelInput) ||
-				string.IsNullOrWhiteSpace(description) ||
 				string.IsNullOrWhiteSpace(licensePlate) ||
 				string.IsNullOrWhiteSpace(_imageFilePath) ||
 				string.IsNullOrWhiteSpace(countryCode))
@@ -201,7 +200,6 @@ namespace RoadPal.ViewModels
 			{
 				Make = !string.IsNullOrWhiteSpace(manualMakeInput) ? manualMakeInput : make,
 				Model = !string.IsNullOrWhiteSpace(manualModelInput) ? manualModelInput : model,
-				Description = description!,
 				LicensePlate = licensePlate!,
 				CountryCodeForLicensePlate = countryCode!,
 				ImagePath = _imageFilePath!,

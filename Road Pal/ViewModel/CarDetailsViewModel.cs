@@ -16,6 +16,8 @@ namespace RoadPal.ViewModels
 
 		private readonly ICarService _carService;
 
+		private readonly INoteService _noteService;
+
 		[ObservableProperty]
 
 		private string? make;
@@ -33,6 +35,10 @@ namespace RoadPal.ViewModels
 		private string? title;
 
 		[ObservableProperty]
+
+		private string? createdDate;
+
+		[ObservableProperty]
 		private string? licensePlate;
 
 		[ObservableProperty]
@@ -48,6 +54,10 @@ namespace RoadPal.ViewModels
 
 		private ObservableCollection<Barcode>? barcodes;
 
+		[ObservableProperty]
+
+		private ObservableCollection<ServiceNote>? serviceNotes;
+
 		private int _carId;
 
 		public IRelayCommand ScanReceiptCommand { get; }
@@ -56,11 +66,16 @@ namespace RoadPal.ViewModels
 		public IRelayCommand AddServiceNoteCommand { get; }
 
 
-		public CarDetailsViewModel(Car car, INavigationService navigationServiceContext, IBarcodeService barcodeServiceContext, ICarService carServiceContext)
+		public CarDetailsViewModel(Car car,
+			INavigationService navigationServiceContext,
+			IBarcodeService barcodeServiceContext,
+			ICarService carServiceContext,
+			INoteService noteServiceContext)
 		{
 			_navigationService = navigationServiceContext;
 			_barcodeService = barcodeServiceContext;
 			_carService = carServiceContext;
+			_noteService = noteServiceContext;
 			carImage = car.ImagePath;
 			make = car.Make;
 			model = car.Model;
@@ -90,6 +105,15 @@ namespace RoadPal.ViewModels
 			{
 				TotalMoneySpent = carMoneyUpdate.TotalMoneySpent;
 			}
+
+			await LoadNewServiceNotes();
+		}
+
+		public async Task LoadNewServiceNotes()
+		{
+			var serviceNotesFromService = await _noteService.GetAllServiceNotesAsync(_carId);
+
+			ServiceNotes = new ObservableCollection<ServiceNote>(serviceNotesFromService);
 		}
 
 		public async Task SaveServiceNoteAsync()
@@ -97,7 +121,7 @@ namespace RoadPal.ViewModels
 			if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description))
 			{
 				await Application.Current.MainPage
-	                 .DisplayAlert("An error occured!", "Please fill out the title and description of your service note.", "OK");
+					 .DisplayAlert("An error occured!", "Please fill out the title and description of your service note.", "OK");
 
 				return;
 			}
@@ -109,7 +133,9 @@ namespace RoadPal.ViewModels
 				CarId = _carId,
 			};
 
+			await _noteService.AddServiceNote(serviceNote);
 
+			await LoadNewServiceNotes();
 		}
 
 

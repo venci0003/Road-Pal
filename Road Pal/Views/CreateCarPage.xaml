@@ -34,8 +34,6 @@
 
 
 
-            <Entry Text="{Binding Description}" Placeholder="Description" />
-
             <Entry Text="{Binding LicensePlate}" Placeholder="License Plate" />
 
             <Entry Text="{Binding CountryCode}" Placeholder="Country Code" />

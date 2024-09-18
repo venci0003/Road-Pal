@@ -109,13 +109,37 @@
                                     TextColor="White"
                                     FontAttributes="Bold"
                                     Padding="10"
-                                    Margin="0 0 60 0"
+                                    Margin="0, 0, 60 ,0"
                                     Grid.Column="1"
                                     HorizontalOptions="End"
                                     VerticalOptions="Center"
                                     HeightRequest="50" />
                         </Grid>
                     </Frame>
+
+                    <Label Text="Service Notes" FontSize="24" HorizontalOptions="Start" Margin="0, 10, 0, 0"/>
+
+                    <CollectionView ItemsSource="{Binding ServiceNotes}" Margin="0, 10, 0, 70">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:ServiceNote">
+                                <Frame Padding="10" Margin="0, 5" BackgroundColor="White" BorderColor="Gray" CornerRadius="10">
+                                    <Grid>
+                                        <StackLayout Padding="0, 10, 0, 0">
+                                            <Label Text="Title:" FontSize="16" TextColor="Gray"/>
+                                            <Label Text="{Binding Title}" FontSize="18" TextColor="Black"/>
+
+                                            <Label Text="Description:" FontSize="16" TextColor="Gray"/>
+                                            <Label Text="{Binding Description}" FontSize="18" TextColor="Black"/>
+
+                                            <Label Text="Date:" FontSize="16" TextColor="Gray" Margin="0, 5, 0, 0"/>
+                                            <Label Text="{Binding CreatedDate, StringFormat='{0:dd/MM/yyyy}'}" FontSize="18" TextColor="Black"/>
+
+                                        </StackLayout>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
 
                     <Label Text="Barcodes" FontSize="24" HorizontalOptions="Start" Margin="0, 10, 0, 0"/>
 
