@@ -19,5 +19,11 @@ namespace RoadPal.Services
 			await connection.InsertAsync(serviceNote);
 		}
 
+		public async Task<IEnumerable<ServiceNote>> GetAllServiceNotesAsync(int carId)
+		{
+			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
+			return await connection.Table<ServiceNote>().Where(n => n.CarId == carId).ToListAsync();
+		}
+
 	}
 }
