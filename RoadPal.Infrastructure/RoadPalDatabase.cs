@@ -29,6 +29,10 @@ namespace RoadPal.Infrastructure
 					{
 						await _database.CreateTableAsync<Barcode>();
 					}
+					if (!_database.TableMappings.Any(m => m.MappedType.Name == typeof(ServiceNote).Name))
+					{
+						await _database.CreateTableAsync<ServiceNote>();
+					}
 					_isInitialized = true;
 				}
 			}
