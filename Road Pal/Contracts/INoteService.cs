@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using RoadPal.Infrastructure.Models;
 
 namespace RoadPal.Contracts
 {
 	public interface INoteService
 	{
+		Task AddServiceNote(ServiceNote serviceNote);
 	}
 }

@@ -29,6 +29,10 @@ namespace RoadPal.ViewModels
 		private string? description;
 
 		[ObservableProperty]
+
+		private string? title;
+
+		[ObservableProperty]
 		private string? licensePlate;
 
 		[ObservableProperty]
@@ -49,6 +53,8 @@ namespace RoadPal.ViewModels
 		public IRelayCommand ScanReceiptCommand { get; }
 		public IRelayCommand<Barcode> DeleteBarcodeCommand { get; }
 
+		public IRelayCommand AddServiceNoteCommand { get; }
+
 
 		public CarDetailsViewModel(Car car, INavigationService navigationServiceContext, IBarcodeService barcodeServiceContext, ICarService carServiceContext)
 		{
@@ -67,6 +73,8 @@ namespace RoadPal.ViewModels
 
 			DeleteBarcodeCommand = new AsyncRelayCommand<Barcode>(DeleteBarcodeAsync);
 
+			AddServiceNoteCommand = new AsyncRelayCommand(SaveServiceNoteAsync);
+
 			_carId = car.CarId;
 		}
 
@@ -82,6 +90,26 @@ namespace RoadPal.ViewModels
 			{
 				TotalMoneySpent = carMoneyUpdate.TotalMoneySpent;
 			}
+		}
+
+		public async Task SaveServiceNoteAsync()
+		{
+			if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description))
+			{
+				await Application.Current.MainPage
+	                 .DisplayAlert("An error occured!", "Please fill out the title and description of your service note.", "OK");
+
+				return;
+			}
+			var serviceNote = new ServiceNote()
+			{
+				Title = title,
+				Description = description,
+				CreatedDate = DateTime.UtcNow,
+				CarId = _carId,
+			};
+
+
 		}
 
 
