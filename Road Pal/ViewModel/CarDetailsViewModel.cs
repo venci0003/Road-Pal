@@ -118,7 +118,7 @@ namespace RoadPal.ViewModels
 			if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description))
 			{
 				await Application.Current.MainPage
-					 .DisplayAlert("An error occured!", "Please fill out the title and description of your service note.", "OK");
+					 .DisplayAlert(SaveServiceNoteErrorTitleMessage, SaveServiceNoteErrorDescriptionMessage, "OK");
 
 				return;
 			}
@@ -153,7 +153,7 @@ namespace RoadPal.ViewModels
 			}
 
 			bool deleteReceipt = await Application.Current.MainPage
-	   .DisplayAlert(ConfirmDeleteTitleMessage, "Are you sure you want to delete this note?", "Delete", "Cancel");
+	   .DisplayAlert(ConfirmDeleteTitleMessage, DeleteServiceNoteMessage, "Delete", "Cancel");
 
 			if (ServiceNotes != null && ServiceNotes.Contains(serviceNote) && deleteReceipt)
 			{
