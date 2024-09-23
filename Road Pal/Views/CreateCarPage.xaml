@@ -36,7 +36,9 @@
 
             <Entry Text="{Binding LicensePlate}" Placeholder="License Plate" />
 
-            <Entry Text="{Binding CountryCode}" Placeholder="Country Code" />
+            <Picker Title="Select Country Code"
+                    ItemsSource="{Binding CountryCodes}"
+                    SelectedItem="{Binding SelectedCountryCode}" />
 
             <Button Text="Pick Image" Command="{Binding PickImageCommand}" />
 

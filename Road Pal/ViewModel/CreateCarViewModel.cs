@@ -60,6 +60,12 @@ namespace RoadPal.ViewModels
 		[ObservableProperty]
 		private bool isManualModelInputVisible;
 
+		[ObservableProperty]
+		private ObservableCollection<string> countryCodes;
+
+		[ObservableProperty]
+		private string? selectedCountryCode;
+
 		public IRelayCommand PickImageCommand { get; }
 		public IRelayCommand SaveCarCommand { get; }
 		public IAsyncRelayCommand SearchMakesCommand { get; }
@@ -78,6 +84,7 @@ namespace RoadPal.ViewModels
 			SearchMakesCommand = new AsyncRelayCommand<string?>(SearchCarMakesAsync);
 			LoadCarModelsCommand = new AsyncRelayCommand<string?>(LoadCarModelsAsync);
 
+			CountryCodes = new ObservableCollection<string> { "BG", "EU" };
 
 			LoadCarMakes().ConfigureAwait(false);
 
@@ -108,6 +115,7 @@ namespace RoadPal.ViewModels
 				Model = selectedModel;
 			}
 		}
+
 
 		private async Task LoadCarMakes()
 		{
@@ -190,7 +198,7 @@ namespace RoadPal.ViewModels
 				string.IsNullOrWhiteSpace(manualModelInput) ||
 				string.IsNullOrWhiteSpace(licensePlate) ||
 				string.IsNullOrWhiteSpace(_imageFilePath) ||
-				string.IsNullOrWhiteSpace(countryCode))
+				string.IsNullOrWhiteSpace(selectedCountryCode))
 			{
 				await Application.Current.MainPage.DisplayAlert("Error", "Please fill in all fields and select an image.", "OK");
 				return;
@@ -201,7 +209,7 @@ namespace RoadPal.ViewModels
 				Make = !string.IsNullOrWhiteSpace(manualMakeInput) ? manualMakeInput : make,
 				Model = !string.IsNullOrWhiteSpace(manualModelInput) ? manualModelInput : model,
 				LicensePlate = licensePlate!,
-				CountryCodeForLicensePlate = countryCode!,
+				CountryCodeForLicensePlate = selectedCountryCode!,
 				ImagePath = _imageFilePath!,
 				TotalMoneySpent = 0.0m
 			};
