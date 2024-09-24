@@ -4,6 +4,7 @@ using RoadPal.Infrastructure;
 using RoadPal.Services;
 using RoadPal.ViewModels;
 using RoadPal.Views;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 using ZXing.Net.Maui.Controls;
 
 namespace RoadPal
@@ -20,7 +21,8 @@ namespace RoadPal
 					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 					fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 				})
-				.UseBarcodeReader();
+				.UseBarcodeReader()
+				.UseSkiaSharp();
 
 			builder.Services.AddSingleton<RoadPalDatabase>();
 
@@ -34,10 +36,10 @@ namespace RoadPal
 
 
 
-			builder.Services.AddTransient<ICarService, CarService>();
+			builder.Services.AddSingleton<ICarService, CarService>();
 			builder.Services.AddTransient<IBarcodeService, BarcodeService>();
 			builder.Services.AddSingleton<INavigationService, NavigationService>();
-			builder.Services.AddSingleton<INoteService, NoteService>();
+			builder.Services.AddTransient<INoteService, NoteService>();
 
 #if DEBUG
 			builder.Logging.AddDebug();
