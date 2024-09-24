@@ -1,6 +1,8 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="RoadPal.Views.MainPage"    
+             x:Class="RoadPal.Views.MainPage"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
+             xmlns:extended="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
              xmlns:vm="clr-namespace:RoadPal.ViewModels"
              x:DataType="vm:MainPageViewModel"
              xmlns:model="clr-namespace:RoadPal.Infrastructure.Models;assembly=RoadPal.Infrastructure">
@@ -116,6 +118,27 @@
                     </CollectionView>
                 </StackLayout>
             </ScrollView>
+
+            <extended:SKLottieView x:Name="loadingAnimation"
+                                   IsVisible="{Binding IsBusy}"
+                                   Source="comeone.json" 
+                                   RepeatMode="Reverse"
+                                   RepeatCount="-1"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"
+                                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                                   AbsoluteLayout.LayoutBounds="0.5, 0.5, 150, 150" 
+                                   WidthRequest="250"           
+                                   HeightRequest="250"/>
+
+            <Label Text="Loading..."
+                   IsVisible="{Binding IsBusy}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                   AbsoluteLayout.LayoutBounds="0.5, 0.6, AutoSize, AutoSize"
+                   FontSize="Medium"
+                   TextColor="Gray" />
 
             <Button Text="+"
                     FontSize="24"

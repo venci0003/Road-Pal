@@ -25,6 +25,9 @@ namespace RoadPal.ViewModels
 		[ObservableProperty]
 		private string? carCountMessage;
 
+		[ObservableProperty]
+		private bool isBusy;
+
 		public IAsyncRelayCommand NavigateToCreateCarPageCommand { get; }
 		public IAsyncRelayCommand<Car> DeleteCarCommand { get; }
 
@@ -69,19 +72,45 @@ namespace RoadPal.ViewModels
 
 		private async Task NavigateToCreateCarPage()
 		{
-			var createCarViewModel = new CreateCarViewModel(_carService, _navigationService);
-			var createCarPage = new CreateCarPage(createCarViewModel);
-			await _navigationService.NavigateToPage(createCarPage);
+			if (IsBusy)
+				return;
+
+			IsBusy = true;
+
+			try
+			{
+
+				var createCarViewModel = new CreateCarViewModel(_carService, _navigationService);
+				var createCarPage = new CreateCarPage(createCarViewModel);
+				await _navigationService.NavigateToPage(createCarPage);
+			}
+			finally
+			{
+				IsBusy = false;
+			}
 		}
 
 
 		private async Task NavigateToCarDetailsAsync(Car? car)
 		{
-			if (car != null)
+			if (IsBusy)
+				return;
+
+			IsBusy = true;
+
+			try
 			{
-				var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService, _noteService);
-				var carDetailsPage = new CarDetailsPage(carDetailsViewModel);
-				await _navigationService.NavigateToPage(carDetailsPage);
+				if (car != null)
+				{
+					var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService, _noteService);
+					var carDetailsPage = new CarDetailsPage(carDetailsViewModel);
+					await _navigationService.NavigateToPage(carDetailsPage);
+				}
+			}
+			finally
+			{
+
+				IsBusy = false;
 			}
 		}
 	}

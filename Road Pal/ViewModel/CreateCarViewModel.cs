@@ -66,6 +66,7 @@ namespace RoadPal.ViewModels
 		[ObservableProperty]
 		private string? selectedCountryCode;
 
+
 		public IRelayCommand PickImageCommand { get; }
 		public IRelayCommand SaveCarCommand { get; }
 		public IAsyncRelayCommand SearchMakesCommand { get; }
