@@ -121,7 +121,7 @@
 
             <extended:SKLottieView x:Name="loadingAnimation"
                                    IsVisible="{Binding IsBusy}"
-                                   Source="comeone.json" 
+                                   Source="loading.json" 
                                    RepeatMode="Reverse"
                                    RepeatCount="-1"
                                    VerticalOptions="Center"
