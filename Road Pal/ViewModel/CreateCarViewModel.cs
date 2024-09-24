@@ -206,13 +206,22 @@ namespace RoadPal.ViewModels
 
 			var newCar = new Car
 			{
-				Make = !string.IsNullOrWhiteSpace(manualMakeInput) ? manualMakeInput : make,
-				Model = !string.IsNullOrWhiteSpace(manualModelInput) ? manualModelInput : model,
 				LicensePlate = licensePlate!,
 				CountryCodeForLicensePlate = selectedCountryCode!,
 				ImagePath = _imageFilePath!,
 				TotalMoneySpent = 0.0m
 			};
+
+			if (CarMakes != null)
+			{
+				newCar.Make = make!;
+				newCar.Model = model!;
+			}
+			else
+			{
+				newCar.Make = manualMakeInput!;
+				newCar.Model = manualModelInput!;
+			}
 
 			await _carService.AddCarAsync(newCar);
 
