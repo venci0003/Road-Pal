@@ -7,7 +7,7 @@ namespace RoadPal.Contracts
 	{
 		Task AddServiceNote(ServiceNote serviceNote);
 		Task DeleteServiceNoteByIdAsync(int serviceNoteId);
+		Task ChangeServiceNoteToFinishedAsync(ServiceNote serviceNote);
 		Task<IEnumerable<ServiceNote>> GetAllServiceNotesAsync(int carId, bool isTaskFinished);
-
 	}
 }

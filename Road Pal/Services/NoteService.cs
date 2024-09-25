@@ -26,6 +26,12 @@ namespace RoadPal.Services
 			await connection.Table<ServiceNote>().Where(s => s.ServiceNoteId == serviceNoteId).DeleteAsync();
 		}
 
+		public async Task ChangeServiceNoteToFinishedAsync(ServiceNote serviceNote)
+		{
+			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
+			await connection.UpdateAsync(serviceNote);
+		}
+
 		public async Task<IEnumerable<ServiceNote>> GetAllServiceNotesAsync(int carId, bool isTaskFinished)
 		{
 			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
