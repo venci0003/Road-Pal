@@ -117,7 +117,87 @@
                         </Grid>
                     </Frame>
 
-                    <Label Text="Service Notes" FontSize="24" HorizontalOptions="Start" Margin="0, 10, 0, 0"/>
+                    <Label Text="Service Notes" FontSize="24" HorizontalOptions="Center" Margin="0, 10, 0, 0"/>
+
+                    <Grid Padding="15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Frame x:Name="UnfinishedFrame"
+                               BackgroundColor="#3A4755"
+                               CornerRadius="10"
+                               Padding="10"
+                               HorizontalOptions="Start"
+                               VerticalOptions="Center">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label Text="Unfinished"
+                                       FontSize="18"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="Center"
+                                       TextColor="White"
+                                       Grid.Column="0" />
+
+                                <Image Source="Resources/Images/todo_icon.png"
+                                       Margin="5,0,0,0"
+                                       WidthRequest="24"
+                                       HeightRequest="24"
+                                       HorizontalOptions="End"
+                                       VerticalOptions="Center"
+                                       Grid.Column="1" />
+
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnFinishedTapped" />
+                                    <TapGestureRecognizer Command="{Binding UnfinishedCommand}"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </Frame>
+
+                        <Frame 
+                               x:Name="FinishedFrame"
+                               BackgroundColor="#202936"
+                               CornerRadius="10"
+                               Padding="10"
+                               HorizontalOptions="End"
+                               VerticalOptions="Center"
+                               Grid.Column="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Image Source="Resources/Images/tick_icon.png"
+                                       Margin="0,0,5,0"
+                                       WidthRequest="24"
+                                       HeightRequest="24"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="Center"
+                                       Grid.Column="0" />
+
+                                <Label Text="Finished"
+                                       FontSize="18"
+                                       HorizontalOptions="End"
+                                       VerticalOptions="Center"
+                                       TextColor="White"
+                                       Grid.Column="1" />
+
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnUnfinishedTapped" />
+
+                                    <TapGestureRecognizer Command="{Binding FinishedCommand}" />
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </Frame>
+                    </Grid>
+
+
 
                     <CollectionView ItemsSource="{Binding ServiceNotes}" Margin="0, 10, 0, 70">
                         <CollectionView.ItemTemplate>
