@@ -4,8 +4,6 @@ using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
 using RoadPal.Views;
 using System.Collections.ObjectModel;
-using System.Linq;
-using ZXing.QrCode.Internal;
 using static RoadPal.Common.ApplicationConstants.MessagesConstants;
 
 namespace RoadPal.ViewModels
@@ -62,11 +60,14 @@ namespace RoadPal.ViewModels
 
 		private int _carId;
 
+		private bool isFinished;
+
 		public IRelayCommand ScanReceiptCommand { get; }
 		public IRelayCommand<Barcode> DeleteBarcodeCommand { get; }
 		public IRelayCommand AddServiceNoteCommand { get; }
 		public IRelayCommand<ServiceNote> DeleteServiceNoteCommand { get; }
-
+		public IRelayCommand UnfinishedCommand { get; }
+		public IRelayCommand FinishedCommand { get; }
 
 		public CarDetailsViewModel(Car car,
 			INavigationService navigationServiceContext,
@@ -94,8 +95,24 @@ namespace RoadPal.ViewModels
 
 			DeleteServiceNoteCommand = new AsyncRelayCommand<ServiceNote>(DeleteServiceNoteAsync);
 
+			FinishedCommand = new AsyncRelayCommand(ChangeToFinished);
+			UnfinishedCommand = new AsyncRelayCommand(ChangeToUnfinished);
+
 			_carId = car.CarId;
 		}
+
+		public async Task ChangeToUnfinished()
+		{
+			isFinished = false;
+			await LoadNewServiceNotes();
+		}
+
+		public async Task ChangeToFinished()
+		{
+			isFinished = true;
+			await LoadNewServiceNotes();
+		}
+
 
 		public async Task LoadDetailsAsync()
 		{
@@ -127,6 +144,7 @@ namespace RoadPal.ViewModels
 				Title = title,
 				Description = description,
 				CreatedDate = DateTime.UtcNow,
+				isFinished = false,
 				CarId = _carId,
 			};
 
@@ -140,7 +158,7 @@ namespace RoadPal.ViewModels
 
 		private async Task LoadNewServiceNotes()
 		{
-			var serviceNotesFromService = await _noteService.GetAllServiceNotesAsync(_carId);
+			var serviceNotesFromService = await _noteService.GetAllServiceNotesAsync(_carId, isFinished);
 
 			ServiceNotes = new ObservableCollection<ServiceNote>(serviceNotesFromService);
 		}
@@ -159,7 +177,7 @@ namespace RoadPal.ViewModels
 			{
 				ServiceNotes.Remove(serviceNote);
 
-				await _barcodeService.DeleteReceiptByIdAsync(serviceNote.ServiceNoteId);
+				await _noteService.DeleteServiceNoteByIdAsync(serviceNote.ServiceNoteId);
 			}
 		}
 
