@@ -10,7 +10,6 @@ namespace RoadPal.Infrastructure.Models
 		public string Title { get; set; }
 		public string Description { get; set; }
 		public DateTime CreatedDate { get; set; }
-
 		public bool isFinished { get; set; }
 		public int CarId { get; set; }
 	}
