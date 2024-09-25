@@ -32,33 +32,48 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <StackLayout Grid.RowSpan="2" Grid.Column="0" BackgroundColor="#00309a" Padding="5" VerticalOptions="Center" HorizontalOptions="Center">
-                                <Image Source="Resources/Images/flag_of_europe.png"
-                                       WidthRequest="30"
-                                       HeightRequest="20"
-                                       Aspect="AspectFit"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"/>
-                                <Label Text="{Binding CountryCode}" 
-                                       FontSize="12" 
-                                       HorizontalOptions="Center" 
-                                       VerticalOptions="Center" 
-                                       TextColor="White" />
-                            </StackLayout>
+                            <BoxView Color="#00309a"
+                                     Grid.RowSpan="3"
+                                     Grid.Column="0"
+                                     WidthRequest="60"
+                                     HorizontalOptions="FillAndExpand"
+                                     VerticalOptions="FillAndExpand"/>
 
-                            <Label Grid.Column="1"
-                                   FontSize="24"
-                                   Text="{Binding LicensePlate}"
+                            <Image Source="Resources/Images/flag_of_europe.png"
+                                   Grid.Row="0"
+                                   Grid.Column="0"
+                                   WidthRequest="60"
+                                   HeightRequest="40"
+                                   Aspect="AspectFill"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+
+                            <Label Text="{Binding CountryCode}"
+                                   Grid.Row="1"
+                                   Grid.Column="0"
+                                   FontSize="12"
+                                   HorizontalOptions="Center"
                                    VerticalOptions="Center"
-                                   HorizontalOptions="Start"
-                                   Padding="10"
-                                   TextColor="Black" />
+                                   TextColor="White"
+                                   BackgroundColor="#00309a"
+                                   Padding="5"/>
+
+                            <Label Text="{Binding LicensePlate}"
+                                   Grid.Row="0"
+                                   Grid.Column="1"
+                                   Grid.RowSpan="3"
+                                   FontSize="24"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   TextColor="Black"
+                                   Padding="10"/>
                         </Grid>
                     </Frame>
 
@@ -202,7 +217,16 @@
                     <CollectionView ItemsSource="{Binding ServiceNotes}" Margin="0, 10, 0, 70">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:ServiceNote">
-                                <Frame Padding="10" Margin="0, 5" BackgroundColor="White" BorderColor="Gray" CornerRadius="10">
+                                <Frame Padding="10" Margin="0, 5" BackgroundColor="#303434" CornerRadius="10">
+                                    <Frame.Triggers>
+                                        <DataTrigger TargetType="Frame" Binding="{Binding isFinished}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="#38445c" />
+                                        </DataTrigger>
+
+                                        <DataTrigger TargetType="Frame" Binding="{Binding isFinished}" Value="False">
+                                            <Setter Property="BackgroundColor" Value="#303434" />
+                                        </DataTrigger>
+                                    </Frame.Triggers>
                                     <Grid>
                                         <ImageButton 
                                            Source="Resources/Images/delete_icon.png"
@@ -222,17 +246,17 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <StackLayout Orientation="Horizontal" Grid.Column="0" VerticalOptions="Center">
-                                                    <Label Text="{Binding Title}" FontSize="18" TextColor="Black" 
+                                                    <Label Text="{Binding Title}" FontSize="18" TextColor="White" 
                                                            Margin="0,0,0,0" WidthRequest="190"/>
 
                                                     <Label Text="{Binding CreatedDate, StringFormat='{0:dd/MM/yyyy}'}" 
-                                                           FontSize="18" TextColor="Black" />
+                                                           FontSize="18" TextColor="White" />
                                                 </StackLayout>
                                             </Grid>
 
 
-                                            <Label Text="Description:" FontSize="16" TextColor="Gray"/>
-                                            <Label Text="{Binding Description}" FontSize="18" TextColor="Black"/>
+                                            <Label Text="Description:" FontSize="16" TextColor="LightGray"/>
+                                            <Label Text="{Binding Description}" FontSize="18" TextColor="White"/>
 
 
                                             <Button 
@@ -256,6 +280,7 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:Barcode">
                                 <Frame Padding="10" Margin="0, 5" BackgroundColor="White" BorderColor="Gray" CornerRadius="10">
+
                                     <Grid>
                                         <ImageButton 
                                             Source="Resources/Images/delete_icon.png"

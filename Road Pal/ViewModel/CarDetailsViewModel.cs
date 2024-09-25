@@ -107,6 +107,9 @@ namespace RoadPal.ViewModels
 			MarkAsFinishedCommand = new AsyncRelayCommand<ServiceNote>(ChangeServiceNoteToFinished);
 
 			_carId = car.CarId;
+
+			HideCheckOffButton = true;
+
 		}
 
 		public async Task ChangeServiceNoteToFinished(ServiceNote? serviceNote)
