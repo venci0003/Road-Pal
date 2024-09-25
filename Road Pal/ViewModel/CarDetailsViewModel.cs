@@ -60,7 +60,11 @@ namespace RoadPal.ViewModels
 
 		private int _carId;
 
+		[ObservableProperty]
 		private bool isFinished;
+
+		[ObservableProperty]
+		private bool hideCheckOffButton;
 
 		public IRelayCommand ScanReceiptCommand { get; }
 		public IRelayCommand<Barcode> DeleteBarcodeCommand { get; }
@@ -68,6 +72,8 @@ namespace RoadPal.ViewModels
 		public IRelayCommand<ServiceNote> DeleteServiceNoteCommand { get; }
 		public IRelayCommand UnfinishedCommand { get; }
 		public IRelayCommand FinishedCommand { get; }
+
+		public IRelayCommand<ServiceNote> MarkAsFinishedCommand { get; }
 
 		public CarDetailsViewModel(Car car,
 			INavigationService navigationServiceContext,
@@ -98,18 +104,36 @@ namespace RoadPal.ViewModels
 			FinishedCommand = new AsyncRelayCommand(ChangeToFinished);
 			UnfinishedCommand = new AsyncRelayCommand(ChangeToUnfinished);
 
+			MarkAsFinishedCommand = new AsyncRelayCommand<ServiceNote>(ChangeServiceNoteToFinished);
+
 			_carId = car.CarId;
+		}
+
+		public async Task ChangeServiceNoteToFinished(ServiceNote? serviceNote)
+		{
+			if (serviceNote == null)
+			{
+				return;
+			}
+
+			serviceNote.isFinished = true;
+
+			await _noteService.ChangeServiceNoteToFinishedAsync(serviceNote);
+
+			await LoadNewServiceNotes();
 		}
 
 		public async Task ChangeToUnfinished()
 		{
-			isFinished = false;
+			IsFinished = false;
+			HideCheckOffButton = true;
 			await LoadNewServiceNotes();
 		}
 
 		public async Task ChangeToFinished()
 		{
-			isFinished = true;
+			IsFinished = true;
+			HideCheckOffButton = false;
 			await LoadNewServiceNotes();
 		}
 
@@ -158,7 +182,7 @@ namespace RoadPal.ViewModels
 
 		private async Task LoadNewServiceNotes()
 		{
-			var serviceNotesFromService = await _noteService.GetAllServiceNotesAsync(_carId, isFinished);
+			var serviceNotesFromService = await _noteService.GetAllServiceNotesAsync(_carId, IsFinished);
 
 			ServiceNotes = new ObservableCollection<ServiceNote>(serviceNotesFromService);
 		}
