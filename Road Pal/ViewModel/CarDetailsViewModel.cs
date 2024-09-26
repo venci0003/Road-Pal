@@ -70,9 +70,6 @@ namespace RoadPal.ViewModels
 		public IRelayCommand<Barcode> DeleteBarcodeCommand { get; }
 		public IRelayCommand AddServiceNoteCommand { get; }
 		public IRelayCommand<ServiceNote> DeleteServiceNoteCommand { get; }
-		public IRelayCommand UnfinishedCommand { get; }
-		public IRelayCommand FinishedCommand { get; }
-
 		public IRelayCommand<ServiceNote> MarkAsFinishedCommand { get; }
 
 		public CarDetailsViewModel(Car car,
@@ -100,9 +97,6 @@ namespace RoadPal.ViewModels
 			AddServiceNoteCommand = new AsyncRelayCommand(SaveServiceNoteAsync);
 
 			DeleteServiceNoteCommand = new AsyncRelayCommand<ServiceNote>(DeleteServiceNoteAsync);
-
-			FinishedCommand = new AsyncRelayCommand(ChangeToFinished);
-			UnfinishedCommand = new AsyncRelayCommand(ChangeToUnfinished);
 
 			MarkAsFinishedCommand = new AsyncRelayCommand<ServiceNote>(ChangeServiceNoteToFinished);
 

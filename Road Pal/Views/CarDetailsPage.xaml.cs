@@ -19,23 +19,73 @@ public partial class CarDetailsPage : ContentPage
 		await _viewModel.LoadDetailsAsync();
 	}
 
-	private void OnUnfinishedTapped(object sender, EventArgs e)
+	private void AnimateColorTransition(VisualElement element, Color startColor, Color endColor, uint duration = 500)
 	{
-		UnfinishedFrame.BackgroundColor = Color.FromArgb("#171E25");
-		FinishedFrame.BackgroundColor = Color.FromArgb("#3A4755");
+		var animation = new Animation(v =>
+		{
+			if (element is Label label)
+			{
+				label.TextColor = new Color(
+					(float)(Colors.Gray.Red + (Colors.White.Red - Colors.Gray.Red) * v),
+					(float)(Colors.Gray.Green + (Colors.White.Green - Colors.Gray.Green) * v),
+					(float)(Colors.Gray.Blue + (Colors.White.Blue - Colors.Gray.Blue) * v),
+					(float)(Colors.Gray.Alpha + (Colors.White.Alpha - Colors.Gray.Alpha) * v)
+				);
+			}
+			else if (element is Frame frame)
+			{
+				element.BackgroundColor = new Color(
+					(float)(startColor.Red + (endColor.Red - startColor.Red) * v),
+					(float)(startColor.Green + (endColor.Green - startColor.Green) * v),
+					(float)(startColor.Blue + (endColor.Blue - startColor.Blue) * v),
+					(float)(startColor.Alpha + (endColor.Alpha - startColor.Alpha) * v)
+				);
+			}
+		}, 0, 1);
 
-		// Optionally change text color
-		//((Label)UnfinishedFrame.Content.FindByName("UnfinishedLabel")).TextColor = Colors.White;
-		//((Label)FinishedFrame.Content.FindByName("FinishedLabel")).TextColor = Colors.Black;
+		animation.Commit(element, "ColorAnimation", length: duration, easing: Easing.Linear);
 	}
 
-	private void OnFinishedTapped(object sender, EventArgs e)
-	{
-		UnfinishedFrame.BackgroundColor = Color.FromArgb("#3A4755");
-		FinishedFrame.BackgroundColor = Color.FromArgb("#171E25");
+	private bool _isInFinishedSection = false;
 
-		// Optionally change text color
-		//((Label)UnfinishedFrame.Content.FindByName("UnfinishedLabel")).TextColor = Colors.Black;
-		//((Label)FinishedFrame.Content.FindByName("FinishedLabel")).TextColor = Colors.White;
+	private async void OnFinishedTapped(object sender, EventArgs e)
+	{
+		if (_isInFinishedSection) return;
+
+		_isInFinishedSection = true;
+
+		await ServiceNotesCollectionView.FadeTo(0, 400);
+
+		AnimateColorTransition(UnfinishedFrame, UnfinishedFrame.BackgroundColor, Color.FromArgb("#3A4755"));
+		AnimateColorTransition(FinishedFrame, FinishedFrame.BackgroundColor, Color.FromArgb("#171E25"));
+
+		AnimateColorTransition(UnfinishedLabel, UnfinishedLabel.TextColor, Colors.Gray, 1000);
+		AnimateColorTransition(FinishedLabel, FinishedLabel.TextColor, Colors.White, 1000);
+
+		await _viewModel.ChangeToUnfinished();
+
+		await ServiceNotesCollectionView.FadeTo(1, 400);
+	}
+
+	private async void OnUnfinishedTapped(object sender, EventArgs e)
+	{
+		if (!_isInFinishedSection)
+		{
+			return;
+		}
+
+		_isInFinishedSection = false;
+
+		await ServiceNotesCollectionView.FadeTo(0, 400);
+
+		AnimateColorTransition(UnfinishedFrame, UnfinishedFrame.BackgroundColor, Color.FromArgb("#171E25"));
+		AnimateColorTransition(FinishedFrame, FinishedFrame.BackgroundColor, Color.FromArgb("#3A4755"));
+
+		AnimateColorTransition(UnfinishedLabel, UnfinishedLabel.TextColor, Colors.White, 1000);
+		AnimateColorTransition(FinishedLabel, FinishedLabel.TextColor, Colors.Gray, 1000);
+
+		await _viewModel.ChangeToFinished();
+
+		await ServiceNotesCollectionView.FadeTo(1, 400);
 	}
 }

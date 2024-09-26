@@ -152,7 +152,8 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Label Text="Unfinished"
+                                <Label x:Name="UnfinishedLabel"
+                                       Text="Unfinished"
                                        FontSize="18"
                                        HorizontalOptions="Start"
                                        VerticalOptions="Center"
@@ -168,8 +169,7 @@
                                        Grid.Column="1" />
 
                                 <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnFinishedTapped" />
-                                    <TapGestureRecognizer Command="{Binding UnfinishedCommand}"/>
+                                    <TapGestureRecognizer Tapped="OnUnfinishedTapped" />
                                 </Grid.GestureRecognizers>
                             </Grid>
                         </Frame>
@@ -196,17 +196,16 @@
                                        VerticalOptions="Center"
                                        Grid.Column="0" />
 
-                                <Label Text="Finished"
+                                <Label x:Name="FinishedLabel"
+                                       Text="Finished"
                                        FontSize="18"
                                        HorizontalOptions="End"
                                        VerticalOptions="Center"
-                                       TextColor="White"
+                                       TextColor="Gray"
                                        Grid.Column="1" />
 
                                 <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnUnfinishedTapped" />
-
-                                    <TapGestureRecognizer Command="{Binding FinishedCommand}" />
+                                    <TapGestureRecognizer Tapped="OnFinishedTapped" />
                                 </Grid.GestureRecognizers>
                             </Grid>
                         </Frame>
@@ -214,7 +213,7 @@
 
 
 
-                    <CollectionView ItemsSource="{Binding ServiceNotes}" Margin="0, 10, 0, 70">
+                    <CollectionView x:Name="ServiceNotesCollectionView" ItemsSource="{Binding ServiceNotes}" Margin="0, 10, 0, 70">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:ServiceNote">
                                 <Frame Padding="10" Margin="0, 5" BackgroundColor="#303434" CornerRadius="10">
