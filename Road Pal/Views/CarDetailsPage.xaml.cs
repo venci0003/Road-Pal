@@ -19,6 +19,47 @@ public partial class CarDetailsPage : ContentPage
 		await _viewModel.LoadDetailsAsync();
 	}
 
+	private bool _isCollapsed = false;
+	private async void ServiceNoteTapped(object sender, EventArgs e)
+	{
+		if (_isCollapsed)
+		{
+			ServiceNotesCollectionView.IsVisible = true;
+			FinishedFrame.IsVisible = true;
+			UnfinishedFrame.IsVisible = true;
+
+			await ServiceNoteArrow.FadeTo(0, 100);
+
+			await Task.WhenAll(
+			ServiceNotesCollectionView.FadeTo(1, 800),
+			FinishedFrame.FadeTo(1, 800),
+			UnfinishedFrame.FadeTo(1, 800),
+			ServiceNoteArrow.RotateTo(0, 150));
+
+			await ServiceNoteArrow.FadeTo(1, 100);
+
+			_isCollapsed = false;
+		}
+		else
+		{
+			await ServiceNoteArrow.FadeTo(0, 100);
+
+			await Task.WhenAll(
+			ServiceNotesCollectionView.FadeTo(0, 400),
+			FinishedFrame.FadeTo(0, 400),
+			UnfinishedFrame.FadeTo(0, 400),
+			ServiceNoteArrow.RotateTo(180, 150));
+
+			await ServiceNoteArrow.FadeTo(1, 100);
+
+			ServiceNotesCollectionView.IsVisible = false;
+			FinishedFrame.IsVisible = false;
+			UnfinishedFrame.IsVisible = false;
+
+			_isCollapsed = true;
+		}
+	}
+
 	private void AnimateColorTransition(VisualElement element, Color startColor, Color endColor, uint duration = 500)
 	{
 		var animation = new Animation(v =>
