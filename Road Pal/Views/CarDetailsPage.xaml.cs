@@ -21,11 +21,39 @@ public partial class CarDetailsPage : ContentPage
 
 	private bool _isCollapsedServiceNote = false;
 
-
+	private bool _isCollapsedBarcode = false;
 
 	private async void BarcodeHeaderTapped(object sender, EventArgs e)
 	{
-		return;
+		if (_isCollapsedBarcode)
+		{
+			//BarcodesCollectionView.IsVisible = true;
+
+			await ArrowBarcode.FadeTo(0, 100);
+
+			await Task.WhenAll(
+			BarcodesCollectionView.FadeTo(1, 800),
+			ArrowBarcode.RotateTo(0, 150));
+
+			await ArrowBarcode.FadeTo(1, 100);
+
+			_isCollapsedBarcode = false;
+		}
+		else
+		{
+			await ArrowBarcode.FadeTo(0, 100);
+
+			await Task.WhenAll(
+			BarcodesCollectionView.FadeTo(0, 400),
+			ArrowBarcode.RotateTo(180, 150));
+
+			await ArrowBarcode.FadeTo(1, 100);
+
+			//BarcodesCollectionView.IsVisible = false;
+
+
+			_isCollapsedBarcode = true;
+		}
 	}
 
 	private async void ServiceNoteHeaderTapped(object sender, EventArgs e)
