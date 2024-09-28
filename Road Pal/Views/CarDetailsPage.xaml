@@ -134,7 +134,7 @@
 
                     <Frame CornerRadius="10" BorderColor="Transparent" Padding="10,10,10,20" HasShadow="False" BackgroundColor="Transparent">
                         <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="ServiceNoteTapped" />
+                            <TapGestureRecognizer Tapped="ServiceNoteHeaderTapped" />
                         </Frame.GestureRecognizers>
 
                         <Grid>
@@ -149,7 +149,7 @@
                                    VerticalOptions="Center"
                                    Margin="0, 10, 0, 0"/>
 
-                            <Image x:Name="ServiceNoteArrow"
+                            <Image x:Name="ArrowServiceNote"
                                    Source="Resources/Images/arrow_icon.png"
                                    Margin="0,10,60,0"
                                    WidthRequest="24"
@@ -301,7 +301,34 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-                    <Label Text="Barcodes" FontSize="24" HorizontalOptions="Start" Margin="0, 10, 0, 0"/>
+                    <Frame CornerRadius="10" BorderColor="Transparent" Padding="10,10,10,20" HasShadow="False" BackgroundColor="Transparent">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="BarcodeHeaderTapped"></TapGestureRecognizer>
+                        </Frame.GestureRecognizers>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="Barcodes" FontSize="24" 
+                                   Grid.Column="0" 
+                                   HorizontalOptions="Center" 
+                                   VerticalOptions="Center"
+                                   Margin="0, 10, 0, 0"/>
+
+                            <Image x:Name="ArrowBarcode"
+                                   Source="Resources/Images/arrow_icon.png"
+                                   Margin="0,10,85,0"
+                                   WidthRequest="24"
+                                   HeightRequest="24"
+                                   HorizontalOptions="End"
+                                   VerticalOptions="Center"
+                                   Grid.Column="1" />
+                        </Grid>
+                    </Frame>
+
+
 
                     <CollectionView ItemsSource="{Binding Barcodes}" Margin="0, 10, 0, 70">
                         <CollectionView.ItemTemplate>

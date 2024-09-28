@@ -19,44 +19,52 @@ public partial class CarDetailsPage : ContentPage
 		await _viewModel.LoadDetailsAsync();
 	}
 
-	private bool _isCollapsed = false;
-	private async void ServiceNoteTapped(object sender, EventArgs e)
+	private bool _isCollapsedServiceNote = false;
+
+
+
+	private async void BarcodeHeaderTapped(object sender, EventArgs e)
 	{
-		if (_isCollapsed)
+		return;
+	}
+
+	private async void ServiceNoteHeaderTapped(object sender, EventArgs e)
+	{
+		if (_isCollapsedServiceNote)
 		{
 			ServiceNotesCollectionView.IsVisible = true;
 			FinishedFrame.IsVisible = true;
 			UnfinishedFrame.IsVisible = true;
 
-			await ServiceNoteArrow.FadeTo(0, 100);
+			await ArrowServiceNote.FadeTo(0, 100);
 
 			await Task.WhenAll(
 			ServiceNotesCollectionView.FadeTo(1, 800),
 			FinishedFrame.FadeTo(1, 800),
 			UnfinishedFrame.FadeTo(1, 800),
-			ServiceNoteArrow.RotateTo(0, 150));
+			ArrowServiceNote.RotateTo(0, 150));
 
-			await ServiceNoteArrow.FadeTo(1, 100);
+			await ArrowServiceNote.FadeTo(1, 100);
 
-			_isCollapsed = false;
+			_isCollapsedServiceNote = false;
 		}
 		else
 		{
-			await ServiceNoteArrow.FadeTo(0, 100);
+			await ArrowServiceNote.FadeTo(0, 100);
 
 			await Task.WhenAll(
 			ServiceNotesCollectionView.FadeTo(0, 400),
 			FinishedFrame.FadeTo(0, 400),
 			UnfinishedFrame.FadeTo(0, 400),
-			ServiceNoteArrow.RotateTo(180, 150));
+			ArrowServiceNote.RotateTo(180, 150));
 
-			await ServiceNoteArrow.FadeTo(1, 100);
+			await ArrowServiceNote.FadeTo(1, 100);
 
 			ServiceNotesCollectionView.IsVisible = false;
 			FinishedFrame.IsVisible = false;
 			UnfinishedFrame.IsVisible = false;
 
-			_isCollapsed = true;
+			_isCollapsedServiceNote = true;
 		}
 	}
 
