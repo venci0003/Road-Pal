@@ -97,13 +97,13 @@ public partial class CarDetailsPage : ContentPage
 
 		await ServiceNotesCollectionView.FadeTo(0, 400);
 
-		AnimateColorTransition(UnfinishedFrame, UnfinishedFrame.BackgroundColor, Color.FromArgb("#3A4755"));
-		AnimateColorTransition(FinishedFrame, FinishedFrame.BackgroundColor, Color.FromArgb("#171E25"));
+		AnimateColorTransition(UnfinishedFrame, UnfinishedFrame.BackgroundColor, Color.FromArgb("#171E25"));
+		AnimateColorTransition(FinishedFrame, FinishedFrame.BackgroundColor, Color.FromArgb("#3A4755"));
 
-		AnimateColorTransition(UnfinishedLabel, UnfinishedLabel.TextColor, Colors.Gray, 1000);
-		AnimateColorTransition(FinishedLabel, FinishedLabel.TextColor, Colors.White, 1000);
+		AnimateColorTransition(UnfinishedLabel, UnfinishedLabel.TextColor, Colors.White, 1000);
+		AnimateColorTransition(FinishedLabel, FinishedLabel.TextColor, Colors.Gray, 1000);
 
-		await _viewModel.ChangeToUnfinished();
+		await _viewModel.ChangeToFinished();
 
 		await ServiceNotesCollectionView.FadeTo(1, 400);
 	}
@@ -119,13 +119,13 @@ public partial class CarDetailsPage : ContentPage
 
 		await ServiceNotesCollectionView.FadeTo(0, 400);
 
-		AnimateColorTransition(UnfinishedFrame, UnfinishedFrame.BackgroundColor, Color.FromArgb("#171E25"));
-		AnimateColorTransition(FinishedFrame, FinishedFrame.BackgroundColor, Color.FromArgb("#3A4755"));
+		AnimateColorTransition(UnfinishedFrame, UnfinishedFrame.BackgroundColor, Color.FromArgb("#3A4755"));
+		AnimateColorTransition(FinishedFrame, FinishedFrame.BackgroundColor, Color.FromArgb("#171E25"));
 
-		AnimateColorTransition(UnfinishedLabel, UnfinishedLabel.TextColor, Colors.White, 1000);
-		AnimateColorTransition(FinishedLabel, FinishedLabel.TextColor, Colors.Gray, 1000);
+		AnimateColorTransition(UnfinishedLabel, UnfinishedLabel.TextColor, Colors.Gray, 1000);
+		AnimateColorTransition(FinishedLabel, FinishedLabel.TextColor, Colors.White, 1000);
 
-		await _viewModel.ChangeToFinished();
+		await _viewModel.ChangeToUnfinished();
 
 		await ServiceNotesCollectionView.FadeTo(1, 400);
 	}
