@@ -27,6 +27,7 @@ public partial class TrackingPage : ContentPage
 
 		MapControl.Map = map;
 
+
 		var location = await GetCurrentLocationAsync();
 
 		if (location != null)
@@ -35,6 +36,8 @@ public partial class TrackingPage : ContentPage
 			var lon = location.Longitude;
 
 			var center = new Mapsui.MPoint(SphericalMercator.FromLonLat(lon, lat).x, SphericalMercator.FromLonLat(lon, lat).y);
+
+			MapControl.Map.Navigator.RotationLock = true;
 
 			MapControl.Map?.Navigator?.CenterOn(center);
 			MapControl.Map?.Navigator?.ZoomTo(3);
