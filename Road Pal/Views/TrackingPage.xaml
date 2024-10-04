@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RoadPal.Views.TrackingPage"
+             xmlns:vm="clr-namespace:RoadPal.ViewModel"
+             x:DataType="vm:TrackingViewModel"
+             xmlns:model="clr-namespace:RoadPal.Infrastructure.Models;assembly=RoadPal.Infrastructure"
+             xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
+             Title="TrackingPage">
+    <StackLayout Padding="20">
+
+
+        <Label Text="Tracking" FontSize="Medium" FontAttributes="Bold" />
+
+        <Label Text="Speed (km/h):" />
+        <Label Text="{Binding CurrentSpeed, StringFormat='{0:F2}'}" />
+
+        <Label Text="Distance (km):" />
+        <Label Text="{Binding DistanceTraveled, StringFormat='{0:F2}'}" />
+
+        <Button Text="Start Tracking"
+                Command="{Binding StartTrackingCommand}"
+                IsEnabled="{Binding Source={RelativeSource Self}, Path=Command.CanExecute}" />
+
+        <Button Text="Stop Tracking"
+                Command="{Binding StopTrackingCommand}" />
+
+        <mapsui:MapControl x:Name="MapControl"
+                           VerticalOptions="FillAndExpand"
+                           HorizontalOptions="FillAndExpand" />
+    </StackLayout>
+</ContentPage>
