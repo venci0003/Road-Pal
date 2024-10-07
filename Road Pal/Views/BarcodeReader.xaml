@@ -19,18 +19,28 @@
                 BarcodesDetected="BarcodeReader_BarcodesDetected"
                 VerticalOptions="FillAndExpand" />
 
-            <ImageButton 
-                Source="Resources/Images/torch_icon.png" 
-                Clicked="ToggleTorchButton_Clicked" 
+            <Frame 
+                Grid.Row="1"
                 VerticalOptions="Center" 
                 HorizontalOptions="Center"
-                Margin="10"
-                Padding="10"
-                CornerRadius="100"
                 WidthRequest="85"
                 HeightRequest="85"
+                CornerRadius="100"
+                Padding="0"
+                Margin="0,10,0,10"
                 BackgroundColor="Gray"
-                Grid.Row="1" />
+                HasShadow="False">
+
+                <ImageButton 
+                    Source="Resources/Images/torch_icon.png" 
+                    Clicked="ToggleTorchButton_Clicked"
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Center"
+                    WidthRequest="85"
+                    HeightRequest="85"
+                    BackgroundColor="Transparent"
+                    Padding="10"/>
+            </Frame>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
