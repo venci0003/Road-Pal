@@ -4,21 +4,33 @@
              xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
              xmlns:vm="clr-namespace:RoadPal.ViewModels"
              x:DataType="vm:BarcodeReaderViewModel"
-
              x:Class="RoadPal.Views.BarcodeReader"
              Title="BarcodeReader">
     <ContentPage.Content>
-        <StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
             <zxing:CameraBarcodeReaderView
                 x:Name="barcodeReader"
-                BarcodesDetected="BarcodeReader_BarcodesDetected"/>
+                Grid.Row="0"
+                BarcodesDetected="BarcodeReader_BarcodesDetected"
+                VerticalOptions="FillAndExpand" />
 
-            <Button Text="Toggle Torch" Clicked="ToggleTorchButton_Clicked" VerticalOptions="End" HorizontalOptions="Center" />
-
-            <Button Text="Go Back"
-                    Command="{Binding GoBackToPreviousPage}"
-                    VerticalOptions="EndAndExpand"
-                    HorizontalOptions="Center"/>
-        </StackLayout>
+            <ImageButton 
+                Source="Resources/Images/torch_icon.png" 
+                Clicked="ToggleTorchButton_Clicked" 
+                VerticalOptions="Center" 
+                HorizontalOptions="Center"
+                Margin="10"
+                Padding="10"
+                CornerRadius="100"
+                WidthRequest="85"
+                HeightRequest="85"
+                BackgroundColor="Gray"
+                Grid.Row="1" />
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
