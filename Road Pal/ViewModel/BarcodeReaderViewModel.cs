@@ -8,8 +8,6 @@ namespace RoadPal.ViewModels
 {
 	public partial class BarcodeReaderViewModel : ObservableObject
 	{
-		public IAsyncRelayCommand GoBackToPreviousPage { get; }
-
 		public IAsyncRelayCommand<string> BarcodeScannedCommand { get; }
 
 		private readonly INavigationService _navigationService;
@@ -28,16 +26,9 @@ namespace RoadPal.ViewModels
 
 			_carService = carServiceContext;
 
-			GoBackToPreviousPage = new AsyncRelayCommand(GoBack);
-
 			BarcodeScannedCommand = new AsyncRelayCommand<string>(BarcodeScannedAsync);
 
 			_carId = carId;
-		}
-
-		private async Task GoBack()
-		{
-			await _navigationService.GoBack();
 		}
 
 		private async Task BarcodeScannedAsync(string? barcodeInformation)
