@@ -32,7 +32,8 @@
                 HasShadow="False">
 
                 <ImageButton 
-                    Source="Resources/Images/torch_icon.png" 
+                    x:Name="TorchButton"
+                    Source="Resources/Images/torch_white_icon.png" 
                     Clicked="ToggleTorchButton_Clicked"
                     VerticalOptions="Center" 
                     HorizontalOptions="Center"
