@@ -46,5 +46,14 @@ public partial class BarcodeReader : ContentPage
 	private void ToggleTorchButton_Clicked(object sender, EventArgs e)
 	{
 		barcodeReader.IsTorchOn = !barcodeReader.IsTorchOn;
+
+		if (barcodeReader.IsTorchOn)
+		{
+			TorchButton.Source = "torch_yellow_icon.png";
+		}
+		else
+		{
+			TorchButton.Source = "torch_white_icon.png";
+		}
 	}
 }

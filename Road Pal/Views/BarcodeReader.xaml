@@ -39,6 +39,7 @@
                     HorizontalOptions="Center"
                     WidthRequest="85"
                     HeightRequest="85"
+                    CornerRadius="100"
                     BackgroundColor="Transparent"
                     Padding="10"/>
             </Frame>
