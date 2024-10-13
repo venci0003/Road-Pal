@@ -3,12 +3,15 @@ using RoadPal.Contracts;
 using RoadPal.Infrastructure;
 using RoadPal.Infrastructure.Models;
 using SQLite;
+using System.Reflection.Metadata.Ecma335;
 
 namespace RoadPal.Services
 {
 	public class CarService : ICarService
 	{
 		private readonly RoadPalDatabase _roadPalDatabase;
+
+		private static readonly HttpClient httpClient = new HttpClient();
 
 		private readonly string BaseUrl = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 		private readonly string localMakesFilePath;
@@ -220,6 +223,43 @@ namespace RoadPal.Services
 				Console.WriteLine(car.TotalMoneySpent);
 				await connection.UpdateAsync(car);
 			}
+		}
+
+		public async Task<string> CheckVignette(string licensePlate)
+		{
+			string url = $"https://check.bgtoll.bg/check/vignette/plate/BG/{licensePlate}";
+
+			string message;
+
+			HttpResponseMessage response = await httpClient.GetAsync(url);
+
+			response.EnsureSuccessStatusCode();
+
+			string jsonResponse = await response.Content.ReadAsStringAsync();
+
+			dynamic? vignetteData = JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+
+			if (vignetteData?.vignette == null)
+			{
+				return message = $"No valid vignette found!\n\nPlease ensure the vignette is paid and the license plate number is correct.";
+			}
+
+			string licensePlateNumber = vignetteData.vignette.licensePlateNumber;
+			string validityFrom = vignetteData.vignette.validityDateFromFormated;
+			string validityTo = vignetteData.vignette.validityDateToFormated;
+			string pricePaid = vignetteData.vignette.price;
+
+			TimeSpan timeSpan = DateTime.Parse(validityTo) - DateTime.UtcNow;
+			int daysLeft = (int)timeSpan.TotalDays;
+
+			message = $"The vignette for the vehicle with license plate {licensePlateNumber} (BG) is valid:\n" +
+							$"- From: {validityFrom}\n" +
+							$"- To: {validityTo}\n" +
+							$"- Paid: {pricePaid}lv\n" +
+							$"- Days left: {daysLeft}";
+
+			return message;
+
 		}
 	}
 }
