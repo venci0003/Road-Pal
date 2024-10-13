@@ -39,6 +39,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
                             <BoxView Color="#00309a"
@@ -76,6 +77,19 @@
                                    VerticalOptions="Center"
                                    TextColor="Black"
                                    Padding="10"/>
+                            <ImageButton Source="Resources/Images/search_icon.png"
+                                         Grid.Row="0"
+                                         Grid.Column="2"
+                                         Grid.RowSpan="3"
+                                         WidthRequest="70"  
+                                         HeightRequest="70"  
+                                         Aspect="Fill"
+                                         HorizontalOptions="Center"
+                                         VerticalOptions="FillAndExpand"
+                                         Padding="0"
+                                         BackgroundColor="black"
+                                         Command="{Binding CheckCarVignetteCommand}"/>
+
                         </Grid>
                     </Frame>
 
