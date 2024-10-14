@@ -47,6 +47,14 @@
 			public const string SaveServiceNoteErrorTitleMessage = "An error occured!";
 
 			public const string SaveServiceNoteErrorDescriptionMessage = "Please fill out the title and description of your service note.";
+
+			public const string NoValidVignetteMessage = $"No valid vignette found!\n\nPlease ensure the vignette is paid and the license plate number is correct.";
+
+			public const string ValidVignetteInformationMessage = "The vignette for the vehicle with license plate {0} (BG) is valid:\n" +
+							"- From: {1}\n" +
+							"- To: {2}\n" +
+							"- Paid: {3}lv\n" +
+							"- Days left: {4}";
 		}
 	}
 }
