@@ -4,6 +4,7 @@ using RoadPal.Infrastructure;
 using RoadPal.Infrastructure.Models;
 using SQLite;
 using System.Reflection.Metadata.Ecma335;
+using static RoadPal.Common.ApplicationConstants;
 
 namespace RoadPal.Services
 {
@@ -241,7 +242,7 @@ namespace RoadPal.Services
 
 			if (vignetteData?.vignette == null)
 			{
-				return message = $"No valid vignette found!\n\nPlease ensure the vignette is paid and the license plate number is correct.";
+				return message = MessagesConstants.NoValidVignetteMessage;
 			}
 
 			string licensePlateNumber = vignetteData.vignette.licensePlateNumber;
@@ -252,11 +253,7 @@ namespace RoadPal.Services
 			TimeSpan timeSpan = DateTime.Parse(validityTo) - DateTime.UtcNow;
 			int daysLeft = (int)timeSpan.TotalDays;
 
-			message = $"The vignette for the vehicle with license plate {licensePlateNumber} (BG) is valid:\n" +
-							$"- From: {validityFrom}\n" +
-							$"- To: {validityTo}\n" +
-							$"- Paid: {pricePaid}lv\n" +
-							$"- Days left: {daysLeft}";
+			message = string.Format(MessagesConstants.ValidVignetteInformationMessage, licensePlateNumber, validityFrom, validityTo, pricePaid, daysLeft);
 
 			return message;
 
