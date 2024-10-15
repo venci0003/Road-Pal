@@ -33,5 +33,7 @@ namespace RoadPal.Contracts
 		Task AddMoneyToTotalAsync(int carId, decimal money);
 
 		Task<string> CheckVignette(string licensePlate);
+
+		Task ChangeFavouritismAsync(int carId, bool status);
 	}
 }

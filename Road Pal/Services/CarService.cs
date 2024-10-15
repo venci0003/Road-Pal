@@ -268,7 +268,18 @@ namespace RoadPal.Services
 			message = string.Format(MessagesConstants.ValidVignetteInformationMessage, licensePlateNumber, validityFrom, validityTo, pricePaid, daysLeft);
 
 			return message;
+		}
 
+		public async Task ChangeFavouritismAsync(int carId, bool status)
+		{
+			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
+			var car = await connection.Table<Car>().FirstOrDefaultAsync(c => c.CarId == carId);
+
+			if (car != null)
+			{
+				car.IsFavourite = status;
+				await connection.UpdateAsync(car);
+			}
 		}
 	}
 }
