@@ -210,7 +210,8 @@ namespace RoadPal.ViewModels
 				LicensePlate = licensePlate!,
 				CountryCodeForLicensePlate = selectedCountryCode!,
 				ImagePath = _imageFilePath!,
-				TotalMoneySpent = 0.0m
+				TotalMoneySpent = 0.0m,
+				IsFavourite = false
 			};
 
 			if (CarMakes != null)

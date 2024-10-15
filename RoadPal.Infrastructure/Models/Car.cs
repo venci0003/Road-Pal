@@ -21,6 +21,8 @@ namespace RoadPal.Infrastructure.Models
 		[Required]
 		public string CountryCodeForLicensePlate { get; set; } = string.Empty;
 
+		public bool IsFavourite { get; set; }
+
 		public string ImagePath { get; set; } = string.Empty;
 
 		public decimal TotalMoneySpent { get; set; }
