@@ -5,7 +5,43 @@
              xmlns:extended="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
              xmlns:vm="clr-namespace:RoadPal.ViewModels"
              x:DataType="vm:MainPageViewModel"
-             xmlns:model="clr-namespace:RoadPal.Infrastructure.Models;assembly=RoadPal.Infrastructure">
+             xmlns:model="clr-namespace:RoadPal.Infrastructure.Models;assembly=RoadPal.Infrastructure" 
+             Shell.NavBarIsVisible="True">
+
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="Auto, *, Auto">
+            <ImageButton x:Name="StarIcon" 
+                     Source="Resources/Images/star_icon_lightgray.png"
+                     WidthRequest="40"
+                     HeightRequest="40"
+                     VerticalOptions="Center"
+                     HorizontalOptions="Start"
+                     Padding="5"
+                     BackgroundColor="#424242"
+                     Margin="140,16,5,0"
+                         CornerRadius="10"
+                     ZIndex="1">
+                <ImageButton.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnFavouriteCarsTapped" />
+                </ImageButton.GestureRecognizers>
+            </ImageButton>
+
+            <SearchBar Placeholder="Search cars"
+                   Text="{Binding SearchQuery, Mode=TwoWay}"             
+                   HorizontalOptions="FillAndExpand"
+                   VerticalOptions="Center"
+                   Margin="135,10,0,0"
+                   WidthRequest="250" />
+
+            <Label Text="Your cars" 
+               FontSize="Medium" 
+               VerticalOptions="Center"
+               HorizontalOptions="Start" 
+               Margin="5,0,20,0"/>
+        </Grid>
+    </Shell.TitleView>
+
+
 
     <ContentPage.Content>
         <AbsoluteLayout>
@@ -24,7 +60,9 @@
                      LineBreakMode="WordWrap"                    
                      IsVisible="{Binding CarCountMessage, Converter={StaticResource NullToVisibilityConverter}}" />
 
-                    <CollectionView ItemsSource="{Binding Cars}" 
+
+                    <CollectionView x:Name="CarCollectionView"
+                                    ItemsSource="{Binding Cars}" 
                                     IsVisible="{Binding Cars.Count, Converter={StaticResource NullToVisibilityConverter}}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:Car">
@@ -112,7 +150,7 @@
                                                            HorizontalOptions="Center"
                                                            VerticalOptions="Center"
                                                            TextColor="Black"
-                                                           Padding="10"/>
+                                                           Padding="1"/>
                                                 </Grid>
                                             </Frame>
                                         </StackLayout>

@@ -18,6 +18,7 @@ namespace RoadPal.ViewModels
 
 		private readonly INoteService _noteService;
 
+		private readonly ITrackingService _trackingService;
 
 		[ObservableProperty]
 		private ObservableCollection<Car>? cars;
@@ -28,15 +29,39 @@ namespace RoadPal.ViewModels
 		[ObservableProperty]
 		private bool isBusy;
 
+		private string _searchQuery = string.Empty;
+
+		public string SearchQuery
+		{
+			get => _searchQuery;
+			set
+			{
+				SetProperty(ref _searchQuery, value);
+				if (string.IsNullOrWhiteSpace(value))
+				{
+					_ = LoadCarsAsync();
+				}
+				else
+				{
+					_ = LoadCarsAsync();
+				}
+			}
+		}
+
+		[ObservableProperty]
+		public bool isFavourite;
+
 		public IAsyncRelayCommand NavigateToCreateCarPageCommand { get; }
 		public IAsyncRelayCommand<Car> DeleteCarCommand { get; }
-
 		public IAsyncRelayCommand NavigateToCarDetailsCommand { get; }
+
+		public IAsyncRelayCommand GetFavouriteCarsCommand { get; }
 
 		public MainPageViewModel(ICarService carService,
 			INavigationService navigationService,
 			IBarcodeService barcodeService,
-			INoteService noteServiceContext)
+			INoteService noteServiceContext,
+			ITrackingService trackingServiceContext)
 		{
 			_carService = carService;
 			_navigationService = navigationService;
@@ -44,9 +69,26 @@ namespace RoadPal.ViewModels
 			NavigateToCreateCarPageCommand = new AsyncRelayCommand(NavigateToCreateCarPage);
 			DeleteCarCommand = new AsyncRelayCommand<Car>(DeleteCarAsync);
 			NavigateToCarDetailsCommand = new AsyncRelayCommand<Car>(NavigateToCarDetailsAsync);
+			GetFavouriteCarsCommand = new AsyncRelayCommand(ChangeToFavouriteCars);
 			_noteService = noteServiceContext;
+			_trackingService = trackingServiceContext;
 		}
 
+
+
+		public async Task ChangeToFavouriteCars()
+		{
+			isFavourite = true;
+
+			await LoadCarsAsync();
+		}
+
+		public async Task ChangeToNonFavouriteCars()
+		{
+			isFavourite = false;
+
+			await LoadCarsAsync();
+		}
 
 		private async Task DeleteCarAsync(Car? car)
 		{
@@ -62,7 +104,7 @@ namespace RoadPal.ViewModels
 
 		public async Task LoadCarsAsync()
 		{
-			IEnumerable<Car> carsFromService = await _carService.GetAllCarsAsync();
+			IEnumerable<Car> carsFromService = await _carService.GetAllCarsAsync(_searchQuery, isFavourite);
 			Cars = new ObservableCollection<Car>(carsFromService);
 
 			CarCountMessage = (Cars == null || Cars.Count == 0)
@@ -102,7 +144,7 @@ namespace RoadPal.ViewModels
 			{
 				if (car != null)
 				{
-					var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService, _noteService);
+					var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService, _noteService, _trackingService);
 					var carDetailsPage = new CarDetailsPage(carDetailsViewModel);
 					await _navigationService.NavigateToPage(carDetailsPage);
 				}
