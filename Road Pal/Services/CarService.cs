@@ -3,6 +3,7 @@ using RoadPal.Contracts;
 using RoadPal.Infrastructure;
 using RoadPal.Infrastructure.Models;
 using SQLite;
+using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using static RoadPal.Common.ApplicationConstants;
 
@@ -189,10 +190,21 @@ namespace RoadPal.Services
 			await connection.InsertAsync(car);
 		}
 
-		public async Task<IEnumerable<Car>> GetAllCarsAsync()
+		public async Task<IEnumerable<Car>> GetAllCarsAsync(string searchQuery)
 		{
 			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
-			return await connection.Table<Car>().ToListAsync();
+			if (string.IsNullOrEmpty(searchQuery))
+			{
+				return await connection.Table<Car>().ToListAsync();
+			}
+			else
+			{
+				string loweredSearchQuery = searchQuery.ToLower();
+
+				return await connection.Table<Car>()
+					.Where(c => c.Make.ToLower().Contains(loweredSearchQuery) || c.Model.ToLower().Contains(loweredSearchQuery))
+					.ToListAsync();
+			}
 		}
 
 		public async Task DeleteAllCarsTestAsync()
