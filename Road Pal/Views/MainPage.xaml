@@ -62,7 +62,8 @@
 
 
                     <CollectionView x:Name="CarCollectionView"
-                                    ItemsSource="{Binding Cars}" 
+                                    ItemsSource="{Binding Cars}"
+                                    Margin="0,0,0,80"
                                     IsVisible="{Binding Cars.Count, Converter={StaticResource NullToVisibilityConverter}}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:Car">
@@ -84,7 +85,7 @@
                                         </Frame.GestureRecognizers>
 
                                         <StackLayout>
-                                            <StackLayout HorizontalOptions="Center"  Orientation="Horizontal" Spacing="10">
+                                            <StackLayout HorizontalOptions="Center"  Orientation="Horizontal" Spacing="10" Margin="0,0,0,2">
                                                 <Label Text="{Binding Make}" FontSize="18" />
                                                 <Label Text="{Binding Model}" FontSize="18" />
                                             </StackLayout>
@@ -96,63 +97,90 @@
                                                    VerticalOptions="Center" 
                                                    HorizontalOptions="Start" />
 
-                                            <Frame BackgroundColor="White"
-                                                   CornerRadius="5"
-                                                   Padding="0"
-                                                   WidthRequest="300"
-                                                   HorizontalOptions="FillAndExpand"
-                                                   Margin="0,10"
-                                                   HasShadow="True"
-                                                   InputTransparent="True">
+                                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                                <Frame BackgroundColor="White"
+                                                       CornerRadius="5"
+                                                       Padding="0"
+                                                       WidthRequest="285"
+                                                       HorizontalOptions="FillAndExpand"
+                                                       Margin="0,10,5,10"
+                                                       HasShadow="True"
+                                                       InputTransparent="True">
+                                                    <Grid InputTransparent="True">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
 
-                                                <Grid InputTransparent="True">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                    </Grid.RowDefinitions>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
+                                                        <BoxView Color="#00309a"
+                                                                 Grid.RowSpan="3"
+                                                                 Grid.Column="0"
+                                                                 WidthRequest="60"
+                                                                 HorizontalOptions="FillAndExpand"
+                                                                 VerticalOptions="FillAndExpand"/>
 
-                                                    <BoxView Color="#00309a"
-                                                             Grid.RowSpan="3"
-                                                             Grid.Column="0"
-                                                             WidthRequest="60"
-                                                             HorizontalOptions="FillAndExpand"
-                                                             VerticalOptions="FillAndExpand"/>
+                                                        <Image Source="Resources/Images/flag_of_europe.png"
+                                                               Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               WidthRequest="60"
+                                                               HeightRequest="40"
+                                                               Aspect="AspectFill"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"/>
 
-                                                    <Image Source="Resources/Images/flag_of_europe.png"
-                                                           Grid.Row="0"
-                                                           Grid.Column="0"
-                                                           WidthRequest="60"
-                                                           HeightRequest="40"
-                                                           Aspect="AspectFill"
-                                                           HorizontalOptions="Center"
-                                                           VerticalOptions="Center"/>
+                                                        <Label Text="{Binding CountryCodeForLicensePlate}"
+                                                               Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               FontSize="12"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"
+                                                               TextColor="White"
+                                                               BackgroundColor="#00309a"
+                                                               Padding="5"/>
 
-                                                    <Label Text="{Binding CountryCodeForLicensePlate}"
-                                                           Grid.Row="1"
-                                                           Grid.Column="0"
-                                                           FontSize="12"
-                                                           HorizontalOptions="Center"
-                                                           VerticalOptions="Center"
-                                                           TextColor="White"
-                                                           BackgroundColor="#00309a"
-                                                           Padding="5"/>
+                                                        <Label Text="{Binding LicensePlate}"
+                                                               Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Grid.RowSpan="3"
+                                                               FontSize="24"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"
+                                                               TextColor="Black"
+                                                               Padding="1"/>
+                                                    </Grid>
+                                                </Frame>
 
-                                                    <Label Text="{Binding LicensePlate}"
-                                                           Grid.Row="0"
-                                                           Grid.Column="1"
-                                                           Grid.RowSpan="3"
-                                                           FontSize="24"
-                                                           HorizontalOptions="Center"
-                                                           VerticalOptions="Center"
-                                                           TextColor="Black"
-                                                           Padding="1"/>
-                                                </Grid>
-                                            </Frame>
+                                                <ImageButton
+                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}, Path=ChangeFavouritismStatusCommand}"
+                                                     CommandParameter="{Binding .}" 
+                                                     WidthRequest="50"
+                                                     HeightRequest="50"
+                                                     VerticalOptions="Center"
+                                                     HorizontalOptions="Center"
+                                                     Padding="5"
+                                                     BackgroundColor="#424242"
+                                                     CornerRadius="10"
+                                                     Margin="15,0,15,0">
+                                                    <ImageButton.Triggers>
+                                                        <DataTrigger TargetType="ImageButton"
+                                                                     Binding="{Binding IsFavourite}"
+                                                                     Value="true">
+                                                            <Setter Property="Source" Value="Resources/Images/star_icon_yellow.png" />
+                                                        </DataTrigger>
+                                                        <DataTrigger TargetType="ImageButton"
+                                                                     Binding="{Binding IsFavourite}"
+                                                                     Value="false">
+                                                            <Setter Property="Source" Value="Resources/Images/star_icon_lightgray.png" />
+                                                        </DataTrigger>
+                                                    </ImageButton.Triggers>
+                                                </ImageButton>
+                                            </StackLayout>
+
                                         </StackLayout>
                                     </Frame>
                                 </SwipeView>
