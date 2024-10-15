@@ -57,6 +57,8 @@ namespace RoadPal.ViewModels
 
 		public IAsyncRelayCommand GetFavouriteCarsCommand { get; }
 
+		public IAsyncRelayCommand<Car> ChangeFavouritismStatusCommand { get; }
+
 		public MainPageViewModel(ICarService carService,
 			INavigationService navigationService,
 			IBarcodeService barcodeService,
@@ -70,11 +72,28 @@ namespace RoadPal.ViewModels
 			DeleteCarCommand = new AsyncRelayCommand<Car>(DeleteCarAsync);
 			NavigateToCarDetailsCommand = new AsyncRelayCommand<Car>(NavigateToCarDetailsAsync);
 			GetFavouriteCarsCommand = new AsyncRelayCommand(ChangeToFavouriteCars);
+			ChangeFavouritismStatusCommand = new AsyncRelayCommand<Car>(ChangeFavouritismStatus);
 			_noteService = noteServiceContext;
 			_trackingService = trackingServiceContext;
 		}
 
+		public async Task ChangeFavouritismStatus(Car? car)
+		{
+			if (car == null)
+			{
+				return;
+			}
 
+			if (car.IsFavourite == false)
+			{
+				await _carService.ChangeFavouritismAsync(car.CarId, true);
+			}
+			else if (car.IsFavourite == true)
+			{
+				await _carService.ChangeFavouritismAsync(car.CarId, false);
+			}
+			await LoadCarsAsync();
+		}
 
 		public async Task ChangeToFavouriteCars()
 		{

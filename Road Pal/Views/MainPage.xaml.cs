@@ -20,7 +20,6 @@ namespace RoadPal.Views
 		}
 
 		private bool _isTapped = false;
-
 		private async void OnFavouriteCarsTapped(object sender, EventArgs e)
 		{
 			if (_isTapped)
