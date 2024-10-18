@@ -2,8 +2,11 @@
 using CommunityToolkit.Mvvm.Input;
 using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
+using RoadPal.ViewModel;
 using RoadPal.Views;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 using static RoadPal.Common.ApplicationConstants.MessagesConstants;
 
 namespace RoadPal.ViewModels
@@ -18,37 +21,37 @@ namespace RoadPal.ViewModels
 
 		private readonly INoteService _noteService;
 
-		[ObservableProperty]
-
-		private string? make;
+		private readonly ITrackingService _trackingService;
 
 		[ObservableProperty]
 
-		private string? model;
+		private string make;
 
 		[ObservableProperty]
 
-		private string? description;
+		private string model;
 
 		[ObservableProperty]
 
-		private string? title;
+		private string description;
 
 		[ObservableProperty]
-
-		private string? createdDate;
-
-		[ObservableProperty]
-		private string? licensePlate;
+		private string title = string.Empty;
 
 		[ObservableProperty]
-		private string? countryCode;
+		private string createdDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
 
 		[ObservableProperty]
-		private string? carImage;
+		private string licensePlate;
 
 		[ObservableProperty]
-		private decimal? totalMoneySpent;
+		private string countryCode;
+
+		[ObservableProperty]
+		private string carImage;
+
+		[ObservableProperty]
+		private decimal totalMoneySpent;
 
 		[ObservableProperty]
 
@@ -66,26 +69,47 @@ namespace RoadPal.ViewModels
 		[ObservableProperty]
 		private bool hideCheckOffButton;
 
+		[ObservableProperty]
+		private bool isEditing;
+
+		[ObservableProperty]
+		private string? _imageFilePath;
+
+		[ObservableProperty]
+		private string? selectedCountryCode;
+
+		[ObservableProperty]
+		private ObservableCollection<string> countryCodes;
+
 		public IRelayCommand ScanReceiptCommand { get; }
 		public IRelayCommand<Barcode> DeleteBarcodeCommand { get; }
 		public IRelayCommand AddServiceNoteCommand { get; }
 		public IRelayCommand<ServiceNote> DeleteServiceNoteCommand { get; }
 		public IRelayCommand<ServiceNote> MarkAsFinishedCommand { get; }
+		public IRelayCommand NavigateToTrackingCommand { get; }
+		public IRelayCommand CheckCarVignetteCommand { get; }
+		public IRelayCommand EditCarCommand { get; }
+		public IRelayCommand AcceptEditCommand { get; }
+		public IRelayCommand CancelEditCommand { get; }
+
+		public IRelayCommand PickImageCommand { get; }
+
 
 		public CarDetailsViewModel(Car car,
 			INavigationService navigationServiceContext,
 			IBarcodeService barcodeServiceContext,
 			ICarService carServiceContext,
-			INoteService noteServiceContext)
+			INoteService noteServiceContext,
+			ITrackingService trackingServiceContext)
 		{
 			_navigationService = navigationServiceContext;
 			_barcodeService = barcodeServiceContext;
 			_carService = carServiceContext;
 			_noteService = noteServiceContext;
-			carImage = car.ImagePath;
-			make = car.Make;
-			model = car.Model;
-			licensePlate = car.LicensePlate;
+			carImage = car.ImagePath!;
+			make = car.Make!;
+			model = car.Model!;
+			licensePlate = car.LicensePlate!;
 			description = car.Description;
 			countryCode = car.CountryCodeForLicensePlate;
 			totalMoneySpent = car.TotalMoneySpent;
@@ -100,10 +124,165 @@ namespace RoadPal.ViewModels
 
 			MarkAsFinishedCommand = new AsyncRelayCommand<ServiceNote>(ChangeServiceNoteToFinished);
 
+			NavigateToTrackingCommand = new AsyncRelayCommand(NavigateToTrackingPage);
+
+			CheckCarVignetteCommand = new AsyncRelayCommand(CheckViggnetteStatusAsync);
+
+			EditCarCommand = new RelayCommand(EditCar);
+			AcceptEditCommand = new AsyncRelayCommand(AcceptEdit);
+			CancelEditCommand = new RelayCommand(CancelEdit);
+			PickImageCommand = new AsyncRelayCommand(PickImageAsync);
+
+			CountryCodes = new ObservableCollection<string> { "BG", "EU" };
+
+			SelectedCountryCode = car.CountryCodeForLicensePlate;
+
+			IsEditing = false;
+
 			_carId = car.CarId;
 
-			HideCheckOffButton = true;
 
+			HideCheckOffButton = true;
+			_trackingService = trackingServiceContext;
+		}
+
+		private async Task PickImageAsync()
+		{
+			try
+			{
+				var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
+				{
+					Title = "Pick an image for the car"
+				});
+
+				if (result != null)
+				{
+					_imageFilePath = result.FullPath;
+					carImage = _imageFilePath;
+				}
+			}
+			catch (Exception ex)
+			{
+				await Application.Current.MainPage.DisplayAlert("Error", $"Failed to pick image: {ex.Message}", "OK");
+			}
+		}
+
+		private void EditCar()
+		{
+			IsEditing = true;
+		}
+
+		private async Task AcceptEdit()
+		{
+			IsEditing = false;
+
+			Car? carToEdit = await _carService.GetCarByIdAsync(_carId);
+			if (carToEdit == null)
+			{
+				await Application.Current.MainPage.DisplayAlert("Error", "Car not found.", "OK");
+				return;
+			}
+
+			if (string.IsNullOrWhiteSpace(make) ||
+				string.IsNullOrWhiteSpace(model) ||
+				string.IsNullOrWhiteSpace(licensePlate))
+			{
+				Make = carToEdit.Make;
+				Model = carToEdit.Model;
+				LicensePlate = carToEdit.LicensePlate;
+				await Application.Current.MainPage.DisplayAlert("Error", "Please fill in all fields and select an image.", "OK");
+				return;
+			}
+
+			string trimmedMake = make.Trim();
+			string trimmedModel = model.Trim();
+			string trimmedLicensePlate = licensePlate.Trim();
+
+			bool hasChanges = false;
+			StringBuilder changes = new StringBuilder("Old -> New\n");
+
+			if (trimmedMake != carToEdit.Make)
+			{
+				changes.AppendLine($"- {carToEdit.Make} -> {trimmedMake}");
+				carToEdit.Make = trimmedMake;
+				hasChanges = true;
+			}
+
+			if (trimmedModel != carToEdit.Model)
+			{
+				changes.AppendLine($"- {carToEdit.Model} -> {trimmedModel}");
+				carToEdit.Model = trimmedModel;
+				hasChanges = true;
+			}
+
+			if (trimmedLicensePlate != carToEdit.LicensePlate)
+			{
+				changes.AppendLine($"- {carToEdit.LicensePlate} -> {trimmedLicensePlate}");
+				carToEdit.LicensePlate = trimmedLicensePlate;
+				hasChanges = true;
+			}
+
+			if (!string.IsNullOrWhiteSpace(selectedCountryCode) && selectedCountryCode != carToEdit.CountryCodeForLicensePlate)
+			{
+				changes.AppendLine($"- {carToEdit.CountryCodeForLicensePlate} -> {selectedCountryCode}");
+				carToEdit.CountryCodeForLicensePlate = selectedCountryCode;
+				CountryCode = selectedCountryCode;
+				hasChanges = true;
+			}
+
+			bool updatePage = false;
+			if (!string.IsNullOrWhiteSpace(_imageFilePath) && _imageFilePath != carToEdit.ImagePath)
+			{
+				changes.AppendLine($"- Image updated!");
+				carToEdit.ImagePath = _imageFilePath;
+				hasChanges = true;
+
+				updatePage = true;
+			}
+
+			if (!hasChanges)
+			{
+				await Application.Current.MainPage.DisplayAlert("No Changes", "No changes were made to the car.", "OK");
+				return;
+			}
+
+			bool confirmation = await Application.Current.MainPage.DisplayAlert(
+				"Confirm Changes",
+				$"You are about to update the car's details. Would you like to proceed with these changes?\n{changes}",
+				"Yes",
+				"No");
+
+			if (!confirmation)
+			{
+				return;
+			}
+
+			if (updatePage)
+			{
+				var newPage = new CarDetailsPage(this);
+				await _navigationService.RefreshCurrentPage(newPage);
+			}
+
+			await _carService.UpdateCarAsync(carToEdit);
+
+			await Application.Current.MainPage.DisplayAlert("Car edited successfully", $"Changes:\n{changes}", "OK");
+		}
+
+
+
+
+
+		private void CancelEdit()
+		{
+			IsEditing = false;
+		}
+
+		public async Task CheckViggnetteStatusAsync()
+		{
+			var message = await _carService.CheckVignette(licensePlate);
+
+			await Application.Current.MainPage
+					 .DisplayAlert("Car vignette information.", message, "OK");
 		}
 
 		public async Task ChangeServiceNoteToFinished(ServiceNote? serviceNote)
@@ -226,6 +405,13 @@ namespace RoadPal.ViewModels
 			var barcodeReaderViewModel = new BarcodeReaderViewModel(_navigationService, _barcodeService, _carService, _carId);
 			var barcodeReaderPage = new BarcodeReader(barcodeReaderViewModel);
 			await _navigationService.NavigateToPage(barcodeReaderPage);
+		}
+
+		private async Task NavigateToTrackingPage()
+		{
+			var trackingViewModel = new TrackingViewModel(_trackingService);
+			var trackingPage = new TrackingPage(trackingViewModel);
+			await _navigationService.NavigateToPage(trackingPage);
 		}
 	}
 }

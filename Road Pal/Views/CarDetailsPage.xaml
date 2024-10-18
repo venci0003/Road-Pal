@@ -12,12 +12,24 @@
             <ScrollView AbsoluteLayout.LayoutFlags="All"
                         AbsoluteLayout.LayoutBounds="0, 0, 1, 1">
                 <StackLayout Padding="20">
-                    <Image Source="{Binding CarImage}" 
-                           Aspect="AspectFill" 
-                           WidthRequest="320" 
-                           HeightRequest="200"
-                           VerticalOptions="Center" 
-                           HorizontalOptions="Center"/>
+                    <Grid>
+                        <Image Source="{Binding CarImage}" 
+                               Aspect="AspectFill" 
+                               WidthRequest="380" 
+                               HeightRequest="200"
+                               VerticalOptions="Center" 
+                               HorizontalOptions="Center"/>
+
+                        <ImageButton Source="Resources/Images/edit_icon_black.png" 
+                                     WidthRequest="62" 
+                                     HeightRequest="62"                                    
+                                     BackgroundColor="Black"
+                                     CornerRadius="10"
+                                     HorizontalOptions="End" 
+                                     VerticalOptions="Start"
+                                     Margin="0,0,-5,0"
+                                    Command="{Binding EditCarCommand}" />
+                    </Grid>
 
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10">
                         <Label Text="{Binding Make}" FontSize="24" />
@@ -309,7 +321,8 @@
                                              HorizontalOptions="End" 
                                              VerticalOptions="End"
                                              Margin="0,10,0,0"
-                                             IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:CarDetailsViewModel}}, Path=HideCheckOffButton}"                                              Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CarDetailsViewModel}}, Path=MarkAsFinishedCommand}"
+                                             IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:CarDetailsViewModel}}, Path=HideCheckOffButton}"                                              
+                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CarDetailsViewModel}}, Path=MarkAsFinishedCommand}"
                                              CommandParameter="{Binding .}"/>
                                         </StackLayout>
                                     </Grid>
@@ -383,7 +396,8 @@
                 </StackLayout>
             </ScrollView>
 
-            <Frame BackgroundColor="#1C1C1C"
+            <Frame
+                   BackgroundColor="#1C1C1C"
                    CornerRadius="20"
                    Padding="14"
                    HasShadow="True"
@@ -399,18 +413,19 @@
                     </Grid.ColumnDefinitions>
 
                     <Image Source="Resources/Images/speedometer_icon.png"
-                           WidthRequest="50" 
-                           HeightRequest="50"
-                           Aspect="AspectFit"
-                           VerticalOptions="Center"
-                           HorizontalOptions="Start"/>
+                   WidthRequest="50" 
+                   HeightRequest="50"
+                   Aspect="AspectFit"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"/>
                 </Grid>
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NavigateToTrackingCommand}" />
                 </Frame.GestureRecognizers>
             </Frame>
 
-            <Frame BackgroundColor="white"
+            <Frame
+                   BackgroundColor="white"
                    CornerRadius="20"
                    Padding="-5"
                    HasShadow="True"
@@ -426,18 +441,61 @@
                     </Grid.ColumnDefinitions>
 
                     <extended:SKLottieView x:Name="qrCodeAnimation"
-                       Source="qr_code.json" 
-                       RepeatMode="Reverse"
-                       RepeatCount="-1"
-                       WidthRequest="90" 
-                       HeightRequest="90"
-                       VerticalOptions="Center"
-                       HorizontalOptions="Start"/>
+                                    Source="qr_code.json" 
+                                    RepeatMode="Reverse"
+                                    RepeatCount="-1"
+                                    WidthRequest="90" 
+                                    HeightRequest="90"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Start"/>
                 </Grid>
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ScanReceiptCommand}" />
                 </Frame.GestureRecognizers>
             </Frame>
+
+            <BoxView IsVisible="{Binding IsEditing}" 
+             BackgroundColor="Black" 
+             Opacity="0.7"
+             AbsoluteLayout.LayoutFlags="All" 
+             AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 1"
+             InputTransparent="False"/>
+
+            <StackLayout IsVisible="{Binding IsEditing}" 
+                 BackgroundColor="Transparent" 
+                 AbsoluteLayout.LayoutFlags="All" 
+                 AbsoluteLayout.LayoutBounds="0,0,1,1"
+                 InputTransparent="False">
+
+                <BoxView Color="#000000" Opacity="0.5" 
+                 AbsoluteLayout.LayoutFlags="All" 
+                 AbsoluteLayout.LayoutBounds="0,0,1,1"
+                 InputTransparent="False"/>
+
+                <Frame BackgroundColor="Black" Padding="20" Margin="30"
+                       VerticalOptions="Center" HorizontalOptions="Center"
+                       CornerRadius="20" BorderColor ="Transparent" HasShadow="True">
+
+                    <StackLayout>
+                        <Label Text="Edit Car Details" FontSize="24" HorizontalOptions="Center" TextColor="White" />
+                        <Entry Text="{Binding Make}" Placeholder="Make" TextColor="White" />
+                        <Entry Text="{Binding Model}" Placeholder="Model" TextColor="White" />
+                        <Entry Text="{Binding LicensePlate}" Placeholder="License Plate" TextColor="White" />
+                        <Picker Title="Select Country Code"
+                                ItemsSource="{Binding CountryCodes}"
+                                SelectedItem="{Binding SelectedCountryCode}" />
+
+                        <Button Text="Edit Image" Command="{Binding PickImageCommand}" WidthRequest="150" Margin="0,15,0,25" />
+
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10">
+                            <Button Text="Accept" Command="{Binding AcceptEditCommand}" />
+                            <Button Text="Cancel" Command="{Binding CancelEditCommand}" />
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+
+            </StackLayout>
+
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>
