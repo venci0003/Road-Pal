@@ -190,6 +190,12 @@ namespace RoadPal.Services
 			await connection.InsertAsync(car);
 		}
 
+		public async Task UpdateCarAsync(Car car)
+		{
+			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();
+			await connection.UpdateAsync(car);
+		}
+
 		public async Task<IEnumerable<Car>> GetAllCarsAsync(string searchQuery, bool isFavourite)
 		{
 			SQLiteAsyncConnection connection = await _roadPalDatabase.GetConnectionAsync();

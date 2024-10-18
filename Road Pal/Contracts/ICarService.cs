@@ -22,6 +22,8 @@ namespace RoadPal.Contracts
 
 		Task AddCarAsync(Car car);
 
+		Task UpdateCarAsync(Car car);
+
 		Task<IEnumerable<Car>> GetAllCarsAsync(string querySearch, bool isFavourite);
 
 		Task DeleteAllCarsTestAsync();
