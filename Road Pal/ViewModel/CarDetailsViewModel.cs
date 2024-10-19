@@ -5,9 +5,9 @@ using RoadPal.Infrastructure.Models;
 using RoadPal.ViewModel;
 using RoadPal.Views;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 using static RoadPal.Common.ApplicationConstants.MessagesConstants;
+using static RoadPal.Common.ApplicationConstants;
 
 namespace RoadPal.ViewModels
 {
@@ -126,14 +126,14 @@ namespace RoadPal.ViewModels
 
 			NavigateToTrackingCommand = new AsyncRelayCommand(NavigateToTrackingPage);
 
-			CheckCarVignetteCommand = new AsyncRelayCommand(CheckViggnetteStatusAsync);
+			CheckCarVignetteCommand = new AsyncRelayCommand(CheckVignetteStatusAsync);
 
 			EditCarCommand = new RelayCommand(EditCar);
 			AcceptEditCommand = new AsyncRelayCommand(AcceptEdit);
 			CancelEditCommand = new RelayCommand(CancelEdit);
 			PickImageCommand = new AsyncRelayCommand(PickImageAsync);
 
-			CountryCodes = new ObservableCollection<string> { "BG", "EU" };
+			CountryCodes = DataConstants.CountryCodesConstant;
 
 			SelectedCountryCode = car.CountryCodeForLicensePlate;
 
@@ -268,16 +268,12 @@ namespace RoadPal.ViewModels
 			await Application.Current.MainPage.DisplayAlert("Car edited successfully", $"Changes:\n{changes}", "OK");
 		}
 
-
-
-
-
 		private void CancelEdit()
 		{
 			IsEditing = false;
 		}
 
-		public async Task CheckViggnetteStatusAsync()
+		public async Task CheckVignetteStatusAsync()
 		{
 			var message = await _carService.CheckVignette(licensePlate);
 

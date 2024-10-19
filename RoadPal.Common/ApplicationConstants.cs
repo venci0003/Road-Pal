@@ -1,4 +1,6 @@
-﻿namespace RoadPal.Common
+﻿using System.Collections.ObjectModel;
+
+namespace RoadPal.Common
 {
 	public class ApplicationConstants
 	{
@@ -55,6 +57,11 @@
 							"- To: {2}\n" +
 							"- Paid: {3}lv\n" +
 							"- Days left: {4}";
+		}
+
+		public static class DataConstants
+		{
+			public static readonly ObservableCollection<string> CountryCodesConstant = new ObservableCollection<string> { "BG", "EU" };
 		}
 	}
 }

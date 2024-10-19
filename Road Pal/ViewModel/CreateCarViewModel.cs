@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
 using System.Collections.ObjectModel;
+using static RoadPal.Common.ApplicationConstants;
 
 namespace RoadPal.ViewModels
 {
@@ -85,7 +86,7 @@ namespace RoadPal.ViewModels
 			SearchMakesCommand = new AsyncRelayCommand<string?>(SearchCarMakesAsync);
 			LoadCarModelsCommand = new AsyncRelayCommand<string?>(LoadCarModelsAsync);
 
-			CountryCodes = new ObservableCollection<string> { "BG", "EU" };
+			CountryCodes = DataConstants.CountryCodesConstant;
 
 			LoadCarMakes().ConfigureAwait(false);
 
