@@ -462,7 +462,11 @@
                      Opacity="0.7"
                      AbsoluteLayout.LayoutFlags="All" 
                      AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 1"
-                     InputTransparent="False"/>
+                     InputTransparent="False">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CloseCarInformationCommand}" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
 
             <StackLayout IsVisible="{Binding IsInfoOpen}" 
                          BackgroundColor="Transparent" 
@@ -483,7 +487,8 @@
                         <Label Text="Select an Option" FontSize="24" HorizontalOptions="Center" TextColor="White" />
 
                         <Button Text="Insurance Check" 
-                                Clicked="OnCheckCarInfoButtonClicked" 
+                                Clicked="OnCheckCarInfoButtonClicked"
+
                                 WidthRequest="200" Margin="0,15,0,0" />
 
                         <Button Text="Vignette Check" 

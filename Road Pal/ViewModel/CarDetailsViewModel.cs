@@ -93,6 +93,7 @@ namespace RoadPal.ViewModels
 		public IRelayCommand NavigateToTrackingCommand { get; }
 		public IRelayCommand CheckCarVignetteCommand { get; }
 		public IRelayCommand OpenCarInformationCommand { get; }
+		public IRelayCommand CloseCarInformationCommand { get; }
 		public IRelayCommand EditCarCommand { get; }
 		public IRelayCommand AcceptEditCommand { get; }
 		public IRelayCommand CancelEditCommand { get; }
@@ -146,6 +147,8 @@ namespace RoadPal.ViewModels
 			IsInfoOpen = false;
 
 			OpenCarInformationCommand = new RelayCommand(OpenCarInformation);
+
+			CloseCarInformationCommand = new RelayCommand(CloseCarInformation);
 
 			_carId = car.CarId;
 
@@ -279,6 +282,12 @@ namespace RoadPal.ViewModels
 		{
 			IsEditing = false;
 		}
+
+		private void CloseCarInformation()
+		{
+			IsInfoOpen = false;
+		}
+
 
 		private void OpenCarInformation()
 		{
