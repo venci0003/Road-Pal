@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using static RoadPal.Common.ApplicationConstants.MessagesConstants;
 using static RoadPal.Common.ApplicationConstants;
+using System.Net;
 
 namespace RoadPal.ViewModels
 {
@@ -73,6 +74,9 @@ namespace RoadPal.ViewModels
 		private bool isEditing;
 
 		[ObservableProperty]
+		private bool isInfoOpen;
+
+		[ObservableProperty]
 		private string? _imageFilePath;
 
 		[ObservableProperty]
@@ -88,10 +92,10 @@ namespace RoadPal.ViewModels
 		public IRelayCommand<ServiceNote> MarkAsFinishedCommand { get; }
 		public IRelayCommand NavigateToTrackingCommand { get; }
 		public IRelayCommand CheckCarVignetteCommand { get; }
+		public IRelayCommand OpenCarInformationCommand { get; }
 		public IRelayCommand EditCarCommand { get; }
 		public IRelayCommand AcceptEditCommand { get; }
 		public IRelayCommand CancelEditCommand { get; }
-
 		public IRelayCommand PickImageCommand { get; }
 
 
@@ -126,7 +130,7 @@ namespace RoadPal.ViewModels
 
 			NavigateToTrackingCommand = new AsyncRelayCommand(NavigateToTrackingPage);
 
-			CheckCarVignetteCommand = new AsyncRelayCommand(CheckVignetteStatusAsync);
+			CheckCarVignetteCommand = new AsyncRelayCommand(CheckCarVignetteAsync);
 
 			EditCarCommand = new RelayCommand(EditCar);
 			AcceptEditCommand = new AsyncRelayCommand(AcceptEdit);
@@ -139,8 +143,11 @@ namespace RoadPal.ViewModels
 
 			IsEditing = false;
 
-			_carId = car.CarId;
+			IsInfoOpen = false;
 
+			OpenCarInformationCommand = new RelayCommand(OpenCarInformation);
+
+			_carId = car.CarId;
 
 			HideCheckOffButton = true;
 			_trackingService = trackingServiceContext;
@@ -273,12 +280,27 @@ namespace RoadPal.ViewModels
 			IsEditing = false;
 		}
 
-		public async Task CheckVignetteStatusAsync()
+		private void OpenCarInformation()
 		{
+			IsInfoOpen = true;
+		}
+
+		public async Task CheckCarInsuranceAsync(string extractedText)
+		{
+			IsInfoOpen = false;
+
+			await Application.Current.MainPage
+					 .DisplayAlert("Vehicle Insurance Summary", extractedText, "OK");
+		}
+
+		public async Task CheckCarVignetteAsync()
+		{
+			IsInfoOpen = false;
+
 			var message = await _carService.CheckVignette(licensePlate);
 
 			await Application.Current.MainPage
-					 .DisplayAlert("Car vignette information.", message, "OK");
+					 .DisplayAlert("Vehicle Vignette Summary", message, "OK");
 		}
 
 		public async Task ChangeServiceNoteToFinished(ServiceNote? serviceNote)
