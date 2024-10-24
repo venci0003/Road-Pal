@@ -29,7 +29,7 @@ public partial class CarDetailsPage : ContentPage
 		catch (Exception ex)
 		{
 			Console.WriteLine($"Error occurred: {ex.Message}");
-			await _viewModel.CheckCarInfoAsync("An error occurred while checking the car info.");
+			await _viewModel.CheckCarInsuranceAsync("An error occurred while checking the car info.");
 		}
 	}
 
@@ -51,12 +51,12 @@ public partial class CarDetailsPage : ContentPage
 
 			string result = $"INSURANCE DETAILS\n- Insurer: {insurer}\n- Valid from: {validFrom}\n- Valid to: {validTo}\n- Days left: {daysLeft}\n";
 
-			await _viewModel.CheckCarInfoAsync(result);
+			await _viewModel.CheckCarInsuranceAsync(result);
 		}
 		catch (Exception ex)
 		{
 			Console.WriteLine($"Error occurred during navigation: {ex.Message}");
-			await _viewModel.CheckCarInfoAsync("An error occurred while checking the car info.");
+			await _viewModel.CheckCarInsuranceAsync("An error occurred while checking the car info.");
 		}
 		finally
 		{
