@@ -2,6 +2,7 @@
 using RoadPal.Contracts;
 using RoadPal.Infrastructure;
 using RoadPal.Services;
+using RoadPal.ViewModel;
 using RoadPal.ViewModels;
 using RoadPal.Views;
 using SkiaSharp.Views.Maui.Controls.Hosting;
@@ -22,7 +23,7 @@ namespace RoadPal
 					fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 				})
 				.UseBarcodeReader()
-				.UseSkiaSharp();
+				.UseSkiaSharp(true);
 
 			builder.Services.AddSingleton<RoadPalDatabase>();
 
@@ -34,12 +35,17 @@ namespace RoadPal
 			builder.Services.AddTransient<BarcodeReader>();
 			builder.Services.AddTransient<BarcodeReaderViewModel>();
 
-
+			builder.Services.AddTransient<TrackingPage>();
+			builder.Services.AddTransient<TrackingViewModel>();
 
 			builder.Services.AddSingleton<ICarService, CarService>();
 			builder.Services.AddTransient<IBarcodeService, BarcodeService>();
 			builder.Services.AddSingleton<INavigationService, NavigationService>();
 			builder.Services.AddTransient<INoteService, NoteService>();
+			builder.Services.AddTransient<ITrackingService, TrackingService>();
+
+			builder.Services.AddSingleton<WebView>(); 
+
 
 #if DEBUG
 			builder.Logging.AddDebug();
