@@ -52,7 +52,7 @@ namespace RoadPal.Common
 
 			public const string NoValidVignetteMessage = $"No valid vignette found!\n\nPlease ensure the vignette is paid and the license plate number is correct.";
 
-			public const string ValidVignetteInformationMessage = "The vignette for the vehicle with license plate {0} (BG) is valid:\n" +
+			public const string ValidVignetteInformationMessage = "VIGNETTE DETAILS\nThe vignette for the vehicle with license plate {0} (BG) is valid:\n" +
 							"- From: {1}\n" +
 							"- To: {2}\n" +
 							"- Paid: {3}lv\n" +
