@@ -1,4 +1,4 @@
-using RoadPal.ViewModels;
+﻿using RoadPal.ViewModels;
 
 namespace RoadPal.Views;
 
@@ -11,7 +11,59 @@ public partial class CarDetailsPage : ContentPage
 		InitializeComponent();
 		_viewModel = vm;
 		BindingContext = _viewModel;
+		HiddenWebView.Navigated += HiddenWebView_Navigated;
 	}
+
+	private bool isProcessing = false;
+
+	private async void OnCheckCarInfoButtonClicked(object sender, EventArgs e)
+	{
+		try
+		{
+			await HiddenWebView.EvaluateJavaScriptAsync($"document.getElementById('regPlate').value = '{_viewModel.LicensePlate}';");
+
+			await HiddenWebView.EvaluateJavaScriptAsync("document.querySelector('button.btn.btn-primary').click();");
+
+			isProcessing = true;
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error occurred: {ex.Message}");
+			await _viewModel.CheckCarInfoAsync("An error occurred while checking the car info.");
+		}
+	}
+
+	private async void HiddenWebView_Navigated(object? sender, WebNavigatedEventArgs e)
+	{
+		if (!isProcessing)
+		{
+			return;
+		}
+
+		try
+		{
+			var insurer = await HiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(1)')?.innerText || 'Not found';");
+			var validFrom = await HiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(2)')?.innerText || 'Not found';");
+			var validTo = await HiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(3)')?.innerText || 'Not found';");
+
+			TimeSpan timeLeft = DateTime.Parse(validTo) - DateTime.UtcNow;
+			int daysLeft = (int)timeLeft.TotalDays;
+
+			string result = $"INSURANCE DETAILS\n- Insurer: {insurer}\n- Valid from: {validFrom}\n- Valid to: {validTo}\n- Days left: {daysLeft}\n";
+
+			await _viewModel.CheckCarInfoAsync(result);
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error occurred during navigation: {ex.Message}");
+			await _viewModel.CheckCarInfoAsync("An error occurred while checking the car info.");
+		}
+		finally
+		{
+			isProcessing = false;
+		}
+	}
+
 
 	protected override async void OnAppearing()
 	{
