@@ -3,8 +3,6 @@ using RoadPal.Contracts;
 using RoadPal.Infrastructure;
 using RoadPal.Infrastructure.Models;
 using SQLite;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using static RoadPal.Common.ApplicationConstants;
 
 namespace RoadPal.Services
