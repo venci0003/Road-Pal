@@ -1,4 +1,5 @@
 ﻿using RoadPal.ViewModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace RoadPal.Views;
 
@@ -11,20 +12,26 @@ public partial class CarDetailsPage : ContentPage
 		InitializeComponent();
 		_viewModel = vm;
 		BindingContext = _viewModel;
-		HiddenWebView.Navigated += HiddenWebView_Navigated;
+		InsuranceHiddenWebView.Navigated += InsuranceHiddenWebView_Navigated;
+		InspectionHiddenWebView.Navigated += InspectionHiddenWebView_Navigated;
 	}
 
-	private bool isProcessing = false;
+	private bool isInspectionProcessing = false;
 
-	private async void OnCheckCarInfoButtonClicked(object sender, EventArgs e)
+	private async void OnCheckCarInspectionButtonClicked(object sender, EventArgs e)
 	{
 		try
 		{
-			await HiddenWebView.EvaluateJavaScriptAsync($"document.getElementById('regPlate').value = '{_viewModel.LicensePlate}';");
+			_viewModel.CaptchaInput = null;
 
-			await HiddenWebView.EvaluateJavaScriptAsync("document.querySelector('button.btn.btn-primary').click();");
+			_viewModel.OpenInspectionCaptcha();
 
-			isProcessing = true;
+			var imageUrl = await InspectionHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('img.mb-3').src || 'Image not found';");
+
+			CaptchaImage.Source = imageUrl;
+
+			await InspectionHiddenWebView.EvaluateJavaScriptAsync($"document.getElementById('regPlate').value = '{_viewModel.LicensePlate}';");
+
 		}
 		catch (Exception ex)
 		{
@@ -33,18 +40,73 @@ public partial class CarDetailsPage : ContentPage
 		}
 	}
 
-	private async void HiddenWebView_Navigated(object? sender, WebNavigatedEventArgs e)
+	private async void CaptchaSubmitButtonClicked(object sender, EventArgs e)
 	{
-		if (!isProcessing)
+		isInspectionProcessing = true;
+
+		await InspectionHiddenWebView.EvaluateJavaScriptAsync($"document.getElementById('captcha').value = '{_viewModel.CaptchaInput}';");
+		await InspectionHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('button.btn.btn-primary').click();");
+	}
+
+	private async void InspectionHiddenWebView_Navigated(object? sender, WebNavigatedEventArgs e)
+	{
+		if (!isInspectionProcessing)
 		{
 			return;
 		}
 
 		try
 		{
-			var insurer = await HiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(1)')?.innerText || 'Not found';");
-			var validFrom = await HiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(2)')?.innerText || 'Not found';");
-			var validTo = await HiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(3)')?.innerText || 'Not found';");
+			var alertMessage = await InspectionHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('.alert.alert-success.text-center.loading-content')?.innerText.trim() || 'Not found';");
+
+			string[] splittedResult = alertMessage.Split(' ');
+
+			string result = $"INSPECTION DETAILS\n- Valid technical inspection until {splittedResult[splittedResult.Length - 1]}";
+
+			await _viewModel.CheckCarInspectionAsync(result);
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error occurred during navigation: {ex.Message}");
+			await _viewModel.CheckCarInspectionAsync("An error occurred while checking the car info.");
+		}
+		finally
+		{
+			isInspectionProcessing = false;
+		}
+	}
+
+	private bool isInsuranceProcessing = false;
+
+	private async void OnCheckCarInsuranceButtonClicked(object sender, EventArgs e)
+	{
+		try
+		{
+			await InsuranceHiddenWebView.EvaluateJavaScriptAsync($"document.getElementById('regPlate').value = '{_viewModel.LicensePlate}';");
+
+			await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('button.btn.btn-primary').click();");
+
+			isInsuranceProcessing = true;
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error occurred: {ex.Message}");
+			await _viewModel.CheckCarInsuranceAsync("An error occurred while checking the car info.");
+		}
+	}
+
+	private async void InsuranceHiddenWebView_Navigated(object? sender, WebNavigatedEventArgs e)
+	{
+		if (!isInsuranceProcessing)
+		{
+			return;
+		}
+
+		try
+		{
+			var insurer = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(1)')?.innerText || 'Not found';");
+			var validFrom = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(2)')?.innerText || 'Not found';");
+			var validTo = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(3)')?.innerText || 'Not found';");
 
 			TimeSpan timeLeft = DateTime.Parse(validTo) - DateTime.UtcNow;
 			int daysLeft = (int)timeLeft.TotalDays;
@@ -60,7 +122,7 @@ public partial class CarDetailsPage : ContentPage
 		}
 		finally
 		{
-			isProcessing = false;
+			isInsuranceProcessing = false;
 		}
 	}
 

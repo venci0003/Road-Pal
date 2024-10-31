@@ -74,7 +74,13 @@ namespace RoadPal.ViewModels
 		private bool isEditing;
 
 		[ObservableProperty]
-		private bool isInfoOpen;
+		private bool isInfoVisible;
+
+		[ObservableProperty]
+		private bool isCaptchaVisible;
+
+		[ObservableProperty]
+		private string? captchaInput;
 
 		[ObservableProperty]
 		private string? _imageFilePath;
@@ -93,11 +99,12 @@ namespace RoadPal.ViewModels
 		public IRelayCommand NavigateToTrackingCommand { get; }
 		public IRelayCommand CheckCarVignetteCommand { get; }
 		public IRelayCommand OpenCarInformationCommand { get; }
-		public IRelayCommand CloseCarInformationCommand { get; }
+		public IRelayCommand ClosePopUpCommand { get; }
 		public IRelayCommand EditCarCommand { get; }
 		public IRelayCommand AcceptEditCommand { get; }
 		public IRelayCommand CancelEditCommand { get; }
 		public IRelayCommand PickImageCommand { get; }
+		public IRelayCommand OpenInspectionCaptchaCommand { get; }
 
 
 		public CarDetailsViewModel(Car car,
@@ -137,6 +144,7 @@ namespace RoadPal.ViewModels
 			AcceptEditCommand = new AsyncRelayCommand(AcceptEdit);
 			CancelEditCommand = new RelayCommand(CancelEdit);
 			PickImageCommand = new AsyncRelayCommand(PickImageAsync);
+			OpenInspectionCaptchaCommand = new RelayCommand(OpenInspectionCaptcha);
 
 			CountryCodes = DataConstants.CountryCodesConstant;
 
@@ -144,11 +152,13 @@ namespace RoadPal.ViewModels
 
 			IsEditing = false;
 
-			IsInfoOpen = false;
+			IsInfoVisible = false;
+
+			IsCaptchaVisible = false;
 
 			OpenCarInformationCommand = new RelayCommand(OpenCarInformation);
 
-			CloseCarInformationCommand = new RelayCommand(CloseCarInformation);
+			ClosePopUpCommand = new RelayCommand(ClosePopUp);
 
 			_carId = car.CarId;
 
@@ -283,28 +293,45 @@ namespace RoadPal.ViewModels
 			IsEditing = false;
 		}
 
-		private void CloseCarInformation()
+		private void ClosePopUp()
 		{
-			IsInfoOpen = false;
+			IsInfoVisible = false;
+
+			IsCaptchaVisible = false;
 		}
 
 
 		private void OpenCarInformation()
 		{
-			IsInfoOpen = true;
+			IsInfoVisible = true;
+		}
+
+		public void OpenInspectionCaptcha()
+		{
+			IsInfoVisible = false;
+
+			IsCaptchaVisible = true;
 		}
 
 		public async Task CheckCarInsuranceAsync(string extractedText)
 		{
-			IsInfoOpen = false;
+			IsInfoVisible = false;
 
 			await Application.Current.MainPage
 					 .DisplayAlert("Vehicle Insurance Summary", extractedText, "OK");
 		}
 
+		public async Task CheckCarInspectionAsync(string extractedText)
+		{
+			IsCaptchaVisible = false;
+
+			await Application.Current.MainPage
+					 .DisplayAlert("Vehicle Inspection Summary", extractedText, "OK");
+		}
+
 		public async Task CheckCarVignetteAsync()
 		{
-			IsInfoOpen = false;
+			IsInfoVisible = false;
 
 			var message = await _carService.CheckVignette(licensePlate);
 
