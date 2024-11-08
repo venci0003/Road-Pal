@@ -10,17 +10,15 @@ namespace RoadPal.ViewModels
 	public partial class CreateCarViewModel : ObservableObject
 	{
 		private readonly INavigationService _navigationService;
+		private readonly ICarService _carService;
 
 		[ObservableProperty]
-
 		private string? make;
 
 		[ObservableProperty]
-
 		private string? model;
 
 		[ObservableProperty]
-
 		private string? description;
 
 		[ObservableProperty]
@@ -38,8 +36,6 @@ namespace RoadPal.ViewModels
 		[ObservableProperty]
 		private string title = "Add Vehicle Maintenance";
 
-		private readonly ICarService _carService;
-
 		[ObservableProperty]
 		private ObservableCollection<string>? carMakes;
 
@@ -56,10 +52,7 @@ namespace RoadPal.ViewModels
 		private string? manualModelInput;
 
 		[ObservableProperty]
-		private bool isManualMakeInputVisible;
-
-		[ObservableProperty]
-		private bool isManualModelInputVisible;
+		private bool isManualInputEnabled;
 
 		[ObservableProperty]
 		private ObservableCollection<string> countryCodes;
@@ -67,19 +60,22 @@ namespace RoadPal.ViewModels
 		[ObservableProperty]
 		private string? selectedCountryCode;
 
+		// Properties to control visibility of pickers and manual inputs
+		[ObservableProperty]
+		private bool arePickersVisible = true;
+
+		[ObservableProperty]
+		private bool areManualInputsVisible = false;
 
 		public IRelayCommand PickImageCommand { get; }
 		public IRelayCommand SaveCarCommand { get; }
 		public IAsyncRelayCommand SearchMakesCommand { get; }
 		public IAsyncRelayCommand LoadCarModelsCommand { get; }
 
-
-
 		public CreateCarViewModel(ICarService carService, INavigationService navigationService)
 		{
 			_carService = carService;
 			_navigationService = navigationService;
-
 
 			PickImageCommand = new AsyncRelayCommand(PickImageAsync);
 			SaveCarCommand = new AsyncRelayCommand(SaveCarAsync);
@@ -89,7 +85,6 @@ namespace RoadPal.ViewModels
 			CountryCodes = DataConstants.CountryCodesConstant;
 
 			LoadCarMakes().ConfigureAwait(false);
-
 		}
 
 		private string? selectedMake;
@@ -118,57 +113,39 @@ namespace RoadPal.ViewModels
 			}
 		}
 
+		partial void OnIsManualInputEnabledChanged(bool value)
+		{
+			// Toggle visibility based on whether manual input is enabled
+			ArePickersVisible = !value;
+			AreManualInputsVisible = value;
+		}
 
 		private async Task LoadCarMakes()
 		{
 			var makes = await _carService.GetCarMakesAsync();
 			CarMakes = new ObservableCollection<string>(makes);
 		}
+
 		private async Task LoadCarModelsAsync(string? make)
 		{
 			if (!string.IsNullOrEmpty(make))
 			{
 				var models = await _carService.GetCarModelsForMakeAsync(make);
-
-				if (models != null && models.Count > 0)
-				{
-					CarModels = new ObservableCollection<string>(models);
-					IsManualModelInputVisible = false;
-				}
-				else
-				{
-					CarModels = null;
-					IsManualModelInputVisible = true;
-				}
-			}
-			else
-			{
-				CarModels = null;
-				IsManualModelInputVisible = false;
+				CarModels = models != null && models.Count > 0
+					? new ObservableCollection<string>(models)
+					: null;
 			}
 		}
 
 		private async Task SearchCarMakesAsync(string? searchTerm)
 		{
 			if (string.IsNullOrWhiteSpace(searchTerm))
-			{
 				return;
-			}
 
 			var filteredMakes = await _carService.SearchCarMakesAsync(searchTerm);
-
-			if (filteredMakes != null && filteredMakes.Count > 0)
-			{
-				CarMakes = new ObservableCollection<string>(filteredMakes);
-				IsManualMakeInputVisible = false;
-				IsManualModelInputVisible = false;
-			}
-			else
-			{
-				CarMakes = null;
-				IsManualMakeInputVisible = true;
-				IsManualModelInputVisible = true;
-			}
+			CarMakes = filteredMakes != null && filteredMakes.Count > 0
+				? new ObservableCollection<string>(filteredMakes)
+				: null;
 		}
 
 		private async Task PickImageAsync()
@@ -194,10 +171,8 @@ namespace RoadPal.ViewModels
 
 		private async Task SaveCarAsync()
 		{
-			if (string.IsNullOrWhiteSpace(make) &&
-				string.IsNullOrWhiteSpace(manualMakeInput) ||
-				string.IsNullOrWhiteSpace(model) &&
-				string.IsNullOrWhiteSpace(manualModelInput) ||
+			if (string.IsNullOrWhiteSpace(make) && string.IsNullOrWhiteSpace(manualMakeInput) ||
+				string.IsNullOrWhiteSpace(model) && string.IsNullOrWhiteSpace(manualModelInput) ||
 				string.IsNullOrWhiteSpace(licensePlate) ||
 				string.IsNullOrWhiteSpace(_imageFilePath) ||
 				string.IsNullOrWhiteSpace(selectedCountryCode))
@@ -212,26 +187,14 @@ namespace RoadPal.ViewModels
 				CountryCodeForLicensePlate = selectedCountryCode!,
 				ImagePath = _imageFilePath!,
 				TotalMoneySpent = 0.0m,
-				IsFavourite = false
+				IsFavourite = false,
+				Make = IsManualInputEnabled ? manualMakeInput! : make!,
+				Model = IsManualInputEnabled ? manualModelInput! : model!
 			};
 
-			if (CarMakes != null)
-			{
-				newCar.Make = make!;
-				newCar.Model = model!;
-			}
-			else
-			{
-				newCar.Make = manualMakeInput!;
-				newCar.Model = manualModelInput!;
-			}
-
 			await _carService.AddCarAsync(newCar);
-
 			await Application.Current.MainPage.DisplayAlert("Success", "Car added successfully!", "OK");
-
 			await _navigationService.GoBack();
 		}
-
 	}
 }

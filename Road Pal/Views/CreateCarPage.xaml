@@ -14,25 +14,28 @@
                        SearchCommand="{Binding SearchMakesCommand}"
                        SearchCommandParameter="{Binding Text, Source={RelativeSource Self}}" />
 
+            <CheckBox IsChecked="{Binding IsManualInputEnabled}" 
+                      HorizontalOptions="Center" />
+
+            <!-- Pickers for Make and Model, shown when ArePickersVisible is true -->
             <Picker Title="Select Make"
                     ItemsSource="{Binding CarMakes}"
-                    SelectedItem="{Binding SelectedMake}" />
+                    SelectedItem="{Binding SelectedMake}"
+                    IsVisible="{Binding ArePickersVisible}" />
 
             <Picker Title="Select Model"
                     ItemsSource="{Binding CarModels}"
                     SelectedItem="{Binding SelectedModel}"
-                    Focused="OnModelPickerFocused" 
-                    IsEnabled="{Binding SelectedMake, Converter={StaticResource NullToVisibilityConverter}}" />
+                    IsEnabled="{Binding SelectedMake, Converter={StaticResource NullToVisibilityConverter}}" 
+                    IsVisible="{Binding ArePickersVisible}" />
 
             <Entry Placeholder="Type make if not found" 
                    Text="{Binding ManualMakeInput}" 
-                   IsVisible="{Binding IsManualMakeInputVisible}" />
+                   IsVisible="{Binding AreManualInputsVisible}" />
 
             <Entry Placeholder="Type model if not found" 
                    Text="{Binding ManualModelInput}" 
-                   IsVisible="{Binding IsManualModelInputVisible}" />
-
-
+                   IsVisible="{Binding AreManualInputsVisible}" />
 
             <Entry Text="{Binding LicensePlate}" Placeholder="License Plate" />
 
@@ -42,8 +45,7 @@
 
             <Button Text="Pick Image" Command="{Binding PickImageCommand}" />
 
-            <Image Source="{Binding CarImage}" Aspect="AspectFit" 
-                   Margin="10"/>
+            <Image Source="{Binding CarImage}" Aspect="AspectFit" Margin="10"/>
 
             <Button Text="Save" Command="{Binding SaveCarCommand}" />
         </StackLayout>
