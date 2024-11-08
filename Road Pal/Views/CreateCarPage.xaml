@@ -17,7 +17,6 @@
             <CheckBox IsChecked="{Binding IsManualInputEnabled}" 
                       HorizontalOptions="Center" />
 
-            <!-- Pickers for Make and Model, shown when ArePickersVisible is true -->
             <Picker Title="Select Make"
                     ItemsSource="{Binding CarMakes}"
                     SelectedItem="{Binding SelectedMake}"

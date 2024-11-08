@@ -115,7 +115,6 @@ namespace RoadPal.ViewModels
 
 		partial void OnIsManualInputEnabledChanged(bool value)
 		{
-			// Toggle visibility based on whether manual input is enabled
 			ArePickersVisible = !value;
 			AreManualInputsVisible = value;
 		}
