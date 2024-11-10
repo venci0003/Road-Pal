@@ -178,7 +178,7 @@ namespace RoadPal.ViewModels
 				if (result != null)
 				{
 					_imageFilePath = result.FullPath;
-					carImage = _imageFilePath;
+					CarImage = _imageFilePath!;
 				}
 			}
 			catch (Exception ex)
@@ -249,15 +249,14 @@ namespace RoadPal.ViewModels
 				CountryCode = selectedCountryCode;
 				hasChanges = true;
 			}
+			string originalImagePath = string.Empty;
 
-			bool updatePage = false;
 			if (!string.IsNullOrWhiteSpace(_imageFilePath) && _imageFilePath != carToEdit.ImagePath)
 			{
 				changes.AppendLine($"- Image updated!");
+				originalImagePath = carToEdit.ImagePath;
 				carToEdit.ImagePath = _imageFilePath;
 				hasChanges = true;
-
-				updatePage = true;
 			}
 
 			if (!hasChanges)
@@ -274,14 +273,11 @@ namespace RoadPal.ViewModels
 
 			if (!confirmation)
 			{
+				CarImage = originalImagePath;
 				return;
 			}
 
-			if (updatePage)
-			{
-				var newPage = new CarDetailsPage(this);
-				await _navigationService.RefreshCurrentPage(newPage);
-			}
+
 
 			await _carService.UpdateCarAsync(carToEdit);
 
