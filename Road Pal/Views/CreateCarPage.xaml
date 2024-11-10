@@ -6,47 +6,132 @@
              x:DataType="vm:CreateCarViewModel">
 
     <ContentPage.Content>
-        <StackLayout Padding="20">
-            <Label Text="{Binding Title}" FontSize="24" HorizontalOptions="Center" />
+        <ScrollView>
+            <StackLayout Padding="20">
+                <Label Text="{Binding Title}" FontSize="24" HorizontalOptions="Center" />
 
-            <SearchBar Placeholder="Search make" 
-                       Text="{Binding SearchTerm}" 
-                       SearchCommand="{Binding SearchMakesCommand}"
-                       SearchCommandParameter="{Binding Text, Source={RelativeSource Self}}" />
+                <SearchBar Placeholder="Search make" 
+                           Text="{Binding SearchTerm}" 
+                           SearchCommand="{Binding SearchMakesCommand}"
+                           SearchCommandParameter="{Binding Text, Source={RelativeSource Self}}" />
 
-            <CheckBox IsChecked="{Binding IsManualInputEnabled}" 
-                      HorizontalOptions="Center" />
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                    <CheckBox IsChecked="{Binding IsManualInputEnabled}" />
+                    <Label Text="Enable Manual Input" VerticalOptions="Center" />
+                </HorizontalStackLayout>
 
-            <Picker Title="Select Make"
-                    ItemsSource="{Binding CarMakes}"
-                    SelectedItem="{Binding SelectedMake}"
-                    IsVisible="{Binding ArePickersVisible}" />
+                <Picker Title="Select Make"
+                        ItemsSource="{Binding CarMakes}"
+                        SelectedItem="{Binding SelectedMake}"
+                        IsVisible="{Binding ArePickersVisible}" />
 
-            <Picker Title="Select Model"
-                    ItemsSource="{Binding CarModels}"
-                    SelectedItem="{Binding SelectedModel}"
-                    IsEnabled="{Binding SelectedMake, Converter={StaticResource NullToVisibilityConverter}}" 
-                    IsVisible="{Binding ArePickersVisible}" />
+                <Picker Title="Select Model"
+                        ItemsSource="{Binding CarModels}"
+                        SelectedItem="{Binding SelectedModel}"
+                        IsEnabled="{Binding SelectedMake, Converter={StaticResource NullToVisibilityConverter}}" 
+                        IsVisible="{Binding ArePickersVisible}" />
 
-            <Entry Placeholder="Type make if not found" 
-                   Text="{Binding ManualMakeInput}" 
-                   IsVisible="{Binding AreManualInputsVisible}" />
+                <Entry Placeholder="Type make if not found" 
+                       Text="{Binding ManualMakeInput}" 
+                       IsVisible="{Binding AreManualInputsVisible}" />
 
-            <Entry Placeholder="Type model if not found" 
-                   Text="{Binding ManualModelInput}" 
-                   IsVisible="{Binding AreManualInputsVisible}" />
+                <Entry Placeholder="Type model if not found" 
+                       Text="{Binding ManualModelInput}" 
+                       IsVisible="{Binding AreManualInputsVisible}" />
 
-            <Entry Text="{Binding LicensePlate}" Placeholder="License Plate" />
+                <Entry Text="{Binding LicensePlate}" Placeholder="License Plate" />
 
-            <Picker Title="Select Country Code"
-                    ItemsSource="{Binding CountryCodes}"
-                    SelectedItem="{Binding SelectedCountryCode}" />
+                <Picker Title="Select Country Code"
+                        ItemsSource="{Binding CountryCodes}"
+                        SelectedItem="{Binding SelectedCountryCode}" />
 
-            <Button Text="Pick Image" Command="{Binding PickImageCommand}" />
+                <StackLayout Spacing="10">
+                    <Button Text="Pick Image" Command="{Binding PickImageCommand}" />
 
-            <Image Source="{Binding CarImage}" Aspect="AspectFit" Margin="10"/>
+                    <Button Text="Save" Command="{Binding SaveCarCommand}" />
+                </StackLayout>
 
-            <Button Text="Save" Command="{Binding SaveCarCommand}" />
-        </StackLayout>
+                <Frame Margin="10" Padding="10" HasShadow="True" CornerRadius="10">
+                    <StackLayout>
+                        <Frame Margin="0,0,0,10" Padding="10" HasShadow="True" CornerRadius="10" WidthRequest="190" BackgroundColor="#2A2D30">
+                            <Label HorizontalOptions="Center" Margin="0,0,0,0" FontSize="20" Text="{Binding PreviewText}">
+                            </Label>
+                        </Frame>
+                        <StackLayout HorizontalOptions="Center"  Orientation="Horizontal" Spacing="10" Margin="0,0,0,2">
+                            <Label Text="{Binding Make}" FontSize="18" />
+                            <Label Text="{Binding Model}" FontSize="18" />
+                        </StackLayout>
+
+                        <Image Source="{Binding CarImage}" 
+                               Aspect="AspectFill" 
+                               WidthRequest="375" 
+                               HeightRequest="200"
+                               VerticalOptions="Center" 
+                               HorizontalOptions="Start" />
+
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                            <Frame BackgroundColor="White"
+                                   CornerRadius="5"
+                                   Padding="0"
+                                   WidthRequest="285"
+                                   HorizontalOptions="FillAndExpand"
+                                   Margin="0,10,5,10"
+                                   HasShadow="True"
+                                   InputTransparent="True">
+                                <Grid InputTransparent="True">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <BoxView Color="#00309a"
+                             Grid.RowSpan="3"
+                             Grid.Column="0"
+                             WidthRequest="60"
+                             HorizontalOptions="FillAndExpand"
+                             VerticalOptions="FillAndExpand"/>
+
+                                    <Image Source="Resources/Images/flag_of_europe.png"
+                           Grid.Row="0"
+                           Grid.Column="0"
+                           WidthRequest="60"
+                           HeightRequest="40"
+                           Aspect="AspectFill"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+
+                                    <Label Text="{Binding SelectedCountryCode}"
+                           Grid.Row="1"
+                           Grid.Column="0"
+                           FontSize="12"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           TextColor="White"
+                           BackgroundColor="#00309a"
+                           Padding="5"/>
+
+                                    <Label Text="{Binding LicensePlate}"
+                           Grid.Row="0"
+                           Grid.Column="1"
+                           Grid.RowSpan="3"
+                           FontSize="24"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           TextColor="Black"
+                           Padding="1"/>
+                                </Grid>
+                            </Frame>
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>
