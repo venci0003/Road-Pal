@@ -12,60 +12,23 @@ namespace RoadPal.ViewModels
 		private readonly INavigationService _navigationService;
 		private readonly ICarService _carService;
 
-		[ObservableProperty]
-		private string? make;
-
-		[ObservableProperty]
-		private string? model;
-
-		[ObservableProperty]
-		private string? description;
-
-		[ObservableProperty]
-		private string? licensePlate;
-
-		[ObservableProperty]
-		private string? countryCode;
-
-		[ObservableProperty]
-		private string? carImage;
-
-		[ObservableProperty]
-		private string? _imageFilePath;
-
-		[ObservableProperty]
-		private string title = "Add Vehicle Maintenance";
-
-		[ObservableProperty]
-		private ObservableCollection<string>? carMakes;
-
-		[ObservableProperty]
-		private string? searchTerm;
-
-		[ObservableProperty]
-		private ObservableCollection<string>? carModels;
-
-		[ObservableProperty]
-		private string? manualMakeInput;
-
-		[ObservableProperty]
-		private string? manualModelInput;
-
-		[ObservableProperty]
-		private bool isManualInputEnabled;
-
-		[ObservableProperty]
-		private ObservableCollection<string> countryCodes;
-
-		[ObservableProperty]
-		private string? selectedCountryCode;
-
-		// Properties to control visibility of pickers and manual inputs
-		[ObservableProperty]
-		private bool arePickersVisible = true;
-
-		[ObservableProperty]
-		private bool areManualInputsVisible = false;
+		[ObservableProperty] private string? make;
+		[ObservableProperty] private string? model;
+		[ObservableProperty] private string? description;
+		[ObservableProperty] private string? licensePlate;
+		[ObservableProperty] private string? countryCode;
+		[ObservableProperty] private string? carImage;
+		[ObservableProperty] private string? _imageFilePath;
+		[ObservableProperty] private string title = "Add Vehicle Maintenance";
+		[ObservableProperty] private string previewText = "Preview";
+		[ObservableProperty] private ObservableCollection<string>? carMakes;
+		[ObservableProperty] private string? searchTerm;
+		[ObservableProperty] private ObservableCollection<string>? carModels;
+		[ObservableProperty] private bool isManualInputEnabled;
+		[ObservableProperty] private ObservableCollection<string> countryCodes;
+		[ObservableProperty] private string? selectedCountryCode;
+		[ObservableProperty] private bool arePickersVisible = true;
+		[ObservableProperty] private bool areManualInputsVisible = false;
 
 		public IRelayCommand PickImageCommand { get; }
 		public IRelayCommand SaveCarCommand { get; }
@@ -94,7 +57,7 @@ namespace RoadPal.ViewModels
 			set
 			{
 				SetProperty(ref selectedMake, value);
-				if (!string.IsNullOrEmpty(selectedMake))
+				if (!string.IsNullOrEmpty(selectedMake) && !IsManualInputEnabled)
 				{
 					Make = selectedMake;
 					LoadCarModelsAsync(selectedMake).ConfigureAwait(false);
@@ -109,7 +72,38 @@ namespace RoadPal.ViewModels
 			set
 			{
 				SetProperty(ref selectedModel, value);
-				Model = selectedModel;
+				if (!IsManualInputEnabled)
+				{
+					Model = selectedModel;
+				}
+			}
+		}
+
+		private string? manualMakeInput;
+		public string? ManualMakeInput
+		{
+			get => manualMakeInput;
+			set
+			{
+				SetProperty(ref manualMakeInput, value);
+				if (IsManualInputEnabled)
+				{
+					Make = manualMakeInput;
+				}
+			}
+		}
+
+		private string? manualModelInput;
+		public string? ManualModelInput
+		{
+			get => manualModelInput;
+			set
+			{
+				SetProperty(ref manualModelInput, value);
+				if (IsManualInputEnabled)
+				{
+					Model = manualModelInput;
+				}
 			}
 		}
 
@@ -117,6 +111,17 @@ namespace RoadPal.ViewModels
 		{
 			ArePickersVisible = !value;
 			AreManualInputsVisible = value;
+
+			if (value)
+			{
+				Make = manualMakeInput;
+				Model = manualModelInput;
+			}
+			else
+			{
+				Make = selectedMake;
+				Model = selectedModel;
+			}
 		}
 
 		private async Task LoadCarMakes()
@@ -159,7 +164,7 @@ namespace RoadPal.ViewModels
 				if (result != null)
 				{
 					_imageFilePath = result.FullPath;
-					carImage = _imageFilePath;
+					CarImage = _imageFilePath;
 				}
 			}
 			catch (Exception ex)
