@@ -10,7 +10,5 @@ namespace RoadPal.Contracts
 	{
 		Task NavigateToPage(Page page);
 		Task GoBack();
-
-		Task RefreshCurrentPage(Page page);
 	}
 }
