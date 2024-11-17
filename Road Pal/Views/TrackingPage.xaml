@@ -15,15 +15,15 @@
         <Label Text="Speed (km/h):" />
         <Label Text="{Binding CurrentSpeed, StringFormat='{0:F2}'}" />
 
-        <Label Text="Distance (km):" />
-        <Label Text="{Binding DistanceTraveled, StringFormat='{0:F2}'}" />
+        <!--<Label Text="Distance (km):" />
+        <Label Text="{Binding DistanceTraveled, StringFormat='{0:F2}'}" />-->
 
-        <Button Text="Start Tracking"
+        <!--<Button Text="Start Tracking"
                 Command="{Binding StartTrackingCommand}"
                 IsEnabled="{Binding Source={RelativeSource Self}, Path=Command.CanExecute}" />
 
         <Button Text="Stop Tracking"
-                Command="{Binding StopTrackingCommand}" />
+                Command="{Binding StopTrackingCommand}" />-->
 
         <mapsui:MapControl x:Name="MapControl"
                            VerticalOptions="FillAndExpand"
