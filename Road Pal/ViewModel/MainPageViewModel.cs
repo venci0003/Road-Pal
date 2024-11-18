@@ -121,6 +121,9 @@ namespace RoadPal.ViewModels
 
 			Cars?.Remove(car);
 
+			string cacheKey = $"{_searchQuery}_{isFavourite}";
+			_memoryCache.Remove(cacheKey);
+
 			await _carService.DeleteCarByIdAsync(car.CarId);
 
 			await LoadCarsAsync();
@@ -128,32 +131,24 @@ namespace RoadPal.ViewModels
 
 		public async Task LoadCarsAsync()
 		{
-			// Construct a cache key based on search query and favourite status
 			string cacheKey = $"{_searchQuery}_{isFavourite}";
 
-			// Try to get the cars from the cache first
 			if (!_memoryCache.TryGetValue(cacheKey, out ObservableCollection<Car> cachedCars))
 			{
-				// If the cars are not in the cache, fetch from the service
 				IEnumerable<Car> carsFromService = await _carService.GetAllCarsAsync(_searchQuery, isFavourite);
 
-				// If cars are fetched, cache them for later use
 				cachedCars = new ObservableCollection<Car>(carsFromService);
 
-				// Set cache options (you can define an expiration time here)
 				var cacheOptions = new MemoryCacheEntryOptions
 				{
-					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) // Cache for 10 minutes, for example
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
 				};
 
-				// Store the fetched cars in the cache
 				_memoryCache.Set(cacheKey, cachedCars, cacheOptions);
 			}
 
-			// Set the cached cars (or the newly fetched ones) to the Cars property
 			Cars = cachedCars;
 
-			// Set the car count message
 			CarCountMessage = (Cars == null || Cars.Count == 0)
 				? NoCarsMessage
 				: null;
