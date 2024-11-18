@@ -99,7 +99,7 @@
                                          HorizontalOptions="Center"
                                          VerticalOptions="FillAndExpand"
                                          Padding="0"
-                                         BackgroundColor="black"
+                                         BackgroundColor="Black"
                                          Command="{Binding OpenCarInformationCommand}" />
 
                         </Grid>

@@ -65,6 +65,7 @@
 		<PackageReference Include="Mapsui.Maui" Version="4.1.7" />
 		<PackageReference Include="Mapsui.Nts" Version="4.1.7" />
 		<PackageReference Include="Mapsui.Rendering.Skia" Version="4.1.7" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />

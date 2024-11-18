@@ -27,6 +27,8 @@ namespace RoadPal
 
 			builder.Services.AddSingleton<RoadPalDatabase>();
 
+			builder.Services.AddMemoryCache();
+
 			builder.Services.AddTransient<MainPage>();
 			builder.Services.AddTransient<MainPageViewModel>();
 			builder.Services.AddTransient<CreateCarPage>();
