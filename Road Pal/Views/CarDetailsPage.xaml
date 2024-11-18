@@ -113,7 +113,9 @@
 
                     <WebView x:Name="InspectionHiddenWebView"
                              IsVisible="False"
-                             Source="https://www.car-diary.net/bg/proverka-na-gtp"/>
+                             Source="https://www.car-diary.net/bg/proverka-na-gtp" 
+                             HeightRequest="600"
+                             WidthRequest="350"/>
 
                     <Label Text="Total Money Spent" FontSize="24" HorizontalOptions="Start" Margin="0, 10, 0, 0"/>
 

@@ -1,5 +1,6 @@
 ﻿using RoadPal.ViewModels;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace RoadPal.Views;
 
@@ -59,11 +60,24 @@ public partial class CarDetailsPage : ContentPage
 		{
 			var alertMessage = await InspectionHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('.alert.alert-success.text-center.loading-content')?.innerText.trim() || 'Not found';");
 
-			string[] splittedResult = alertMessage.Split(' ');
+			string datePattern = @"\d{2}\.\d{2}\.\d{4}";
 
-			string result = $"INSPECTION DETAILS\n- Valid technical inspection until {splittedResult[splittedResult.Length - 1]}";
+			Match match = Regex.Match(alertMessage, datePattern);
 
-			await _viewModel.CheckCarInspectionAsync(result);
+			if (match.Success)
+			{
+				string date = match.Value; 
+				string result = $"INSPECTION DETAILS\n- Valid technical inspection until {date}";
+
+				await _viewModel.CheckCarInspectionAsync(result);
+			}
+			else
+			{
+				string result = "INSPECTION DETAILS\n- Date not found.";
+				await _viewModel.CheckCarInspectionAsync(result);
+			}
+
+			InspectionHiddenWebView.Source = "https://www.car-diary.net/bg/proverka-na-gtp";
 		}
 		catch (Exception ex)
 		{
