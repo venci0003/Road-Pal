@@ -107,7 +107,9 @@
 
                     <WebView x:Name="InsuranceHiddenWebView"
                              IsVisible="False"
-                             Source="https://www.car-diary.net/bg/proverka-na-grazhdanska-otgovornost"/>
+                             Source="https://www.car-diary.net/bg/proverka-na-grazhdanska-otgovornost"
+                             HeightRequest="600"
+                             WidthRequest="350"/>
 
                     <WebView x:Name="InspectionHiddenWebView"
                              IsVisible="False"

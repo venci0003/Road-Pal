@@ -82,6 +82,7 @@ public partial class CarDetailsPage : ContentPage
 	{
 		try
 		{
+
 			await InsuranceHiddenWebView.EvaluateJavaScriptAsync($"document.getElementById('regPlate').value = '{_viewModel.LicensePlate}';");
 
 			await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('button.btn.btn-primary').click();");
@@ -114,6 +115,8 @@ public partial class CarDetailsPage : ContentPage
 			string result = $"INSURANCE DETAILS\n- Insurer: {insurer}\n- Valid from: {validFrom}\n- Valid to: {validTo}\n- Days left: {daysLeft}\n";
 
 			await _viewModel.CheckCarInsuranceAsync(result);
+
+			InsuranceHiddenWebView.Source = "https://www.car-diary.net/bg/proverka-na-grazhdanska-otgovornost";
 		}
 		catch (Exception ex)
 		{
