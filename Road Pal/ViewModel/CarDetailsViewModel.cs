@@ -8,12 +8,14 @@ using System.Collections.ObjectModel;
 using System.Text;
 using static RoadPal.Common.ApplicationConstants.MessagesConstants;
 using static RoadPal.Common.ApplicationConstants;
-using System.Net;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace RoadPal.ViewModels
 {
 	public partial class CarDetailsViewModel : ObservableObject
 	{
+		private readonly IMemoryCache _memoryCache;
+
 		private readonly INavigationService _navigationService;
 
 		private readonly IBarcodeService _barcodeService;
@@ -112,7 +114,8 @@ namespace RoadPal.ViewModels
 			IBarcodeService barcodeServiceContext,
 			ICarService carServiceContext,
 			INoteService noteServiceContext,
-			ITrackingService trackingServiceContext)
+			ITrackingService trackingServiceContext,
+			IMemoryCache memoryCacheContext)
 		{
 			_navigationService = navigationServiceContext;
 			_barcodeService = barcodeServiceContext;
@@ -164,6 +167,7 @@ namespace RoadPal.ViewModels
 
 			HideCheckOffButton = true;
 			_trackingService = trackingServiceContext;
+			_memoryCache = memoryCacheContext;
 		}
 
 		private async Task PickImageAsync()
@@ -329,7 +333,23 @@ namespace RoadPal.ViewModels
 		{
 			IsInfoVisible = false;
 
-			var message = await _carService.CheckVignette(licensePlate);
+			string cacheKey = $"Vignette_{licensePlate}";
+
+			if (!_memoryCache.TryGetValue(cacheKey, out string message))
+			{
+				message = await _carService.CheckVignette(licensePlate);
+
+				DateTime now = DateTime.Now;
+				DateTime midnight = DateTime.Today.AddDays(1);
+				TimeSpan timeUntilMidnight = midnight - now;
+
+				var cacheOptions = new MemoryCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = timeUntilMidnight
+				};
+				_memoryCache.Set(cacheKey, message, cacheOptions);
+
+			}
 
 			await Application.Current.MainPage
 					 .DisplayAlert("Vehicle Vignette Summary", message, "OK");

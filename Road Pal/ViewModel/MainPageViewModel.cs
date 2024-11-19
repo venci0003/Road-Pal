@@ -187,7 +187,7 @@ namespace RoadPal.ViewModels
 			{
 				if (car != null)
 				{
-					var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService, _noteService, _trackingService);
+					var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService, _noteService, _trackingService,_memoryCache);
 					var carDetailsPage = new CarDetailsPage(carDetailsViewModel);
 					await _navigationService.NavigateToPage(carDetailsPage);
 				}
