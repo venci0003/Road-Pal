@@ -13,11 +13,11 @@ namespace RoadPal.Views
 			BindingContext = _viewModel;
 		}
 
-		protected override async void OnAppearing()
-		{
-			base.OnAppearing();
-			await _viewModel.LoadCarsAsync();
-		}
+		//protected override async void OnAppearing()
+		//{
+		//	base.OnAppearing();
+		//	await _viewModel.LoadCarsAsync();
+		//}
 
 		private bool _isTapped = false;
 		private async void OnFavouriteCarsTapped(object sender, EventArgs e)
