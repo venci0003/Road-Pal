@@ -420,7 +420,16 @@ namespace RoadPal.ViewModels
 
 			await _noteService.AddServiceNote(serviceNote);
 
-			await LoadNewServiceNotes();
+			string cacheKey = $"ServiceNote_{_carId}_{IsFinished}";
+			if (_memoryCache.TryGetValue(cacheKey, out ObservableCollection<ServiceNote> cachedNotes))
+			{
+				cachedNotes.Add(serviceNote);
+
+				_memoryCache.Set(cacheKey, cachedNotes, new MemoryCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+				});
+			}
 
 			Title = string.Empty;
 			Description = string.Empty;
@@ -428,9 +437,22 @@ namespace RoadPal.ViewModels
 
 		private async Task LoadNewServiceNotes()
 		{
-			var serviceNotesFromService = await _noteService.GetAllServiceNotesAsync(_carId, IsFinished);
+			string cacheKey = $"ServiceNote_{_carId}_{IsFinished}";
 
-			ServiceNotes = new ObservableCollection<ServiceNote>(serviceNotesFromService);
+			if (!_memoryCache.TryGetValue(cacheKey, out ObservableCollection<ServiceNote> serviceNotesFromCache))
+			{
+				IEnumerable<ServiceNote> serviceNotesFromService = await _noteService.GetAllServiceNotesAsync(_carId, IsFinished);
+
+				serviceNotesFromCache = new ObservableCollection<ServiceNote>(serviceNotesFromService);
+
+				var cacheOptions = new MemoryCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+				};
+				_memoryCache.Set(cacheKey, serviceNotesFromCache, cacheOptions);
+			}
+
+			ServiceNotes = serviceNotesFromCache;
 		}
 
 		private async Task DeleteServiceNoteAsync(ServiceNote? serviceNote)
@@ -441,15 +463,27 @@ namespace RoadPal.ViewModels
 			}
 
 			bool deleteReceipt = await Application.Current.MainPage
-	   .DisplayAlert(ConfirmDeleteTitleMessage, DeleteServiceNoteMessage, "Delete", "Cancel");
+				.DisplayAlert(ConfirmDeleteTitleMessage, DeleteServiceNoteMessage, "Delete", "Cancel");
 
 			if (ServiceNotes != null && ServiceNotes.Contains(serviceNote) && deleteReceipt)
 			{
 				ServiceNotes.Remove(serviceNote);
 
 				await _noteService.DeleteServiceNoteByIdAsync(serviceNote.ServiceNoteId);
+
+				string cacheKey = $"ServiceNote_{_carId}_{IsFinished}";
+				if (_memoryCache.TryGetValue(cacheKey, out ObservableCollection<ServiceNote> cachedNotes))
+				{
+					cachedNotes.Remove(serviceNote);
+
+					_memoryCache.Set(cacheKey, cachedNotes, new MemoryCacheEntryOptions
+					{
+						AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+					});
+				}
 			}
 		}
+
 
 
 		private async Task DeleteBarcodeAsync(Barcode? barcode)
