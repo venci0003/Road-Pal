@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Caching.Memory;
 using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
+using System.Collections.ObjectModel;
 using static RoadPal.Common.ApplicationConstants.MessagesConstants;
 
 namespace RoadPal.ViewModels
@@ -16,15 +18,23 @@ namespace RoadPal.ViewModels
 
 		private readonly ICarService _carService;
 
+		private readonly IMemoryCache _memoryCache;
+
 		private int _carId;
 
-		public BarcodeReaderViewModel(INavigationService navigationServiceContext, IBarcodeService barcodeServiceContext, ICarService carServiceContext, int carId)
+		public BarcodeReaderViewModel(INavigationService navigationServiceContext,
+			IBarcodeService barcodeServiceContext,
+			ICarService carServiceContext,
+			IMemoryCache memoryCacheContext,
+			int carId)
 		{
 			_navigationService = navigationServiceContext;
 
 			_barcodeService = barcodeServiceContext;
 
 			_carService = carServiceContext;
+
+			_memoryCache = memoryCacheContext;
 
 			BarcodeScannedCommand = new AsyncRelayCommand<string>(BarcodeScannedAsync);
 
@@ -96,6 +106,18 @@ namespace RoadPal.ViewModels
 					};
 
 					await _barcodeService.SaveReceiptAsync(barcode);
+
+					var cacheKey = $"Barcode_{_carId}";
+
+					if (_memoryCache.TryGetValue(cacheKey, out ObservableCollection<Barcode> cachedBarcodes))
+					{
+						cachedBarcodes!.Add(barcode);
+
+						_memoryCache.Set(cacheKey, cachedBarcodes, new MemoryCacheEntryOptions
+						{
+							AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
+						});
+					}
 
 					await _carService.AddMoneyToTotalAsync(_carId, totalAmount);
 

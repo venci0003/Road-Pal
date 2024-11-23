@@ -386,9 +386,23 @@ namespace RoadPal.ViewModels
 
 		public async Task LoadDetailsAsync()
 		{
-			var barcodesFromService = await _barcodeService.GetBarcodesAsync(_carId);
 
-			Barcodes = new ObservableCollection<Barcode>(barcodesFromService);
+			var cacheKey = $"Barcode_{_carId}";
+
+			if (!_memoryCache.TryGetValue(cacheKey, out ObservableCollection<Barcode> cachedBarcodes))
+			{
+				var barcodesFromService = await _barcodeService.GetBarcodesAsync(_carId);
+
+				cachedBarcodes = new ObservableCollection<Barcode>();
+
+				var cacheOptions = new MemoryCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
+				};
+				_memoryCache.Set(cacheKey, cachedBarcodes, cacheOptions);
+			}
+
+			Barcodes = cachedBarcodes;
 
 			var carMoneyUpdate = await _carService.GetCarByIdAsync(_carId);
 
@@ -427,7 +441,7 @@ namespace RoadPal.ViewModels
 
 				_memoryCache.Set(cacheKey, cachedNotes, new MemoryCacheEntryOptions
 				{
-					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
 				});
 			}
 
@@ -447,7 +461,7 @@ namespace RoadPal.ViewModels
 
 				var cacheOptions = new MemoryCacheEntryOptions
 				{
-					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
 				};
 				_memoryCache.Set(cacheKey, serviceNotesFromCache, cacheOptions);
 			}
@@ -478,7 +492,7 @@ namespace RoadPal.ViewModels
 
 					_memoryCache.Set(cacheKey, cachedNotes, new MemoryCacheEntryOptions
 					{
-						AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+						AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
 					});
 				}
 			}
@@ -500,13 +514,25 @@ namespace RoadPal.ViewModels
 			{
 				Barcodes.Remove(barcode);
 
+				var cacheKey = $"Barcode_{_carId}";
+
+				if (_memoryCache.TryGetValue(cacheKey, out ObservableCollection<Barcode> cachedBarcodes))
+				{
+					cachedBarcodes!.Remove(barcode);
+
+					_memoryCache.Set(cacheKey, cachedBarcodes, new MemoryCacheEntryOptions
+					{
+						AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
+					});
+				}
+
 				await _barcodeService.DeleteReceiptByIdAsync(barcode.BarcodeId);
 			}
 		}
 
 		private async Task ScanReceiptNavigation()
 		{
-			var barcodeReaderViewModel = new BarcodeReaderViewModel(_navigationService, _barcodeService, _carService, _carId);
+			var barcodeReaderViewModel = new BarcodeReaderViewModel(_navigationService, _barcodeService, _carService, _memoryCache, _carId);
 			var barcodeReaderPage = new BarcodeReader(barcodeReaderViewModel);
 			await _navigationService.NavigateToPage(barcodeReaderPage);
 		}
