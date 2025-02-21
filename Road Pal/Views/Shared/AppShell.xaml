@@ -7,11 +7,11 @@
     Title="RoadPal">
 
     <TabBar>
-        <ShellContent
+        <!--<ShellContent
             Title="Settings"
             Icon="settings_icon.png"
             ContentTemplate="{DataTemplate local:SettingsPage}"
-            Route="SettingsPage" />
+            Route="SettingsPage" />-->
 
         <ShellContent
             Title="Home"
@@ -20,11 +20,11 @@
             Route="HomePage"
             x:Name="homeTab" />
 
-        <ShellContent
+        <!--<ShellContent
             Title="Profile"
             Icon="profile_icon.png"
             ContentTemplate="{DataTemplate local:ProfilePage}"
-            Route="ProfilePage" />
+            Route="ProfilePage" />-->
     </TabBar>
 
     <ShellContent Route="CreateCarPage" ContentTemplate="{DataTemplate local:CreateCarPage}" />
