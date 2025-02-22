@@ -1,6 +1,8 @@
-﻿using RoadPal.ViewModels;
-using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Maui.Controls;
+using RoadPal.ViewModels;
+using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RoadPal.Views;
 
@@ -14,7 +16,6 @@ public partial class CarDetailsPage : ContentPage
 		_viewModel = vm;
 		BindingContext = _viewModel;
 		InsuranceHiddenWebView.Navigated += InsuranceHiddenWebView_Navigated;
-		InspectionHiddenWebView.Navigated += InspectionHiddenWebView_Navigated;
 	}
 
 	private bool isInspectionProcessing = false;
@@ -24,15 +25,28 @@ public partial class CarDetailsPage : ContentPage
 		try
 		{
 			_viewModel.CaptchaInput = null;
-
 			_viewModel.OpenInspectionCaptcha();
 
-			var imageUrl = await InspectionHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('img.mb-3').src || 'Image not found';");
+			await InspectionHiddenWebView.EvaluateJavaScriptAsync($@"
+        function simulateTyping(element, text) {{
+            for (let i = 0; i < text.length; i++) {{
+                let char = text[i];
+                element.dispatchEvent(new KeyboardEvent('keydown', {{ key: char }}));
+                element.value += char;
+                element.dispatchEvent(new KeyboardEvent('keypress', {{ key: char }}));
+                element.dispatchEvent(new KeyboardEvent('keyup', {{ key: char }}));
+                element.dispatchEvent(new Event('input', {{ bubbles: true }}));
+            }}
+            element.dispatchEvent(new Event('change', {{ bubbles: true }}));
+            element.dispatchEvent(new Event('blur', {{ bubbles: true }}));
+        }}
 
-			CaptchaImage.Source = imageUrl;
-
-			await InspectionHiddenWebView.EvaluateJavaScriptAsync($"document.getElementById('regPlate').value = '{_viewModel.LicensePlate}';");
-
+        var inputElement1 = document.evaluate('/html/body/div[2]/div/div[6]/div/div[1]/div/div[1]/input', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        if (inputElement1) {{
+            inputElement1.value = '';
+            simulateTyping(inputElement1, '{_viewModel.LicensePlate}');
+        }}
+        ");
 		}
 		catch (Exception ex)
 		{
@@ -41,53 +55,58 @@ public partial class CarDetailsPage : ContentPage
 		}
 	}
 
+
 	private async void CaptchaSubmitButtonClicked(object sender, EventArgs e)
 	{
 		isInspectionProcessing = true;
 
-		await InspectionHiddenWebView.EvaluateJavaScriptAsync($"document.getElementById('captcha').value = '{_viewModel.CaptchaInput}';");
-		await InspectionHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('button.btn.btn-primary').click();");
-	}
+		await InspectionHiddenWebView.EvaluateJavaScriptAsync($@"
+    function simulateTyping(element, text) {{
+        for (let i = 0; i < text.length; i++) {{
+            let char = text[i];
+            element.dispatchEvent(new KeyboardEvent('keydown', {{ key: char }}));
+            element.value += char;
+            element.dispatchEvent(new KeyboardEvent('keypress', {{ key: char }}));
+            element.dispatchEvent(new KeyboardEvent('keyup', {{ key: char }}));
+            element.dispatchEvent(new Event('input', {{ bubbles: true }}));
+        }}
+        element.dispatchEvent(new Event('change', {{ bubbles: true }}));
+        element.dispatchEvent(new Event('blur', {{ bubbles: true }}));
+    }}
 
-	private async void InspectionHiddenWebView_Navigated(object? sender, WebNavigatedEventArgs e)
-	{
-		if (!isInspectionProcessing)
+    var inputElement2 = document.evaluate('/html/body/div[2]/div/div[6]/div/div[1]/div/div[2]/input', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    if (inputElement2) {{
+        inputElement2.value = '';
+        simulateTyping(inputElement2, '{_viewModel.CaptchaInput}');
+    }}
+    ");
+
+		await InspectionHiddenWebView.EvaluateJavaScriptAsync($@"
+    var element = document.evaluate('/html/body/div[2]/div/div[6]/div/div[1]/div/a[2]/span', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    if (element && element.offsetParent !== null) {{
+        element.click();
+    }}
+    ");
+		await Task.Delay(1600);
+
+		string result = string.Empty;
+
+		string validDate = await InspectionHiddenWebView.EvaluateJavaScriptAsync($@"document.evaluate('/html/body/div[2]/div/div[6]/div/div[2]/div[1]/div[2]/i[7]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue?.innerText;");
+		string ecoCategory = await InspectionHiddenWebView.EvaluateJavaScriptAsync($@"document.evaluate('/html/body/div[2]/div/div[6]/div/div[2]/div[1]/div[2]/i[4]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue?.innerText;");
+
+		if (!string.IsNullOrEmpty(validDate) && !string.IsNullOrEmpty(ecoCategory))
 		{
-			return;
+			result = $"INSPECTION DETAILS\n- Valid technical inspection until {validDate}\nEco Category: {ecoCategory}";
+		}
+		else
+		{
+			result = "An error occured, please try again later.";
 		}
 
-		try
-		{
-			var alertMessage = await InspectionHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('.alert.alert-success.text-center.loading-content')?.innerText.trim() || 'Not found';");
 
-			string datePattern = @"\d{2}\.\d{2}\.\d{4}";
+		await _viewModel.CheckCarInspectionAsync(result);
 
-			Match match = Regex.Match(alertMessage, datePattern);
-
-			if (match.Success)
-			{
-				string date = match.Value; 
-				string result = $"INSPECTION DETAILS\n- Valid technical inspection until {date}";
-
-				await _viewModel.CheckCarInspectionAsync(result);
-			}
-			else
-			{
-				string result = "INSPECTION DETAILS\n- Date not found.";
-				await _viewModel.CheckCarInspectionAsync(result);
-			}
-
-			InspectionHiddenWebView.Source = "https://www.car-diary.net/bg/proverka-na-gtp";
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine($"Error occurred during navigation: {ex.Message}");
-			await _viewModel.CheckCarInspectionAsync("An error occurred while checking the car info.");
-		}
-		finally
-		{
-			isInspectionProcessing = false;
-		}
+		InspectionHiddenWebView.Source = "https://rta.government.bg/services/check-inspection/index.html";
 	}
 
 	private bool isInsuranceProcessing = false;
@@ -97,9 +116,9 @@ public partial class CarDetailsPage : ContentPage
 		try
 		{
 
-			await InsuranceHiddenWebView.EvaluateJavaScriptAsync($"document.getElementById('regPlate').value = '{_viewModel.LicensePlate}';");
+			await InsuranceHiddenWebView.EvaluateJavaScriptAsync($"document.getElementById('dkn').value = '{_viewModel.LicensePlate}';");
 
-			await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('button.btn.btn-primary').click();");
+			await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('.button_submit').click();");
 
 			isInsuranceProcessing = true;
 		}
@@ -119,9 +138,10 @@ public partial class CarDetailsPage : ContentPage
 
 		try
 		{
-			var insurer = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(1)')?.innerText || 'Not found';");
-			var validFrom = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(2)')?.innerText || 'Not found';");
-			var validTo = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('dd.col-sm-6.text-md-left.text-sm-center:nth-of-type(3)')?.innerText || 'Not found';");
+			var insurer = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('tr > td:nth-of-type(1) a')?.innerText || 'Not found';");
+			var validFrom = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('tr > td:nth-of-type(2)')?.innerText || 'Not found';");
+			var validTo = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('tr > td:nth-of-type(3)')?.innerText || 'Not found';");
+
 
 			TimeSpan timeLeft = DateTime.Parse(validTo) - DateTime.UtcNow;
 			int daysLeft = (int)timeLeft.TotalDays;
@@ -130,7 +150,7 @@ public partial class CarDetailsPage : ContentPage
 
 			await _viewModel.CheckCarInsuranceAsync(result);
 
-			InsuranceHiddenWebView.Source = "https://www.car-diary.net/bg/proverka-na-grazhdanska-otgovornost";
+			InsuranceHiddenWebView.Source = "https://www.guaranteefund.org/bg/%D0%B8%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%B5%D0%BD-%D1%86%D0%B5%D0%BD%D1%82%D1%8A%D1%80-%D0%B8-%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BA%D0%B8/%D1%83%D1%81%D0%BB%D1%83%D0%B3%D0%B8/%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0-%D0%B7%D0%B0-%D0%B2%D0%B0%D0%BB%D0%B8%D0%B4%D0%BD%D0%B0-%D0%B7%D0%B0%D1%81%D1%82%D1%80%D0%B0%D1%85%D0%BE%D0%B2%D0%BA%D0%B0-%D0%B3%D1%80a%D0%B6%D0%B4a%D0%BD%D1%81%D0%BAa-%D0%BE%D1%82%D0%B3%D0%BE%D0%B2%D0%BE%D1%80%D0%BD%D0%BE%D1%81%D1%82-%D0%BD%D0%B0-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%81%D1%82%D0%B8%D1%82%D0%B5";
 		}
 		catch (Exception ex)
 		{

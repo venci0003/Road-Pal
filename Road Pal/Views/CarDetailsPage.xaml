@@ -107,15 +107,21 @@
 
                     <WebView x:Name="InsuranceHiddenWebView"
                              IsVisible="False"
-                             Source="https://www.car-diary.net/bg/proverka-na-grazhdanska-otgovornost"
-                             HeightRequest="600"
+                             Source="https://www.guaranteefund.org"
+                             HeightRequest="100"
                              WidthRequest="350"/>
+                  
 
-                    <WebView x:Name="InspectionHiddenWebView"
-                             IsVisible="False"
-                             Source="https://www.car-diary.net/bg/proverka-na-gtp" 
-                             HeightRequest="600"
-                             WidthRequest="350"/>
+
+                            <!--<WebView x:Name="InspectionHiddenWebView"
+                                Source="https://rta.government.bg/services/check-inspection/index.html"
+                                HeightRequest="2500"  
+                                WidthRequest="450"                              
+                                VerticalOptions="Start"
+                                HorizontalOptions="Start"
+                                />-->
+
+
 
                     <Label Text="Total Money Spent" FontSize="24" HorizontalOptions="Start" Margin="0, 10, 0, 0"/>
 
@@ -494,13 +500,30 @@
                        CornerRadius="20" BorderColor ="Transparent" HasShadow="True">
 
                     <StackLayout>
-                        <Label Text="Please solve the Captcha" FontSize="24" HorizontalOptions="Center" TextColor="White" />
+                        <Label Text="Please solve the Captcha" FontSize="24" HorizontalOptions="Center" TextColor="White" Margin="0,0,0,25" />
 
-                        <Image x:Name="CaptchaImage"
+                        <!--<Image x:Name="CaptchaImage"
                                Source="empty" 
                                HorizontalOptions="Center" 
                                VerticalOptions="Center" 
-                               WidthRequest="200" HeightRequest="100" />
+                               WidthRequest="200" HeightRequest="100" />-->
+                        <Grid>
+                            <Frame HeightRequest="130" WidthRequest="350" Padding="0" Margin="0, 10, 280, 0">
+                                <Frame.Clip>
+                                    <RectangleGeometry Rect="129, -45, 235, 110"/>
+                                </Frame.Clip>
+                                <Frame.ScaleX>2.0</Frame.ScaleX>
+                                <Frame.ScaleY>2.0</Frame.ScaleY>
+
+                                <WebView x:Name="InspectionHiddenWebView"
+                                         Source="https://rta.government.bg/services/check-inspection/index.html"
+                                         HeightRequest="2600"  
+                                         WidthRequest="2450"                              
+                                         VerticalOptions="Start"
+                                         HorizontalOptions="Start"
+                                         Margin="-1270, -457, 0, 0"/>
+                            </Frame>
+                        </Grid>
 
                         <Entry x:Name="CaptchaEntry"
                 Placeholder="Enter Captcha" 
