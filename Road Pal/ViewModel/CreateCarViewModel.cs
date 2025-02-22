@@ -34,7 +34,6 @@ namespace RoadPal.ViewModels
 		[ObservableProperty] private bool areManualInputsVisible = false;
 
 		private string cachedKey = string.Empty;
-
 		public IRelayCommand PickImageCommand { get; }
 		public IRelayCommand SaveCarCommand { get; }
 		public IAsyncRelayCommand SearchMakesCommand { get; }

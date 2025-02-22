@@ -212,11 +212,13 @@ namespace RoadPal.ViewModels
 
 			IsBusy = true;
 
+			string cacheKey = $"MainPageKey_{_searchQuery}_{isFavourite}";
+
 			try
 			{
 				if (car != null)
 				{
-					var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService, _noteService, _trackingService, _memoryCache);
+					var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService, _noteService, _trackingService, _memoryCache, cacheKey);
 					var carDetailsPage = new CarDetailsPage(carDetailsViewModel);
 					await _navigationService.NavigateToPage(carDetailsPage);
 				}

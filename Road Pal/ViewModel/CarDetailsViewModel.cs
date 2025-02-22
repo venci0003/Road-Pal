@@ -93,6 +93,8 @@ namespace RoadPal.ViewModels
 		[ObservableProperty]
 		private ObservableCollection<string> countryCodes;
 
+		private string cachedKey = string.Empty;
+
 		public IRelayCommand ScanReceiptCommand { get; }
 		public IRelayCommand<Barcode> DeleteBarcodeCommand { get; }
 		public IRelayCommand AddServiceNoteCommand { get; }
@@ -117,7 +119,8 @@ namespace RoadPal.ViewModels
 			ICarService carServiceContext,
 			INoteService noteServiceContext,
 			ITrackingService trackingServiceContext,
-			IMemoryCache memoryCacheContext)
+			IMemoryCache memoryCacheContext,
+			string cacheKey)
 		{
 			_navigationService = navigationServiceContext;
 			_barcodeService = barcodeServiceContext;
@@ -172,6 +175,8 @@ namespace RoadPal.ViewModels
 			HideCheckOffButton = true;
 			_trackingService = trackingServiceContext;
 			_memoryCache = memoryCacheContext;
+			cachedKey = cacheKey;
+
 		}
 
 		private async Task PickImageAsync()
@@ -285,7 +290,17 @@ namespace RoadPal.ViewModels
 				return;
 			}
 
+			if (_memoryCache.TryGetValue(cachedKey, out ObservableCollection<Car>? cachedCars))
+			{
+				Car carToUpdateCache = cachedCars.FirstOrDefault(x => x.CarId == carToEdit.CarId);
 
+				if (carToUpdateCache != null)
+				{
+					cachedCars.Remove(carToUpdateCache);
+				}
+
+				cachedCars.Add(carToEdit);
+			}
 
 			await _carService.UpdateCarAsync(carToEdit);
 
