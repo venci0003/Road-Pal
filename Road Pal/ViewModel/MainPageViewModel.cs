@@ -89,14 +89,40 @@ namespace RoadPal.ViewModels
 				return;
 			}
 
-			if (car.IsFavourite == false)
+			car.IsFavourite = !car.IsFavourite;
+			await _carService.ChangeFavouritismAsync(car.CarId, car.IsFavourite);
+
+			string cacheKey = $"MainPageKey_{_searchQuery}_True";
+
+			if (_memoryCache.TryGetValue(cacheKey, out ObservableCollection<Car>? cachedFavouriteCars))
 			{
-				await _carService.ChangeFavouritismAsync(car.CarId, true);
+				if (car.IsFavourite)
+				{
+					cachedFavouriteCars?.Add(car);
+				}
+				else
+				{
+					cachedFavouriteCars?.Remove(car);
+				}
+				_memoryCache.Set(cacheKey, cachedFavouriteCars);
+
 			}
-			else if (car.IsFavourite == true)
+
+			 cacheKey = $"MainPageKey_{_searchQuery}_False";
+
+			if (_memoryCache.TryGetValue(cacheKey, out ObservableCollection<Car>? cachedNonFavouriteCars))
 			{
-				await _carService.ChangeFavouritismAsync(car.CarId, false);
+				if (car.IsFavourite)
+				{
+					cachedNonFavouriteCars?.Remove(car);
+				}
+				else
+				{
+					cachedNonFavouriteCars?.Add(car);
+				}
+				_memoryCache.Set(cacheKey, cachedNonFavouriteCars);
 			}
+
 			await LoadCarsAsync();
 		}
 
@@ -122,6 +148,7 @@ namespace RoadPal.ViewModels
 			Cars?.Remove(car);
 
 			string cacheKey = $"{_searchQuery}_{isFavourite}";
+
 			_memoryCache.Remove(cacheKey);
 
 			await _carService.DeleteCarByIdAsync(car.CarId);
@@ -131,7 +158,7 @@ namespace RoadPal.ViewModels
 
 		public async Task LoadCarsAsync()
 		{
-			string cacheKey = $"{_searchQuery}_{isFavourite}";
+			string cacheKey = $"MainPageKey_{_searchQuery}_{isFavourite}";
 
 			if (!_memoryCache.TryGetValue(cacheKey, out ObservableCollection<Car> cachedCars))
 			{
@@ -162,10 +189,12 @@ namespace RoadPal.ViewModels
 
 			IsBusy = true;
 
+			string cacheKey = $"MainPageKey_{_searchQuery}_{isFavourite}";
+
 			try
 			{
 
-				var createCarViewModel = new CreateCarViewModel(_carService, _navigationService);
+				var createCarViewModel = new CreateCarViewModel(_carService, _navigationService, _memoryCache, cacheKey);
 				var createCarPage = new CreateCarPage(createCarViewModel);
 				await _navigationService.NavigateToPage(createCarPage);
 			}
@@ -187,7 +216,7 @@ namespace RoadPal.ViewModels
 			{
 				if (car != null)
 				{
-					var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService, _noteService, _trackingService,_memoryCache);
+					var carDetailsViewModel = new CarDetailsViewModel(car, _navigationService, _barcodeService, _carService, _noteService, _trackingService, _memoryCache);
 					var carDetailsPage = new CarDetailsPage(carDetailsViewModel);
 					await _navigationService.NavigateToPage(carDetailsPage);
 				}

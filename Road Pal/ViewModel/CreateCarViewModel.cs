@@ -1,5 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using BruTile.Cache;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Caching.Memory;
 using RoadPal.Contracts;
 using RoadPal.Infrastructure.Models;
 using System.Collections.ObjectModel;
@@ -11,6 +13,7 @@ namespace RoadPal.ViewModels
 	{
 		private readonly INavigationService _navigationService;
 		private readonly ICarService _carService;
+		private readonly IMemoryCache _memoryCache;
 
 		[ObservableProperty] private string? make;
 		[ObservableProperty] private string? model;
@@ -30,15 +33,18 @@ namespace RoadPal.ViewModels
 		[ObservableProperty] private bool arePickersVisible = true;
 		[ObservableProperty] private bool areManualInputsVisible = false;
 
+		private string cachedKey = string.Empty;
+
 		public IRelayCommand PickImageCommand { get; }
 		public IRelayCommand SaveCarCommand { get; }
 		public IAsyncRelayCommand SearchMakesCommand { get; }
 		public IAsyncRelayCommand LoadCarModelsCommand { get; }
 
-		public CreateCarViewModel(ICarService carService, INavigationService navigationService)
+		public CreateCarViewModel(ICarService carService, INavigationService navigationService, IMemoryCache memoryCacheContext, string cacheKey)
 		{
 			_carService = carService;
 			_navigationService = navigationService;
+			_memoryCache = memoryCacheContext;
 
 			PickImageCommand = new AsyncRelayCommand(PickImageAsync);
 			SaveCarCommand = new AsyncRelayCommand(SaveCarAsync);
@@ -46,6 +52,7 @@ namespace RoadPal.ViewModels
 			LoadCarModelsCommand = new AsyncRelayCommand<string?>(LoadCarModelsAsync);
 
 			CountryCodes = DataConstants.CountryCodesConstant;
+			cachedKey = cacheKey;
 
 			LoadCarMakes().ConfigureAwait(false);
 		}
@@ -185,6 +192,7 @@ namespace RoadPal.ViewModels
 				return;
 			}
 
+
 			var newCar = new Car
 			{
 				LicensePlate = licensePlate!,
@@ -195,6 +203,13 @@ namespace RoadPal.ViewModels
 				Make = IsManualInputEnabled ? manualMakeInput! : make!,
 				Model = IsManualInputEnabled ? manualModelInput! : model!
 			};
+
+			if (_memoryCache.TryGetValue(cachedKey, out ObservableCollection<Car>? cachedCars))
+			{
+				cachedCars?.Add(newCar);
+
+				_memoryCache.Set(cachedKey, cachedCars);
+			}
 
 			await _carService.AddCarAsync(newCar);
 			await Application.Current.MainPage.DisplayAlert("Success", "Car added successfully!", "OK");

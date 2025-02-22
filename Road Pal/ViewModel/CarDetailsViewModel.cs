@@ -108,6 +108,8 @@ namespace RoadPal.ViewModels
 		public IRelayCommand PickImageCommand { get; }
 		public IRelayCommand OpenInspectionCaptchaCommand { get; }
 
+		public IRelayCommand CheckCarInspectionCommand { get; }
+
 
 		public CarDetailsViewModel(Car car,
 			INavigationService navigationServiceContext,
@@ -142,6 +144,8 @@ namespace RoadPal.ViewModels
 			NavigateToTrackingCommand = new AsyncRelayCommand(NavigateToTrackingPage);
 
 			CheckCarVignetteCommand = new AsyncRelayCommand(CheckCarVignetteAsync);
+
+			CheckCarInspectionCommand = new AsyncRelayCommand<string>(CheckCarInspectionAsync);
 
 			EditCarCommand = new RelayCommand(EditCar);
 			AcceptEditCommand = new AsyncRelayCommand(AcceptEdit);
