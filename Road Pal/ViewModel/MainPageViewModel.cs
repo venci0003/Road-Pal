@@ -145,9 +145,19 @@ namespace RoadPal.ViewModels
 			if (car == null)
 				return;
 
-			if (File.Exists(car.ImagePath))
+			try
 			{
-				File.Delete(car.ImagePath);
+				if (File.Exists(car.ImagePath))
+				{
+					File.Delete(car.ImagePath);
+				}
+				await Application.Current.MainPage.DisplayAlert("An Error Occured", "Car deletion was unsuccessful.", "OK");
+				return;
+
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Failed to delete image: {ex.Message}");
 			}
 
 			Cars?.Remove(car);
