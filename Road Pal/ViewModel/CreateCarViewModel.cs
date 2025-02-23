@@ -169,7 +169,22 @@ namespace RoadPal.ViewModels
 
 				if (result != null)
 				{
-					_imageFilePath = result.FullPath;
+					string imagesFolder = Path.Combine(FileSystem.AppDataDirectory, "Images");
+					if (!Directory.Exists(imagesFolder))
+					{
+						Directory.CreateDirectory(imagesFolder);
+					}
+
+					string fileName = $"{Guid.NewGuid()}{Path.GetExtension(result.FullPath)}";
+					string destinationPath = Path.Combine(imagesFolder, fileName);
+
+					using (var sourceStream = await result.OpenReadAsync())
+					using (var destinationStream =  File.OpenWrite(destinationPath))
+					{
+						await sourceStream.CopyToAsync(destinationStream);
+					}
+
+					_imageFilePath = destinationPath;
 					CarImage = _imageFilePath;
 				}
 			}

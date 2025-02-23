@@ -108,7 +108,7 @@ namespace RoadPal.ViewModels
 
 			}
 
-			 cacheKey = $"MainPageKey_{_searchQuery}_False";
+			cacheKey = $"MainPageKey_{_searchQuery}_False";
 
 			if (_memoryCache.TryGetValue(cacheKey, out ObservableCollection<Car>? cachedNonFavouriteCars))
 			{
@@ -144,6 +144,11 @@ namespace RoadPal.ViewModels
 		{
 			if (car == null)
 				return;
+
+			if (File.Exists(car.ImagePath))
+			{
+				File.Delete(car.ImagePath);
+			}
 
 			Cars?.Remove(car);
 
