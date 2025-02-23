@@ -15,7 +15,6 @@ public partial class CarDetailsPage : ContentPage
 		InitializeComponent();
 		_viewModel = vm;
 		BindingContext = _viewModel;
-		InsuranceHiddenWebView.Navigated += InsuranceHiddenWebView_Navigated;
 	}
 
 	private bool isInspectionProcessing = false;
@@ -47,6 +46,7 @@ public partial class CarDetailsPage : ContentPage
             simulateTyping(inputElement1, '{_viewModel.LicensePlate}');
         }}
         ");
+			
 		}
 		catch (Exception ex)
 		{
@@ -109,57 +109,23 @@ public partial class CarDetailsPage : ContentPage
 		InspectionHiddenWebView.Source = "https://rta.government.bg/services/check-inspection/index.html";
 	}
 
-	private bool isInsuranceProcessing = false;
-
 	private async void OnCheckCarInsuranceButtonClicked(object sender, EventArgs e)
 	{
-		try
+		bool isConfirmed = await DisplayAlert(
+			"Leaving the App",
+			"You are about to leave the app and open a web page. Do you want to continue?",
+			"Yes",
+			"No");
+
+		if (isConfirmed)
 		{
+			string url = "https://www.guaranteefund.org/bg/%D0%B8%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%B5%D0%BD-%D1%86%D0%B5%D0%BD%D1%82%D1%8A%D1%80-%D0%B8-%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BA%D0%B8/%D1%83%D1%81%D0%BB%D1%83%D0%B3%D0%B8/%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0-%D0%B7%D0%B0-%D0%B2%D0%B0%D0%BB%D0%B8%D0%B4%D0%BD%D0%B0-%D0%B7%D0%B0%D1%81%D1%82%D1%80%D0%B0%D1%85%D0%BE%D0%B2%D0%BA%D0%B0-%D0%B3%D1%80a%D0%B6%D0%B4a%D0%BD%D1%81%D0%BAa-%D0%BE%D1%82%D0%B3%D0%BE%D0%B2%D0%BE%D1%80%D0%BD%D0%BE%D1%81%D1%82-%D0%BD%D0%B0-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%81%D1%82%D0%B8%D1%82%D0%B5";
 
-			await InsuranceHiddenWebView.EvaluateJavaScriptAsync($"document.getElementById('dkn').value = '{_viewModel.LicensePlate}';");
-
-			await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('.button_submit').click();");
-
-			isInsuranceProcessing = true;
+			await Launcher.OpenAsync(url);
 		}
-		catch (Exception ex)
+		else
 		{
-			Console.WriteLine($"Error occurred: {ex.Message}");
-			await _viewModel.CheckCarInsuranceAsync("An error occurred while checking the car info.");
-		}
-	}
-
-	private async void InsuranceHiddenWebView_Navigated(object? sender, WebNavigatedEventArgs e)
-	{
-		if (!isInsuranceProcessing)
-		{
-			return;
-		}
-
-		try
-		{
-			var insurer = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('tr > td:nth-of-type(1) a')?.innerText || 'Not found';");
-			var validFrom = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('tr > td:nth-of-type(2)')?.innerText || 'Not found';");
-			var validTo = await InsuranceHiddenWebView.EvaluateJavaScriptAsync("document.querySelector('tr > td:nth-of-type(3)')?.innerText || 'Not found';");
-
-
-			TimeSpan timeLeft = DateTime.Parse(validTo) - DateTime.UtcNow;
-			int daysLeft = (int)timeLeft.TotalDays;
-
-			string result = $"INSURANCE DETAILS\n- Insurer: {insurer}\n- Valid from: {validFrom}\n- Valid to: {validTo}\n- Days left: {daysLeft}\n";
-
-			await _viewModel.CheckCarInsuranceAsync(result);
-
-			InsuranceHiddenWebView.Source = "https://www.guaranteefund.org/bg/%D0%B8%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%B5%D0%BD-%D1%86%D0%B5%D0%BD%D1%82%D1%8A%D1%80-%D0%B8-%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BA%D0%B8/%D1%83%D1%81%D0%BB%D1%83%D0%B3%D0%B8/%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0-%D0%B7%D0%B0-%D0%B2%D0%B0%D0%BB%D0%B8%D0%B4%D0%BD%D0%B0-%D0%B7%D0%B0%D1%81%D1%82%D1%80%D0%B0%D1%85%D0%BE%D0%B2%D0%BA%D0%B0-%D0%B3%D1%80a%D0%B6%D0%B4a%D0%BD%D1%81%D0%BAa-%D0%BE%D1%82%D0%B3%D0%BE%D0%B2%D0%BE%D1%80%D0%BD%D0%BE%D1%81%D1%82-%D0%BD%D0%B0-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%81%D1%82%D0%B8%D1%82%D0%B5";
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine($"Error occurred during navigation: {ex.Message}");
-			await _viewModel.CheckCarInsuranceAsync("An error occurred while checking the car info.");
-		}
-		finally
-		{
-			isInsuranceProcessing = false;
+			Console.WriteLine("User canceled opening the URL.");
 		}
 	}
 
