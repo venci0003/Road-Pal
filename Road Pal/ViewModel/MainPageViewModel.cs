@@ -145,6 +145,14 @@ namespace RoadPal.ViewModels
 			if (car == null)
 				return;
 
+			bool confirmation = await Application.Current.MainPage.DisplayAlert(
+				"Confirm Changes",
+				$"You are about to delete this car.\nAre you sure you want to proceed?",
+				"Yes",
+				"No");
+			if (!confirmation)
+				return;
+
 			try
 			{
 				if (File.Exists(car.ImagePath))
